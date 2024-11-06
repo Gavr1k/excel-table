@@ -135,6 +135,18 @@ function getKeys(context: any, rec: any): any[] {
 };
 //===================================================================================//
 
+// очистки выбранных элементов
+export function clearAllSelected(context: any): void {
+  if (context.selectedCount > 0) {
+    const selectedRows = Object.keys(context.selected).map(Number);
+    context.$emit('select', selectedRows, false);
+  }
+
+  context.selected = {};
+  context.selectedCount = 0;
+}
+
+//===================================================================================//
 // Функция хеширования строки
 export function hashCode(input: string): string {
   let hash = 0;
@@ -190,17 +202,6 @@ export function tempKey(): string {
   const timestamp = Date.now() % 1e8;
   const randomPart = Math.floor(Math.random() * 1e5).toString().padStart(5, '0');
   return `${timestamp}-${randomPart}`;
-}
-
-// очистки выбранных элементов
-export function clearAllSelected(context: any): void {
-  if (context.selectedCount > 0) {
-    const selectedRows = Object.keys(context.selected).map(Number);
-    context.$emit('select', selectedRows, false);
-  }
-
-  context.selected = {};
-  context.selectedCount = 0;
 }
 
 // добавляет обработчики событий на глобальный объект
@@ -409,34 +410,6 @@ export function rowLabelClick(context: any, event: MouseEvent): void {
   context.prevSelect = rowPos;
 }
 
-//динамические изменение курсора мыши
-export function inputBoxMouseMove(context: any, event: MouseEvent): void {
-  let cursor = 'text';
-
-  if (!context.currentField.readonly &&
-    (context.currentField.options || context.currentField.type === 'date') &&
-    event.target instanceof HTMLElement &&
-    event.target.offsetWidth - event.offsetX < 15) {
-    cursor = 'pointer';
-  }
-
-  (event.target as HTMLElement).style.cursor = cursor;
-}
-
-// отображение поле ввода если не для чтения
-export function inputSquareClick(context: any): void {
-  if (!context.currentField.readonly && !context.inputBoxShow && context.currentField.type !== 'select') {
-    context.inputBox.value = context.currentCell.textContent || '';
-
-    context.inputBoxShow = 1;
-    context.inputBox.focus();
-
-    context.inputBoxChanged = false;
-
-    context.focused = true;
-  }
-}
-
 // динамически меняет курсор при наведении на ячейки таблицы
 export function cellMouseMove(context: any, event: MouseEvent): void {
   let cursor = 'cell';
@@ -566,14 +539,12 @@ export function colSepMouseMove(context: any, event: MouseEvent): void {
   lazy(context, calStickyLeft.bind(context), 200);
 }
 
-
-
-// export function colSepMouseUp(this: any, event: MouseEvent): void {
+// export function colSepMouseUp(context: any, event: MouseEvent): void {
 //   event.preventDefault();
 //   event.stopPropagation();
 
 //   // Удаляем объект `sep`
-//   delete this.sep;
+//   delete context.sep;
 
 //   // Удаляем ранее добавленные обработчики событий
 //   window.removeEventListener('mousemove', this.boundColSepMouseMove);

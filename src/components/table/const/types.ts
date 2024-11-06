@@ -1,0 +1,41 @@
+import {LocalizedLabel} from './constVars';
+
+interface Props {
+  disablePanelSetting?: boolean;
+  disablePanelFilter?: boolean;
+  modelValue?: any[];
+  rowStyle?: (row: any) => Record<string, any>;
+  cellStyle?: (cell: any) => Record<string, any>;
+  headerLabel?: (label: string) => string;
+  recordLabel?: (pos: number) => number | string;
+  noFinding?: boolean;
+  noFindingNext?: boolean;
+  noSorting?: boolean;
+  noMassUpdate?: boolean;
+  filterRow?: boolean;
+  freeSelect?: boolean;
+  noFooter?: boolean;
+  noPaging?: boolean;
+  noNumCol?: boolean;
+  noMouseScroll?: boolean;
+  page?: number;
+  enterToSouth?: boolean;
+  nFilterCount?: number;
+  height?: string;
+  width?: string;
+  wheelSensitivity?: number;
+  autocomplete?: boolean;
+  autocompleteCount?: number;
+  readonly?: boolean;
+  readonlyStyle?: Record<string, any>;
+  remember?: boolean;
+  register?: ((...args: any[]) => any) | null;
+  allowAddCol?: boolean;
+  noHeaderEdit?: boolean;
+  addColumn?: ((...args: any[]) => any) | null;
+  spellcheck?: boolean;
+  newIfBottom?: boolean;
+  validate?: ((...args: any[]) => any) | null;
+  localizedLabel?: LocalizedLabel;
+  recordFilter?: (record: any) => boolean;
+}
