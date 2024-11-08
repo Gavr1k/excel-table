@@ -1,7 +1,0 @@
-interface Table {
-  
-}
-
-interface Field {
-  
-}

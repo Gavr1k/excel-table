@@ -1,41 +1,372 @@
 import {LocalizedLabel} from './constVars';
 
-interface Props {
-  disablePanelSetting?: boolean;
-  disablePanelFilter?: boolean;
-  modelValue?: any[];
-  rowStyle?: (row: any) => Record<string, any>;
-  cellStyle?: (cell: any) => Record<string, any>;
-  headerLabel?: (label: string) => string;
-  recordLabel?: (pos: number) => number | string;
-  noFinding?: boolean;
-  noFindingNext?: boolean;
-  noSorting?: boolean;
-  noMassUpdate?: boolean;
-  filterRow?: boolean;
-  freeSelect?: boolean;
-  noFooter?: boolean;
-  noPaging?: boolean;
-  noNumCol?: boolean;
-  noMouseScroll?: boolean;
-  page?: number;
-  enterToSouth?: boolean;
-  nFilterCount?: number;
-  height?: string;
-  width?: string;
-  wheelSensitivity?: number;
-  autocomplete?: boolean;
-  autocompleteCount?: number;
+/**
+ * Интерфейс для компонента vue-excel-column
+ */
+export interface ExcelColumn {
+  /**
+   * Поле, обязательное.
+   * Имя поля, ключ объекта строки.
+   */
+  field: string;
+
+  /**
+   * Заголовок столбца, опционально.
+   * По умолчанию используется имя поля.
+   */
+  label?: string;
+
+  /**
+   * Тип столбца, опционально.
+   */
+  type?: string;
+
+  /**
+   * Только для чтения, опционально.
+   * По умолчанию наследуется от родительского пропса `readonly`.
+   */
   readonly?: boolean;
-  readonlyStyle?: Record<string, any>;
+
+  /**
+   * Изначальный стиль ячейки в CSS, опционально.
+   */
+  initStyle?: Record<string, string | number>;
+
+  /**
+   * Зафиксированный столбец слева таблицы, опционально.
+   * Не реагирует на горизонтальную прокрутку.
+   */
+  sticky?: boolean;
+
+  /**
+   * Видимость столбца, опционально.
+   * По умолчанию `false`.
+   */
+  invisible?: boolean;
+
+  /**
+   * Заданная ширина столбца, опционально.
+   * По умолчанию `'100px'`.
+   */
+  width?: string;
+
+  /**
+   * Автоматическое заполнение ширины столбца до ширины редактора, опционально.
+   * По умолчанию `false`.
+   */
+  autoFillWidth?: boolean;
+
+  /**
+   * Функция, вызываемая при изменении данных этого столбца, опционально.
+   * @param value Новое значение поля.
+   */
+  change?: (value: any) => void;
+
+  /**
+   * Функция для валидации значения и возврата сообщения об ошибке, опционально.
+   * @param value Значение для валидации.
+   * @returns Сообщение об ошибке или пустая строка.
+   */
+  validate?: (value: any) => string;
+
+  /**
+   * Указывает, что это ключевое поле, включаемое в параметр `keys` в событии `@update`, опционально.
+   */
+  keyField?: boolean;
+
+  /**
+   * Массив допустимых символов для ввода или функция для проверки допустимости ввода, опционально.
+   */
+  allowKeys?: string[] | ((input: string) => boolean);
+
+  /**
+   * Если не пусто, отображает ошибку при изменении на пустое значение, опционально.
+   * По умолчанию `''`.
+   */
+  mandatory?: string;
+
+  /**
+   * Ограничение длины ввода, опционально.
+   * Не позволяет вводить, когда длина контента достигает предела.
+   */
+  lengthLimit?: number;
+
+  /**
+   * Разрешает всплывающее окно автозаполнения при редактировании, опционально.
+   * По умолчанию наследуется от родительского пропса `autocomplete`.
+   */
+  autocomplete?: boolean;
+
+  /**
+   * Позиция столбца, опционально.
+   */
+  pos?: number;
+
+  /**
+   * Преобразует ввод в верхний или нижний регистр при редактировании, опционально.
+   * Возможные значения: `'uppercase'`, `'lowercase'`.
+   */
+  textTransform?: 'uppercase' | 'lowercase';
+
+  /**
+   * Выравнивание текста, опционально.
+   * По умолчанию `'left'`.
+   */
+  textAlign?: 'left' | 'right' | 'center' | 'justify';
+
+  /**
+   * Опции для типа столбца `select` или `map`, опционально.
+   * Для `type = 'select'`: массив объектов с `label` и `value` или функция, возвращающая такой массив.
+   * Для `type = 'map'`: объект (хеш) или функция, возвращающая такой объект.
+   */
+  options?: Array<{ label: string; value: any }> | Record<string, any> | (() => Array<{ label: string; value: any }> | Record<string, any>);
+
+  /**
+   * Сводка для столбца, опционально.
+   * Возможные значения: `'sum'`, `'avg'`, `'max'`, `'min'`.
+   * По умолчанию `null`.
+   */
+  summary?: 'sum' | 'avg' | 'max' | 'min' | null;
+
+  /**
+   * Пользовательская функция для сортировки столбца, опционально.
+   * @param a Первый элемент для сравнения.
+   * @param b Второй элемент для сравнения.
+   * @returns Число, определяющее порядок сортировки.
+   */
+  sort?: (a: any, b: any) => number;
+
+  /**
+   * Функция, вызываемая при альт-клике по тексту ячейки, опционально.
+   * @param value Значение ячейки.
+   */
+  link?: (value: any) => void;
+
+  /**
+   * Функция для определения, является ли ячейка ссылкой, опционально.
+   * @param value Значение ячейки.
+   * @returns `true` если ячейка является ссылкой, иначе `false`.
+   */
+  isLink?: (value: any) => boolean;
+
+  /**
+   * Функция для преобразования значения объекта в текст для редактирования, опционально.
+   * @param value Значение объекта.
+   * @returns Текст для редактирования.
+   */
+  toText?: (value: any) => string;
+
+  /**
+   * Функция для преобразования текста редактирования обратно в значение объекта, опционально.
+   * @param text Текст редактирования.
+   * @returns Значение объекта.
+   */
+  toValue?: (text: string) => any;
+
+  /**
+   * Пользовательский текст-подсказка, если поле пустое, опционально.
+   */
+  placeholder?: string;
+
+  /**
+   * Отключает сортировку столбца, опционально.
+   */
+  noSorting?: boolean;
+}
+
+/**
+ * Интерфейс для компонента vue-excel-table
+ */
+export interface ExcelTableProps {
+  /**
+   * v-model: Обязательный.
+   * Отредактированные данные в виде массива объектов.
+   */
+  modelValue: Array<Record<string, any>>;
+
+  /**
+   * Специфический размер страницы, опционально.
+   * По умолчанию рассчитывается автоматически по высоте экрана.
+   */
+  page?: number;
+
+  /**
+   * Отключить функцию пагинации, опционально.
+   * По умолчанию `false`.
+   */
+  noPaging?: boolean;
+
+  /**
+   * Отключить номерной столбец, опционально.
+   * По умолчанию `false`.
+   */
+  noNumCol?: boolean;
+
+  /**
+   * Показать фиксированный фильтр-ряд, опционально.
+   * По умолчанию `false`.
+   */
+  filterRow?: boolean;
+
+  /**
+   * Отключить футер-ряд, опционально.
+   * По умолчанию `false`.
+   */
+  noFooter?: boolean;
+
+  /**
+   * Отключить функцию поиска ключа (ctrl-f) и диалог поиска, опционально.
+   * По умолчанию `false`.
+   */
+  noFinding?: boolean;
+
+  /**
+   * Отключить функцию поиска следующего совпадения (ctrl-g), опционально.
+   * По умолчанию `false`.
+   */
+  noFindingNext?: boolean;
+
+  /**
+   * Разрешить множественный выбор строк без нажатия клавиши ctrl/meta, опционально.
+   */
+  freeSelect?: boolean;
+
+  /**
+   * Включить автозаполнение для всех столбцов, опционально.
+   * По умолчанию `false`.
+   */
+  autocomplete?: boolean;
+
+  /**
+   * Максимальная длина списка автозаполнения, опционально.
+   * По умолчанию `50`.
+   */
+  autocompleteCount?: number;
+
+  /**
+   * Сделать все столбцы только для чтения, опционально.
+   * По умолчанию `false`.
+   */
+  readonly?: boolean;
+
+  /**
+   * Стиль ячейки только для чтения, опционально.
+   */
+  readonlyStyle?: Record<string, string | number>;
+
+  /**
+   * Определить точную высоту компонента в пикселях, опционально.
+   * По умолчанию `'auto'`.
+   */
+  height?: string;
+
+  /**
+   * Определить максимальную ширину компонента в пикселях, опционально.
+   * По умолчанию `'100%'`.
+   */
+  width?: string;
+
+  /**
+   * Условное форматирование строк, опционально.
+   * @param record Данные записи.
+   * @param rowIndex Индекс строки.
+   * @returns CSS-стили или классы.
+   */
+  rowStyle?: (record: Record<string, any>, rowIndex: number) => Record<string, string | number> | string | void;
+
+  /**
+   * Условное форматирование ячеек, опционально.
+   * @param record Данные записи.
+   * @param field Имя поля.
+   * @returns CSS-стили или классы.
+   */
+  cellStyle?: (record: Record<string, any>, field: string) => Record<string, string | number> | string | void;
+
+  /**
+   * Функция для возврата заголовка столбца, опционально.
+   * @param label Метка поля.
+   * @param field Объект поля.
+   * @returns Строка заголовка.
+   */
+  headerLabel?: (label: string, field: any) => string;
+
+  /**
+   * Функция для возврата метки записи, опционально.
+   * @param recordPosition Позиция/индекс записи.
+   * @param record Объект записи.
+   * @returns Строка метки записи.
+   */
+  recordLabel?: (recordPosition: number, record: Record<string, any>) => string;
+
+  /**
+   * Настройка меток и сообщений для локализации, опционально.
+   */
+  localizedLabel?: Record<string, any>;
+
+  /**
+   * Количество элементов, отображаемых в диалоге фильтрации, опционально.
+   * По умолчанию `200`.
+   */
+  nFilterCount?: number;
+
+  /**
+   * Запоминать настройки в localStorage, опционально.
+   * По умолчанию `false`.
+   */
   remember?: boolean;
-  register?: ((...args: any[]) => any) | null;
+
+  /**
+   * Перемещать ячейку вниз вместо вправо при нажатии Enter, опционально.
+   */
+  enterToSouth?: boolean;
+
+  /**
+   * Разрешить отображение кнопки добавления столбца во время изменения размера столбца, опционально.
+   */
   allowAddCol?: boolean;
+
+  /**
+   * Функция для возврата определения столбца при добавлении, опционально.
+   */
+  addColumn?: () => ExcelColumn;
+
+  /**
+   * Запретить редактирование меток заголовков, опционально.
+   */
   noHeaderEdit?: boolean;
-  addColumn?: ((...args: any[]) => any) | null;
+
+  /**
+   * Включить проверку орфографии при редактировании, опционально.
+   */
   spellcheck?: boolean;
+
+  /**
+   * Добавлять новую запись, если фокусируемая ячейка достигла нижней границы, опционально.
+   */
   newIfBottom?: boolean;
-  validate?: ((...args: any[]) => any) | null;
-  localizedLabel?: LocalizedLabel;
-  recordFilter?: (record: any) => boolean;
+
+  /**
+   * Скрыть панель настроек, опционально.
+   */
+  disablePanelSetting?: boolean;
+
+  /**
+   * Скрыть панель фильтров, опционально.
+   */
+  disablePanelFilter?: boolean;
+
+  /**
+   * Отключить вертикальную прокрутку колесиком мыши, опционально.
+   */
+  noMouseScroll?: boolean;
+
+  /**
+   * Отключить сортировку, опционально.
+   */
+  noSorting?: boolean;
+
+  /**
+   * Отключить массовое обновление выбранных записей, опционально.
+   */
+  noMassUpdate?: boolean;
 }
