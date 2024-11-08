@@ -1,5 +1,11 @@
 import { lazy } from './excelEditor';
-import { moveInputSquare, moveInputSquare } from './inputBox';
+import { moveInputSquare} from './inputBox';
+import { calVScroll} from './verticalScroll';
+import {newRecord} from './update';
+import {inputBoxBlur} from './inputBox';
+import {calAutocompleteList} from './autocomplete';
+import { refresh } from './other';
+import {showDatePickerDiv} from './datePicker';
 
 export function moveTo(context: any, rowPos: number, colPos: number = 0): boolean {
   const done = moveInputSquare(context, rowPos - context.pageTop, colPos);
@@ -80,7 +86,7 @@ export function moveNorth(context: any): boolean {
 
   const done = moveInputSquare(context, context.currentRowPos - 1, context.currentColPos);
 
-  calVScroll(this);
+  calVScroll(context);
 
   if (context.$refs.vScrollButton) {
     setTimeout(() => {
@@ -103,7 +109,7 @@ export function moveSouth(context: any): boolean {
   ) {
     if (context.readonly || !context.newIfBottom) return false;
 
-    newRecord(this, {}, false, true);
+    newRecord(context, {}, false, true);
 
     setTimeout(() => moveSouth(context), 0);
     return true;
@@ -111,7 +117,7 @@ export function moveSouth(context: any): boolean {
 
   const done = moveInputSquare(context, context.currentRowPos + 1, context.currentColPos);
 
-  calVScroll(this);
+  calVScroll(context);
 
   if (context.$refs.vScrollButton) {
     setTimeout(() => {
@@ -187,52 +193,98 @@ export function mouseDown(context: any, e: MouseEvent): void {
     if (context.currentField.grouping) {
       const key = context.currentField.name + context.currentCell.textContent;
       context.ungroup[key] = !context.ungroup[key];
-      this.refresh();
+      refresh(context);
       return;
     }
 
-    // Перемещение на выбранную ячейку и установка фокуса
-    setTimeout(() => this.inputBox.focus(), 0);
-    this.focused = true;
-    moveInputSquare(this, rowPos, colPos);
+    setTimeout(() => context.inputBox.focus(), 0);
+    context.focused = true;
+    moveInputSquare(context, rowPos, colPos);
 
-    // Отображение автозаполнения, если включено
-    if (this.currentField.listByClick) {
-      calAutocompleteList(this, true);
+    if (context.currentField.listByClick) {
+      calAutocompleteList(context, true);
       return;
     }
 
-    // Отображение подсказки, если текст превышает ширину ячейки
     if (target.offsetWidth - e.offsetX > 25 && target.offsetWidth < target.scrollWidth) {
-      this.textTip = this.currentCell.textContent;
-      this.$refs.texttip.style.opacity = '0';
+      context.textTip = context.currentCell.textContent;
+      context.$refs.texttip.style.opacity = '0';
       const rect = target.getBoundingClientRect();
       setTimeout(() => {
-        const tooltipRect = this.$refs.texttip.getBoundingClientRect();
-        this.$refs.texttip.style.top =
+        const tooltipRect = context.$refs.texttip.getBoundingClientRect();
+        context.$refs.texttip.style.top =
           rect.bottom + tooltipRect.height > window.innerHeight
             ? `${rect.top - tooltipRect.height}px`
             : `${rect.bottom}px`;
-        this.$refs.texttip.style.left =
+        context.$refs.texttip.style.left =
           rect.left + tooltipRect.width > window.innerWidth
             ? `${rect.right - tooltipRect.width}px`
             : `${rect.left}px`;
-        this.$refs.texttip.style.opacity = '1';
+        context.$refs.texttip.style.opacity = '1';
       });
     }
 
-    // Если поле только для чтения, завершить обработку
-    if (this.currentField.readonly) return;
+    if (context.currentField.readonly) return;
 
-    // Установка значения `inputBox` и отображение автозаполнения или календаря
-    this.inputBox.value = this.currentCell.textContent;
+    context.inputBox.value = context.currentCell.textContent;
     if (target.classList.contains('select')) {
-      calAutocompleteList(this, true);
+      calAutocompleteList(context, true);
     }
     if (target.classList.contains('datepick')) {
-      this.showDatePickerDiv();
+      showDatePickerDiv(context);
     }
   }
+}
+
+// Функция отображает тултип (всплывающую подсказку) с сообщением об ошибке
+export function cellMouseOver(context: any, event: MouseEvent): void {
+  const cell = event.target as HTMLElement;
+
+  if (!cell.classList.contains('error')) return;
+
+  if (context.tipTimeout) {
+    clearTimeout(context.tipTimeout);
+  }
+
+  context.tip = context.errmsg[cell.getAttribute('id') || ''];
+
+  if (context.tip === '') return;
+
+  const rect = cell.getBoundingClientRect();
+  context.$refs.tooltip.style.top = `${rect.top - 14}px`;
+  context.$refs.tooltip.style.left = `${rect.right + 8}px`;
+
+  cell.addEventListener('mouseout', context.cellMouseOut);
+}
+
+export function numcolMouseOver(context: any, event: MouseEvent): void {
+  const cell = event.target as HTMLElement;
+
+  if (!cell.classList.contains('error')) return;
+
+  if (context.tipTimeout) {
+    clearTimeout(context.tipTimeout);
+  }
+
+  context.tip = context.rowerr[cell.getAttribute('id') || ''];
+
+  if (context.tip === '') return;
+
+  const rect = cell.getBoundingClientRect();
+  context.$refs.tooltip.style.top = `${rect.top - 14}px`;
+  context.$refs.tooltip.style.left = `${rect.right + 8}px`;
+
+  cell.addEventListener('mouseout', context.cellMouseOut);
+}
+
+export function mouseOver(context: any): void {
+  context.mousein = true;
+  context.systable.classList.add('mouseover');
+}
+
+export function mouseOut(context: any): void {
+  context.mousein = false;
+  context.systable.classList.remove('mouseover');
 }
 
 

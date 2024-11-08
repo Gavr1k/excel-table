@@ -63,8 +63,8 @@ export function vsbMouseDown(context: any, e: MouseEvent): void {
 }
 
 export function vsbMouseUp(context: any): void {
-  window.removeEventListener('mousemove', context.vsbMouseMove);
-  window.removeEventListener('mouseup', context.vsbMouseUp);
+  window.removeEventListener('mousemove', (event) => vsbMouseMove(context, event));
+  window.removeEventListener('mouseup', () => vsbMouseUp(context));
 
   lazy(context, () => {
     context.$refs.vScrollButton?.classList.remove('focus');

@@ -205,7 +205,7 @@ export default {
       this._autocomplete = self.autocomplete || self.type === 'action'
       this._readonly = self.readonly
 
-      this.$parent.registerColumn({
+      this.$parent.registerColumnWrapper({
         name: this.field,
         label: this.label === null ? this.field : this.label,
         type: this.type,

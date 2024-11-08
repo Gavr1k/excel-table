@@ -1,4 +1,5 @@
 import {colSepMouseMove, getSetting} from './excelEditor';
+import { insertColumn } from './other';
 
 export function colSepMouseDown(context: any, e: MouseEvent): void {
   e.preventDefault();
@@ -9,7 +10,7 @@ export function colSepMouseDown(context: any, e: MouseEvent): void {
     const parentElement = e.target.parentElement?.parentElement;
     if (parentElement) {
       const pos = Array.from(parentElement.parentElement!.children).findIndex(td => td === parentElement);
-      context.insertColumn(pos);
+      insertColumn(context, pos);
     }
   }
 

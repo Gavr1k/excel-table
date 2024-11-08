@@ -1,7 +1,3 @@
-/* TODO
-не хватает функции  numColWidth
-*/
-
 import { getCurrentInstance } from 'vue';
 import { lazy } from './excelEditor';
 

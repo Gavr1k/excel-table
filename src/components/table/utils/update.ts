@@ -1,11 +1,10 @@
 import {updateCell, tempKey, lazy} from './excelEditor';
 
-/* TODO
-lastPage();
-moveToSouthWest();
-moveNorth
-refresh
-*/
+import { lastPage } from './paging';
+
+import { moveToSouthWest } from './cursor';
+
+import { refresh } from './other';
 
 function deleteRecord(context: any, valueRowPos: number, isUndo: boolean): void {
   if (context.currentRowPos === valueRowPos) context.moveNorth();
@@ -25,7 +24,7 @@ function deleteRecord(context: any, valueRowPos: number, isUndo: boolean): void 
         );
       }
 
-      context.refresh();
+      refresh(context);
     });
   }, 100);
 }
@@ -85,8 +84,8 @@ export function newRecord(
 
   if (!noLastPage) {
     lazy(context, () => {
-      context.lastPage();
-      context.moveToSouthWest();
+      lastPage(context);
+      moveToSouthWest(context);
     });
   }
 

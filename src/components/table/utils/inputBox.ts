@@ -1,7 +1,6 @@
-/* TODO
-inputCellWrite
-showDatePickerDiv
-*/
+import { showDatePickerDiv } from './datePicker';
+
+
 import {calAutocompleteList} from './autocomplete';
 import {updateSelectedRows} from './update';
 import {updateCell} from './excelEditor';
@@ -42,7 +41,7 @@ export function moveInputSquare(context: any, rowPos: number, colPos: number): b
   if (context.inputBoxChanged) {
     const value = context.inputBox._value || context.inputBox.value;
     context.inputBox._value = '';
-    context.inputCellWrite(value, context.currentColPos, top + context.currentRowPos);
+    inputCellWrite(context, value, context.currentColPos, top + context.currentRowPos);
     context.inputBoxChanged = false;
   }
 
@@ -135,7 +134,7 @@ export function inputBoxMouseDown(context: any, e: MouseEvent): void {
 
   if (context.currentField.type === 'date') {
     e.preventDefault();
-    context.showDatePickerDiv();
+    showDatePickerDiv(context);
   }
 }
 
@@ -179,7 +178,7 @@ export function inputBoxComplete(context: any): void {
     const value = context.inputBox._value || context.inputBox.value;
     context.inputBox._value = '';
 
-    context.inputCellWrite(value);
+    inputCellWrite(context, value);
     context.inputBoxChanged = false;
   }
 

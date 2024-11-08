@@ -1,5 +1,14 @@
 import { getCurrentInstance } from 'vue';
 
+import {
+  winScroll,
+  mousewheel,
+  winResize,
+  winPaste,
+  winKeyup,
+  winKeydown,
+} from './windowEvent';
+
 // отложенная обработка с буферизацией
 function lazyBuf<T>(context: any, item: T, processFunction: (items: T[]) => void, delay: number = 20) {
   const hash = hashCode(`${processFunction.name}${processFunction.toString()}`);
@@ -205,37 +214,37 @@ export function tempKey(): string {
 }
 
 // добавляет обработчики событий на глобальный объект
+type EventListenerWithContext = (context: any, event: Event) => void;
+
 export function addEventListener(context: any): void {
-  const eventListeners: [string, EventListenerOrEventListenerObject, AddEventListenerOptions?][] = [
-    ['resize', context.winResize],
-    ['paste', context.winPaste],
-    ['keydown', context.winKeydown],
-    ['keyup', context.winKeyup],
-    ['scroll', context.winScroll],
-    ['wheel', context.mousewheel, { passive: false }]
+  const eventListeners: [string, EventListenerWithContext, AddEventListenerOptions?][] = [
+    ['resize', () => winResize(context)],           // Передаем context и event
+    ['paste', (event) => winPaste(context, event)],             // Передаем context и event
+    ['keydown', (event) => winKeydown(context, event)],         // Передаем context и event
+    ['keyup', (event) => winKeyup(context, event)],             // Передаем context и event
+    ['scroll', () => winScroll(context)],           // Передаем context и event
+    ['wheel', (event) => mousewheel(context, event), { passive: false }]  // Передаем context и event
   ];
 
-  eventListeners.forEach(([event, handleError, options]) => {
-    window.addEventListener(event, handleError, options || false);
+  eventListeners.forEach(([event, handler, options]) => {
+    window.addEventListener(event, handler as EventListener, options || false);
   });
 }
 
-// удаляем обработчики событий на глобальный объект
 export function removeEventListener(context: any): void {
-  const eventListeners: [string, EventListenerOrEventListenerObject][] = [
-    ['resize', context.winResize],
-    ['paste', context.winPaste],
-    ['keydown', context.winKeydown],
-    ['keyup', context.winKeyup],
-    ['scroll', context.winScroll],
-    ['wheel', context.mousewheel],
+  const eventListeners: [string, EventListenerWithContext][] = [
+    ['resize', (event) => winResize(context)],
+    ['paste', (event) => winPaste(context, event)],
+    ['keydown', (event) => winKeydown(context, event)],
+    ['keyup', (event) => winKeyup(context, event)],
+    ['scroll', (event) => winScroll(context)],
+    ['wheel', (event) => mousewheel(context, event)],
   ];
 
   eventListeners.forEach(([event, handler]) => {
-    window.removeEventListener(event, handler);
-  })
-};
-
+    window.removeEventListener(event, handler as EventListener);
+  });
+}
 
 // группировка по условию
 export function filterGrouping(context: any, record: any, index: number, table: any[]): boolean {
@@ -442,47 +451,6 @@ export function cellMouseMove(context: any, event: MouseEvent): void {
   event.target.style.cursor = cursor;
 }
 
-// Функция отображает тултип (всплывающую подсказку) с сообщением об ошибке
-export function cellMouseOver(context: any, event: MouseEvent): void {
-  const cell = event.target as HTMLElement;
-
-  if (!cell.classList.contains('error')) return;
-
-  if (context.tipTimeout) {
-    clearTimeout(context.tipTimeout);
-  }
-
-  context.tip = context.errmsg[cell.getAttribute('id') || ''];
-
-  if (context.tip === '') return;
-
-  const rect = cell.getBoundingClientRect();
-  context.$refs.tooltip.style.top = `${rect.top - 14}px`;
-  context.$refs.tooltip.style.left = `${rect.right + 8}px`;
-
-  cell.addEventListener('mouseout', context.cellMouseOut);
-}
-
-export function numcolMouseOver(context: any, event: MouseEvent): void {
-  const cell = event.target as HTMLElement;
-
-  if (!cell.classList.contains('error')) return;
-
-  if (context.tipTimeout) {
-    clearTimeout(context.tipTimeout);
-  }
-
-  context.tip = context.rowerr[cell.getAttribute('id') || ''];
-
-  if (context.tip === '') return;
-
-  const rect = cell.getBoundingClientRect();
-  context.$refs.tooltip.style.top = `${rect.top - 14}px`;
-  context.$refs.tooltip.style.left = `${rect.right + 8}px`;
-
-  cell.addEventListener('mouseout', context.cellMouseOut);
-}
-
 
 export function cellMouseOut(context: any, event: MouseEvent): void {
   context.tipTimeout = setTimeout(() => {
@@ -492,16 +460,6 @@ export function cellMouseOut(context: any, event: MouseEvent): void {
   event.target.removeEventListener(event.type, context.cellMouseOut);
 }
 
-
-export function mouseOver(context: any): void {
-  context.mousein = true;
-  context.systable.classList.add('mouseover');
-}
-
-export function mouseOut(context: any): void {
-  context.mousein = false;
-  context.systable.classList.remove('mouseover');
-}
 
 export function calStickyLeft(context: any): void {
   let left = 0, n = 0;
@@ -536,7 +494,7 @@ export function colSepMouseMove(context: any, event: MouseEvent): void {
 
   context.sep.curField.width = newWidth;
 
-  lazy(context, calStickyLeft.bind(context), 200);
+  lazy(context, () => calStickyLeft(context), 200);
 }
 
 // export function colSepMouseUp(context: any, event: MouseEvent): void {

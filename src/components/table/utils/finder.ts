@@ -1,3 +1,5 @@
+import { moveInputSquare } from './inputBox';
+
 export function findPageTop(context: any, rowPos: number): number {
   for (let pt = context.pageTop; pt < context.table.length; pt += context.pageSize) {
     if (rowPos >= pt && rowPos < pt + context.pageSize) {
@@ -13,10 +15,6 @@ export function findPageTop(context: any, rowPos: number): number {
 
   return context.pageTop;
 }
-
-/* TODO
-moveInputSquare
-*/
 
 export function doFind(context: any, searchString?: string): boolean {
   searchString = (searchString ?? context.inputFind).toUpperCase();
@@ -34,7 +32,7 @@ export function doFind(context: any, searchString?: string): boolean {
         context.pageTop = findPageTop(context, r);
         
         setTimeout(() => {
-          context.moveInputSquare(r - context.pageTop, c);
+          moveInputSquare(context, r - context.pageTop, c);
           setTimeout(() => context.inputBox.focus(), 0);
           context.focused = true;
         }, 0);
@@ -52,7 +50,7 @@ export function doFind(context: any, searchString?: string): boolean {
 
       if (record[fieldName] !== undefined && String(record[fieldName]).toUpperCase().includes(searchString)) {
         context.pageTop = findPageTop(context, r);
-        context.moveInputSquare(r - context.pageTop, c);
+        moveInputSquare(context, r - context.pageTop, c);
 
         setTimeout(() => {
           context.focused = true;

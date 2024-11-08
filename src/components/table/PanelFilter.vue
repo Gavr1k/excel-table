@@ -85,7 +85,7 @@
 <script>
 export default {
   props: {
-    nFilterCount: {type: Number, default: 1000},     // show top n values in filter dialog
+    nFilterCount: {type: Number, default: 1000},
     localizedLabel: {
       type: Object,
       default () {
@@ -106,11 +106,18 @@ export default {
           apply: 'Apply'
         }
       }
+    },
+    show: {
+      type: Boolean,
+      default() {return false},
+    },
+    refId: {
+      type: Object,
+      default() {return null},
     }
   },
   data () {
     return {
-      show: false,
       showDropdown: false,
       processing: false,
       columnFilterRef: null,
@@ -174,7 +181,6 @@ export default {
       this.hidePanel()
     },
     filterPanelSelect (opt) {
-      // this.columnFilter[this.columnFilterRef.colPos] = el  // Cannot use this, dunno why
       this.columnFilterRef.$el.textContent = '=' + opt
       this.columnFilterRef.$emit('update:modelValue', '=' + opt)
       this.hidePanel()
@@ -191,7 +197,6 @@ export default {
         this.$parent.calTable()
       }
       setTimeout(() => {
-        this.show = true
         setTimeout(() => (this.$refs.inputFilter.focus()))
 
         const hash = {}
@@ -205,11 +210,18 @@ export default {
       })
     },
     hidePanel () {
-      this.show = false
+      this.$emit('close');
       this.removePanelSizeAfterHide()
       setTimeout(() => {
         this.sortedUniqueValueList = []
       }, 0)
+    }
+  },
+  watch: {
+    show(value) {
+      if (value) {
+        this.showPanel(this.refId);
+      }
     }
   }
 }

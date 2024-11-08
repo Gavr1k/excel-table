@@ -1,8 +1,5 @@
 import {lazy} from './excelEditor';
-
-/*
-inputCellWrite
-*/
+import { inputCellWrite } from './inputBox';
 
 export async function calAutocompleteList(context: any, force: boolean): Promise<number | void> {
   if (!context.currentField.autocomplete) return;
@@ -92,7 +89,7 @@ export function inputAutocompleteText(context: any, text: string, e?: Event): vo
   context.inputBoxChanged = false;
 
   setTimeout(() => {
-    context.inputCellWrite(text);
+    inputCellWrite(context, text);
   }, 0);
 }
 

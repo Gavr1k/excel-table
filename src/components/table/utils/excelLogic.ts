@@ -1,5 +1,20 @@
 import { read, writeFile, utils } from 'xlsx';
 import { updateCell } from './excelEditor';
+import { newRecord } from './update';
+
+/*
+что-то придумать с importCallback + importErrorCallback
+*/
+
+
+export function importTable(context: any, cb: () => void, errCb: () => void): void {
+  const importFileRef = context.$refs.importFile as HTMLElement;
+  
+  importFileRef.click();
+  context.importCallback = cb;
+  context.importErrorCallback = errCb;
+}
+
 
 // Функция экспорта таблицы
 export async function exportTable(
@@ -183,7 +198,7 @@ export async function doImport(context: any, e: Event): Promise<void> {
                 });
                 context.selected[rowPos] = context.table[rowPos].$id;
               } else {
-                context.newRecord(rec, true);
+                newRecord(context, rec, true);
                 inserted++;
               }
             }
