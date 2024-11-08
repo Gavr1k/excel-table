@@ -72,9 +72,12 @@
                   </svg>
                 </span>
               </td>
-              <vue-excel-filter v-for="(item, p) in fields" v-show="!item.invisible" :ref="`filter-${item.name}`"
+              <vue-excel-filter 
+              v-for="(item, p) in fields" v-show="!item.invisible" :ref="`filter-${item.name}`"
                 :colspan="p === fields.length - 1 ? 2 : 1" :key="`th2-${p}`" v-model="columnFilter[p]"
-                :class="{ 'sticky-column': item.sticky }" :style="{ left: item.left }" class="column-filter" />
+                :class="{ 'sticky-column': item.sticky }" :style="{ left: item.left }" class="column-filter" 
+                @showFilter="showPanelFilter = true"
+              />
             </tr>
           </thead>
           <tbody @mousedown="mouseDownWrapper">
@@ -301,9 +304,9 @@
 
 <script lang="ts">
 import { getCurrentInstance, defineComponent } from 'vue'
-import VueExcelFilter from './VueExcelFilter.vue'
-import PanelFilter from './PanelFilter.vue'
-import PanelSetting from './PanelSetting.vue'
+import VueExcelFilter from './components/VueExcelFilter.vue'
+import PanelFilter from './components/filter/PanelFilter.vue'
+import PanelSetting from './components/settings/PanelSetting.vue'
 import PanelFind from './components/find/PanelFind.vue'
 import DatePicker from '@vuepic/vue-datepicker'
 import { exportTable, doImport, importTable } from './utils/excelLogic';
