@@ -273,8 +273,12 @@
         :refId="currentFilterRef"
         :show="showPanelFilter" 
         @close="showPanelFilter = false"
+        @sort="sortWrapper"
+        @calTable="calTableWrapper"
         :n-filter-count="nFilterCount" 
         :localized-label="localizedLabel" 
+        :fields="fields"
+        :table="table"
       />
       <panel-setting 
         :show="showPanelSetting" 
@@ -300,7 +304,7 @@ import { getCurrentInstance, defineComponent } from 'vue'
 import VueExcelFilter from './VueExcelFilter.vue'
 import PanelFilter from './PanelFilter.vue'
 import PanelSetting from './PanelSetting.vue'
-import PanelFind from './PanelFind.vue'
+import PanelFind from './components/find/PanelFind.vue'
 import DatePicker from '@vuepic/vue-datepicker'
 import { exportTable, doImport, importTable } from './utils/excelLogic';
 import {calVScroll, vsMouseDown, vsbMouseDown, vsbMouseUp, vsbMouseMove} from './utils/verticalScroll';

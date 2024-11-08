@@ -12,11 +12,13 @@ import {
 // отложенная обработка с буферизацией
 function lazyBuf<T>(context: any, item: T, processFunction: (items: T[]) => void, delay: number = 20) {
   const hash = hashCode(`${processFunction.name}${processFunction.toString()}`);
+  console.log('hash', hash);
 
   if (context.lazyBuffer[hash]) {
     context.lazyBuffer[hash] = [];
   }
 
+  console.log(context, context.lazyBuffer);
   context.lazyBuffer[hash].push(item);
 
   if (context.lazyTimeout[hash]) {
