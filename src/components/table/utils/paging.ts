@@ -1,9 +1,34 @@
-import { calVScroll} from './verticalScroll';
+import { calVScroll } from './verticalScroll';
 import { lazy } from './excelEditor';
-import {columnFillWidth} from './customization';
+import { columnFillWidth } from './customization';
 
+// full correct +
+
+/**
+ * - context.$refs.hScroll: Reference to the horizontal scroll element.
+ * - context.systable: Main system table element.
+ * - context.tableContent: Element that contains table content.
+ * - context.hScroller: Object managing horizontal scroll properties.
+ * - context.footer: Footer element.
+ * - context.numColWidth: Width of the number column.
+ * - context.editor: Editor element.
+ * - context.height: Height setting for the table, can be 'auto' or specific value.
+ * - context.summaryRow: Boolean indicating if there’s a summary row.
+ * - context.noFooter: Boolean indicating if there’s no footer.
+ * - context.pageSize: Number of rows visible on a single page.
+ * - context.recordBody: Body element for records within the table.
+ * - context.noPaging: Boolean indicating if paging is disabled.
+ * - context.filterRow: Boolean indicating if there’s a filter row.
+ * - context.footerRow: Boolean indicating if there’s a footer row.
+ * - context.page: Current page number.
+ * - context.table: Array containing table rows.
+ * - context.pageTop: Starting row index of the current page.
+ * - context.$refs.vScrollButton: Reference to the vertical scroll button.
+ */
 
 export function refreshPageSize(context: any): void {
+  console.log("refreshPageSize - start");
+
   if (context.$refs.hScroll) {
     const fullWidth = context.systable.getBoundingClientRect().width;
     const viewWidth = context.tableContent.getBoundingClientRect().width;
@@ -65,9 +90,13 @@ export function refreshPageSize(context: any): void {
 
   columnFillWidth(context);
   setTimeout(() => calVScroll(context));
+
+  console.log("refreshPageSize - end");
 }
 
 export function firstPage(context: any, e?: Event): void {
+  console.log("firstPage - start");
+  
   if (e) e.stopPropagation();
 
   context.pageTop = 0;
@@ -81,9 +110,13 @@ export function firstPage(context: any, e?: Event): void {
       }, 1000);
     });
   }
+
+  console.log("firstPage - end");
 }
 
 export function lastPage(context: any, e?: Event): void {
+  console.log("lastPage - start");
+
   if (e) e.stopPropagation();
 
   context.pageTop = Math.max(0, context.table.length - context.pageSize);
@@ -97,9 +130,13 @@ export function lastPage(context: any, e?: Event): void {
       }, 1000);
     });
   }
+
+  console.log("lastPage - end");
 }
 
 export function prevPage(context: any, e?: Event): void {
+  console.log("prevPage - start");
+
   if (e) e.stopPropagation();
 
   context.pageTop = Math.max(0, context.pageTop - context.pageSize);
@@ -113,9 +150,13 @@ export function prevPage(context: any, e?: Event): void {
       }, 1000);
     });
   }
+
+  console.log("prevPage - end");
 }
 
 export function nextPage(context: any, e?: Event): void {
+  console.log("nextPage - start");
+
   if (e) e.stopPropagation();
 
   if (context.pageTop + context.pageSize < context.table.length) {
@@ -132,5 +173,6 @@ export function nextPage(context: any, e?: Event): void {
       }, 1000);
     });
   }
-}
 
+  console.log("nextPage - end");
+}

@@ -248,7 +248,7 @@
             </a>
           </template>
         </span>
-        <span class="footer-right">
+        <!-- <span class="footer-right">
           <a :class="{ disabled: !showSelectedOnly && selectedCount <= 1 }" @mousedown="toggleSelectViewWrapper">
             <span v-html="localizedLabel.footerRight.selected" />
             <span :style="{ color: selectedCount > 0 ? 'red' : 'inherit' }">{{ selectedCount }}</span>
@@ -264,7 +264,7 @@
             <span v-html="localizedLabel.footerRight.loaded" />
             <span>{{ filteredValue.length }}</span>
           </a>
-        </span>
+        </span> -->
       </div>
 
       <input type="file" ref="importFile" accept=".xlsx, .xls, xlsm, .csv"

@@ -2,19 +2,12 @@
   <div>
       <vue-excel-editor 
         v-model="jsondata"
-        :page="1"
+        :page="3"
         :noPaging="true"
-        :noNumCol="false" 
-        :filterRow="true"
+        :noNumCol="false"
         :noFooter="true"
-        :noFinding="false"
-        :noFindingNext="false"
-        :freeSelect="true"
-        :autocomplete="true"
-        :allowAddCol="true"
-        :noHeaderEdit="true"
       >
-          <vue-excel-column field="user"   label="User ID"       type="string" width="100px" />
+          <vue-excel-column field="user"   label="User ID"       type="string" width="400px" />
           <vue-excel-column field="name"   label="Name"          type="string" width="200px" />
           <vue-excel-column field="phone"  label="Contact"       type="string" width="130px" />
           <vue-excel-column field="gender" label="Gender"        type="select" width="50px" :options="['F','M','U']" />
@@ -23,6 +16,15 @@
       </vue-excel-editor> 
   </div>
 </template>
+
+<!--
+:filterRow="true"
+:noFinding="false"
+:noFindingNext="false"
+:freeSelect="true"
+:autocomplete="true"
+:allowAddCol="true"
+:noHeaderEdit="true" -->
 
 <script setup lang="ts">
 import VueExcelEditor from './components/table/VueExcelEditor.vue';
