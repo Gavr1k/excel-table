@@ -66,7 +66,7 @@
         </div>
         <div>
           <div ref="panelList" class="panel-list">
-            <draggable v-model="fields" draggable=".panel-list-item" item-key="fields">
+            <draggable v-model="fields" draggable=".panel-list-item" :item-key="getKey">
               <template #item="{ element }">
                 <div class="panel-list-item" @click.prevent="columnLabelClick($event, element)">
                   <input
@@ -75,6 +75,7 @@
                     class="panel-checkbox"
                     :true-value="false"
                     :false-value="true"
+                    @click.stop
                   />
                   <span>{{ element.label }}</span>
                 </div>
@@ -127,7 +128,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, defineProps, defineEmits } from 'vue';
+import { ref, watch, defineProps, defineEmits, computed } from 'vue';
 import draggable from 'vuedraggable/src/vuedraggable';
 
 const props = defineProps({
@@ -156,7 +157,14 @@ const panelList = ref<HTMLDivElement | null>(null);
 const buttonRef = ref<HTMLButtonElement | null>(null);
 
 // reactive fields for binding
-const fields = ref([...props.modelValue]);
+const fields = computed({
+  get() {
+    return props.modelValue;
+  },
+  set(newValue) {
+    emit('update:modelValue', newValue);
+  }
+});
 
 watch(
   () => props.show,
@@ -219,10 +227,11 @@ const hidePanel = () => {
   emit('close');
   removePanelSizeAfterHide();
 };
+
+const getKey = (element: any, index: number) => index;
 </script>
 
 <style scoped>
-/* Оставляем CSS без изменений */
 input:focus, button:focus {
   outline: none !important;
   box-shadow: inset 0 -1px 0 #ddd !important;

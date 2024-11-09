@@ -27,7 +27,6 @@ import { columnFillWidth } from './customization';
  */
 
 export function refreshPageSize(context: any): void {
-  console.log("refreshPageSize - start");
 
   if (context.$refs.hScroll) {
     const fullWidth = context.systable.getBoundingClientRect().width;
@@ -91,11 +90,9 @@ export function refreshPageSize(context: any): void {
   columnFillWidth(context);
   setTimeout(() => calVScroll(context));
 
-  console.log("refreshPageSize - end");
 }
 
 export function firstPage(context: any, e?: Event): void {
-  console.log("firstPage - start");
   
   if (e) e.stopPropagation();
 
@@ -111,11 +108,9 @@ export function firstPage(context: any, e?: Event): void {
     });
   }
 
-  console.log("firstPage - end");
 }
 
 export function lastPage(context: any, e?: Event): void {
-  console.log("lastPage - start");
 
   if (e) e.stopPropagation();
 
@@ -131,11 +126,9 @@ export function lastPage(context: any, e?: Event): void {
     });
   }
 
-  console.log("lastPage - end");
 }
 
 export function prevPage(context: any, e?: Event): void {
-  console.log("prevPage - start");
 
   if (e) e.stopPropagation();
 
@@ -151,11 +144,9 @@ export function prevPage(context: any, e?: Event): void {
     });
   }
 
-  console.log("prevPage - end");
 }
 
 export function nextPage(context: any, e?: Event): void {
-  console.log("nextPage - start");
 
   if (e) e.stopPropagation();
 
@@ -174,5 +165,4 @@ export function nextPage(context: any, e?: Event): void {
     });
   }
 
-  console.log("nextPage - end");
 }

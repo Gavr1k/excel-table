@@ -175,7 +175,6 @@ import {
   withDefaults,
 } from 'vue';
 
-// Определение интерфейсов
 interface Field {
   name: string;
 }
@@ -210,7 +209,6 @@ interface Props {
   table?: RecordData[];
 }
 
-// Определение пропсов с дефолтными значениями
 const props = withDefaults(
   defineProps<Props>(),
   {
@@ -238,31 +236,28 @@ const props = withDefaults(
   }
 );
 
-// Определение эмитов
 const emit = defineEmits<{
   (e: 'sort', direction: number, columnPos: any): void;
   (e: 'close'): void;
   (e: 'calTable'): void;
 }>();
 
-// Реактивное состояние
 const showDropdown = ref(false);
 const columnFilterRef = ref<any>(null);
 const inputFilter = ref('');
 const inputFilterCondition = ref('');
 const sortedUniqueValueList = ref<string[]>([]);
 
-// Шаблонные ссылки (Refs)
+
 const inputFilterRef = ref<HTMLInputElement | null>(null);
 const panelListRef = ref<HTMLElement | null>(null);
 const panelFilterRef = ref<HTMLElement | null>(null);
 
-// Таймаут для дебаунса
 let debounceTimeout: number | undefined;
 
-// Вычисляемые свойства
 const filteredSortedUniqueValueList = computed(() => {
   const filter = inputFilter.value.trim().toUpperCase();
+  console.log('f', !filter);
   if (!filter) return sortedUniqueValueList.value;
   return sortedUniqueValueList.value.filter((item) =>
     item.toUpperCase().startsWith(filter)
@@ -284,13 +279,13 @@ const symbol = computed(() => {
   }
 });
 
-// Методы
 const clickOutside = (e: MouseEvent) => {
   if ((e.target as HTMLElement).id === 'panelModal') hidePanel();
 };
 
 const sort = (direction: number) => {
   hidePanel();
+  console.log(columnFilterRef.value);
   emit('sort', direction, columnFilterRef.value?.colPos);
 };
 
@@ -382,20 +377,17 @@ const showPanel = async (refObj: any) => {
   }
   sortedUniqueValueList.value = keys;
 
-  // Зафиксировать размер панели после рендеринга списка
   setTimeout(() => freezePanelSizeAfterShown(), 0);
 };
 
 const hidePanel = () => {
   emit('close');
   removePanelSizeAfterHide();
-  // Очистить отсортированный список после скрытия
   setTimeout(() => {
     sortedUniqueValueList.value = [];
   }, 0);
 };
 
-// Наблюдатели (Watchers)
 watch(
   () => props.show,
   (value) => {
@@ -405,7 +397,6 @@ watch(
   }
 );
 
-// Очистка при размонтировании компонента
 onBeforeUnmount(() => {
   if (debounceTimeout) {
     clearTimeout(debounceTimeout);
