@@ -125,7 +125,7 @@
                   @mouseover="cellMouseOver"
                   @mousemove="cellMouseMove">
                   <template v-if="item.format=='html'"><span v-html="item.toText(record[item.name], record, item, p)" /></template>
-                  <template v-else>{{ item.toText(record[item.name], record, item, p) }}</template>
+                  <template v-else>{{ item.toText(record[item.name].value, record, item, p) }}</template>
                 </td>
               <td v-if="vScroller.buttonHeight < vScroller.height" class="last-col"></td>
             </tr>
