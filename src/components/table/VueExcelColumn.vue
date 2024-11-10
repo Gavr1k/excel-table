@@ -6,7 +6,56 @@
 import { defineProps, defineEmits, onMounted, getCurrentInstance, ref, watch } from 'vue';
 import { ExcelColumn } from './const/types';
 
-const props = defineProps<ExcelColumn>();
+type FieldData = {
+  value: any;
+  anomaly: boolean;
+  isSelected: boolean;
+};
+
+type ToValueFunction = (text: string) => FieldData;
+type ToTextFunction = (fieldData: FieldData) => string;
+
+interface ExcelColumnProps {
+  field: string;
+  label?: string | null;
+  type: string;
+  width?: number;
+  autoFillWidth?: boolean;
+  validate?: Function;
+  change?: Function;
+  link?: Function;
+  isLink?: Function;
+  sort?: boolean;
+  sorting?: Function;
+  noSorting?: boolean;
+  keyField?: boolean;
+  sticky?: boolean;
+  allowKeys?: string[];
+  mandatory?: string;
+  lengthLimit?: number;
+  textTransform?: 'uppercase' | 'lowercase';
+  autocomplete?: boolean;
+  initStyle?: Record<string, string | number> | Function;
+  invisible?: boolean;
+  readonly?: boolean;
+  pos?: number;
+  options?: Record<string, any> | Function;
+  summary?: boolean;
+  masking?: string;
+  format?: string;
+  toValue?: ToValueFunction;
+  toText?: ToTextFunction;
+  register?: Function;
+  placeholder?: string;
+  cellClick?: Function;
+  listByClick?: boolean;
+  color?: string;
+  bgcolor?: string;
+  hideDuplicate?: boolean;
+  grouping?: boolean;
+}
+
+const props = defineProps<ExcelColumnProps>();
 
 const instance = getCurrentInstance();
 const parent = instance?.proxy;
@@ -20,7 +69,7 @@ const _color = ref<string>('white');
 const _bgcolor = ref<string>('blue');
 const _listByClick = ref<boolean>(false);
 
-const defaultToValue = (text: string): any => {
+const defaultToValue: ToValueFunction = (text: string) => {
   let transformedText = text;
   if (props.textTransform === 'uppercase') {
     transformedText = text.toUpperCase();
@@ -28,29 +77,42 @@ const defaultToValue = (text: string): any => {
     transformedText = text.toLowerCase();
   }
 
+  let value: any;
   switch (props.type) {
     case 'datetick':
     case 'datetimetick':
     case 'datetimesectick':
-      return new Date(transformedText + ' GMT+0').getTime();
+      value = new Date(transformedText + ' GMT+0').getTime();
+      break;
     case 'check10':
     case 'checkYN':
     case 'checkTF':
-      return transformedText.toUpperCase();
+      value = transformedText.toUpperCase();
+      break;
     case 'map':
       if (typeof props.options === 'function') {
         const list = props.options(transformedText);
-        return Object.keys(list).find(k => list[k] === transformedText);
+        value = Object.keys(list).find(k => list[k] === transformedText);
       } else if (typeof props.options === 'object' && props.options !== null) {
-        return Object.keys(props.options).find(k => (props.options as Record<string, any>)[k] === transformedText);
+        value = Object.keys(props.options).find(k => (props.options as Record<string, any>)[k] === transformedText);
+      } else {
+        value = transformedText;
       }
-      return transformedText;
+      break;
     default:
-      return transformedText;
+      value = transformedText;
+      break;
   }
+
+  return {
+    value: value,
+    anomaly: false,
+    isSelected: false
+  };
 };
 
-const defaultToText = (val: any): string => {
+const defaultToText: ToTextFunction = (fieldData: FieldData): string => {
+  const val = fieldData.value;
   if (props.keyField && val && val.toString().startsWith('§')) return '';
   const offset = new Date().getTimezoneOffset() * 60 * 1000;
   let d: number | undefined;
@@ -81,7 +143,7 @@ const defaultToText = (val: any): string => {
       }
       return val;
     case 'password':
-      return props.masking.repeat(val?.length || 0);
+      return props.masking.repeat(fieldData.value?.toString().length || 0);
     case 'action':
       return '';
     case 'badge':
@@ -97,8 +159,8 @@ const defaultToText = (val: any): string => {
 };
 
 // Назначение функций toValue и toText, если они не предоставлены
-const toValue = props.toValue ?? defaultToValue;
-const toText = props.toText ?? defaultToText;
+const toValue: ToValueFunction = props.toValue ?? defaultToValue;
+const toText: ToTextFunction = props.toText ?? defaultToText;
 
 // Функция инициализации
 const init = () => {
@@ -227,9 +289,10 @@ const init = () => {
       summary: props.summary,
       masking: props.masking,
       format: _format.value ?? props.format,
-      toValue: toValue,
+      toValue: toValue, // Теперь toValue возвращает объект
       toText: (...args: any[]) => {
-        const result = toText(...args);
+        const fieldData: FieldData = args[0];
+        const result = toText(fieldData);
         if (props.placeholder && result === '') return props.placeholder;
         return result;
       },
@@ -248,7 +311,6 @@ const init = () => {
 onMounted(() => {
   init();
 });
-
 </script>
 
 <style scoped></style>

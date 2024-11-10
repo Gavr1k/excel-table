@@ -1,150 +1,123 @@
 <template>
-  <div ref="editor" class="vue-excel-editor" :style="{display: 'inline-block', width}">
+  <div ref="editor" class="vue-excel-editor" :style="{ display: 'inline-block', width }">
     <div class="component-content">
       <!-- No record -->
-      <div v-if="localizedLabel.noRecordIndicator && pagingTable.length == 0" class="norecord" :style="{bottom: noFooter? '12px' : '37px'}">
+      <div v-if="localizedLabel.noRecordIndicator && pagingTable.length == 0" class="norecord"
+        :style="{ bottom: noFooter ? '12px' : '37px' }">
         {{ localizedLabel.noRecordIndicator }}
       </div>
 
-      <div ref="tableContent"
-           class="table-content"
-           :class="{'no-footer': noFooter}"
-           @scroll="tableScroll"
-           @mouseover="mouseOver"
-           @mouseout="mouseOut">
+      <div ref="tableContent" class="table-content" :class="{ 'no-footer': noFooter }" @scroll="tableScroll"
+        @mouseover="mouseOver" @mouseout="mouseOut">
 
         <!-- Main Table -->
-        <table ref="systable"
-              id="systable"
-              style="table-layout: fixed; width: 0"
-              class="systable"
-              :class="{'no-number': noNumCol}"
-              ondragenter="event.preventDefault(); event.dataTransfer.dropEffect = 'none'"
-              ondragover="event.preventDefault(); event.dataTransfer.dropEffect = 'none'">
+        <table ref="systable" id="systable" style="table-layout: fixed; width: 0" class="systable"
+          :class="{ 'no-number': noNumCol }"
+          ondragenter="event.preventDefault(); event.dataTransfer.dropEffect = 'none'"
+          ondragover="event.preventDefault(); event.dataTransfer.dropEffect = 'none'">
           <colgroup>
             <col v-if="!noNumCol" style="width:40px">
-            <col v-for="(item, p) in fields" v-show="!item.invisible" :key="p" :style="{width: item.width}">
+            <col v-for="(item, p) in fields" v-show="!item.invisible" :key="p" :style="{ width: item.width }">
             <col v-if="vScroller.buttonHeight < vScroller.height" style="width:12px">
           </colgroup>
           <thead class="center-text">
             <tr>
-              <th class="center-text first-col tl-setting"
-                  :class="{hide: noNumCol}"
-                  style="top: 0"
-                  @mousedown.left="selectAllClick"
-                  @contextmenu.prevent="settingClick">
+              <th class="center-text first-col tl-setting" :class="{ hide: noNumCol }" style="top: 0"
+                @mousedown.left="selectAllClick" @contextmenu.prevent="settingClick">
                 <span style="width:100%">
-                  <svg v-if="selectedCount>0" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-times-circle fa-w-16 fa-sm"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"></path></svg>
-                  <svg v-else aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bars" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="svg-inline--fa fa-bars fa-w-14 fa-sm"><path fill="currentColor" d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path></svg>
+                  <svg v-if="selectedCount > 0" aria-hidden="true" focusable="false" data-prefix="fas"
+                    data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                    class="svg-inline--fa fa-times-circle fa-w-16 fa-sm">
+                    <path fill="currentColor"
+                      d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z">
+                    </path>
+                  </svg>
+                  <svg v-else aria-hidden="true" focusable="false" data-prefix="fas" data-icon="bars" role="img"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
+                    class="svg-inline--fa fa-bars fa-w-14 fa-sm">
+                    <path fill="currentColor"
+                      d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z">
+                    </path>
+                  </svg>
                 </span>
               </th>
-              <th v-for="(item, p) in fields"
-                  v-show="!item.invisible"
-                  :key="`th-${p}`"
-                  :colspan="p === fields.length - 1 && vScroller.buttonHeight < vScroller.height ? 2: 1"
-                  :class="{'sort-asc-sign': sortPos==p && sortDir==1,
-                          'sort-des-sign': sortPos==p && sortDir==-1,
-                          'sticky-column': item.sticky,
-                          'no-sorting': item.noSorting}"
-                  :style="{left: item.left}"
-                  @mousedown="headerClick($event, p)"
-                  @contextmenu.prevent="panelFilterClick(item)">
-                <div :class="{'filter-sign': columnFilter[p]}">
-                  <span :class="{'table-col-header': !noHeaderEdit}" v-html="headerLabel(item.label, item)"></span>
+              <th v-for="(item, p) in fields" v-show="!item.invisible" :key="`th-${p}`"
+                :colspan="p === fields.length - 1 && vScroller.buttonHeight < vScroller.height ? 2 : 1" :class="{
+                  'sort-asc-sign': sortPos == p && sortDir == 1,
+                  'sort-des-sign': sortPos == p && sortDir == -1,
+                  'sticky-column': item.sticky,
+                  'no-sorting': item.noSorting
+                }" :style="{ left: item.left }" @mousedown="headerClick($event, p)"
+                @contextmenu.prevent="panelFilterClick(item)">
+                <div :class="{ 'filter-sign': columnFilter[p] }">
+                  <span :class="{ 'table-col-header': !noHeaderEdit }" v-html="headerLabel(item.label, item)"></span>
                 </div>
-                <div class="col-sep"
-                    @mousedown="colSepMouseDown"
-                    @mouseover="colSepMouseOver"
-                    @mouseout="colSepMouseOut">
+                <div class="col-sep" @mousedown="colSepMouseDown" @mouseover="colSepMouseOver"
+                  @mouseout="colSepMouseOut">
                   <div class="add-col-btn"> + </div>
                 </div>
               </th>
             </tr>
-            <tr :class="{hide: !filterRow}">
-              <td class="center-text first-col tl-filter"
-                  :class="{hide: noNumCol}"
-                  style="vertical-align: middle; padding: 0"
-                  :style="{top: calCellTop2 + 'px'}"
-                  @click="columnFilter = {}">
+            <tr :class="{ hide: !filterRow }">
+              <td class="center-text first-col tl-filter" :class="{ hide: noNumCol }"
+                style="vertical-align: middle; padding: 0" :style="{ top: calCellTop2 + 'px' }"
+                @click="columnFilter = {}">
                 <span v-if="Object.keys(columnFilter).length > 0">
-                  <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="eraser" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-eraser fa-w-16 fa-sm"><path fill="currentColor" d="M497.941 273.941c18.745-18.745 18.745-49.137 0-67.882l-160-160c-18.745-18.745-49.136-18.746-67.883 0l-256 256c-18.745 18.745-18.745 49.137 0 67.882l96 96A48.004 48.004 0 0 0 144 480h356c6.627 0 12-5.373 12-12v-40c0-6.627-5.373-12-12-12H355.883l142.058-142.059zm-302.627-62.627l137.373 137.373L265.373 416H150.628l-80-80 124.686-124.686z"></path></svg>
+                  <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="eraser" role="img"
+                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                    class="svg-inline--fa fa-eraser fa-w-16 fa-sm">
+                    <path fill="currentColor"
+                      d="M497.941 273.941c18.745-18.745 18.745-49.137 0-67.882l-160-160c-18.745-18.745-49.136-18.746-67.883 0l-256 256c-18.745 18.745-18.745 49.137 0 67.882l96 96A48.004 48.004 0 0 0 144 480h356c6.627 0 12-5.373 12-12v-40c0-6.627-5.373-12-12-12H355.883l142.058-142.059zm-302.627-62.627l137.373 137.373L265.373 416H150.628l-80-80 124.686-124.686z">
+                    </path>
+                  </svg>
                 </span>
-                <!--
-                <svg v-if="selectedCount==table.length" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-times-circle fa-w-16 fa-sm"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"></path></svg>
-                <svg v-else aria-hidden="true" focusable="false" data-prefix="fas" data-icon="check-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-check-circle fa-w-16 fa-sm"><path fill="currentColor" d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"></path></svg>
-                -->
               </td>
-              <vue-excel-filter v-for="(item, p) in fields"
-                                v-show="!item.invisible"
-                                :ref="`filter-${item.name}`"
-                                :colspan="p === fields.length - 1? 2: 1"
-                                :key="`th2-${p}`"
-                                v-model="columnFilter[p]"
-                                :class="{'sticky-column': item.sticky}"
-                                :style="{left: item.left}"
-                                class="column-filter" />
+              <vue-excel-filter v-for="(item, p) in fields" v-show="!item.invisible" :ref="`filter-${item.name}`"
+                :colspan="p === fields.length - 1 ? 2 : 1" :key="`th2-${p}`" v-model="columnFilter[p]"
+                :class="{ 'sticky-column': item.sticky }" :style="{ left: item.left }" class="column-filter" />
             </tr>
           </thead>
           <tbody @mousedown="mouseDown">
             <tr v-if="localizedLabel.noRecordIndicator && pagingTable.length == 0">
               <td colspan="100%" style="height:40px; vertical-align: middle; text-align: center"></td>
             </tr>
-            <tr v-else
-                v-for="(record, rowPos) in pagingTable"
-                :key="rowPos"
-                :class="{select: typeof selected[pageTop + rowPos] !== 'undefined'}"
-                :style="rowStyle(record)">
-              <td class="center-text first-col"
-                  :id="`rid-${record.$id}`"
-                  :class="{
-                    hide: noNumCol,
-                    error: rowerr[`rid-${record.$id}`]
-                  }"
-                  :pos="rowPos"
-                  @mouseover="numcolMouseOver"
-                  @click="rowLabelClick">
+            <tr v-else v-for="(record, rowPos) in pagingTable" :key="rowPos"
+              :class="{ select: typeof selected[pageTop + rowPos] !== 'undefined' }" :style="rowStyle(record)">
+              <td class="center-text first-col" :id="`rid-${record.$id}`" :class="{
+                hide: noNumCol,
+                error: rowerr[`rid-${record.$id}`]
+              }" :pos="rowPos" @mouseover="numcolMouseOver" @click="rowLabelClick">
                 <span v-html="recordLabel(pageTop + rowPos + 1, record)"></span>
               </td>
-              <td v-for="(item, p) in fields"
-                  v-show="!item.invisible"
-                  :id="`id-${record.$id}-${item.name}`"
-                  :cell-RC="`${rowPos}-${item.name}`"
-                  :class="{
-                    readonly: item.readonly,
-                    error: errmsg[`id-${record.$id}-${item.name}`],
-                    link: item.link && item.isLink && item.isLink(record),
-                    select: item.options,
-                    grouping: item.grouping,
-                    expand: item.grouping && ungroup[item.name + record[item.name]],
-                    datepick: item.type == 'date',
-                    'sticky-column': item.sticky,
-                    hideDuplicate: item.hideDuplicate && rowPos > 0 && isSameSinceLeft(p, record, pagingTable[rowPos-1]),
-                  }"
-                  :key="p"
-                  :style="Object.assign(cellStyle(record, item), renderColumnCellStyle(item, record))"
-                  @mouseover="cellMouseOver"
-                  @mousemove="cellMouseMove">
-                  <template v-if="item.format=='html'"><span v-html="item.toText(record[item.name], record, item, p)" /></template>
-                  <template v-else>{{ item.toText(record[item.name].value, record, item, p) }}</template>
-                </td>
+              <td v-for="(item, p) in fields" v-show="!item.invisible" :id="`id-${record.$id}-${item.name}`"
+                :cell-RC="`${rowPos}-${item.name}`" :class="{
+                  readonly: item.readonly,
+                  error: errmsg[`id-${record.$id}-${item.name}`],
+                  link: item.link && item.isLink && item.isLink(record),
+                  select: item.options,
+                  grouping: item.grouping,
+                  expand: item.grouping && ungroup[item.name + record[item.name].value],
+                  datepick: item.type == 'date',
+                  'sticky-column': item.sticky,
+                  hideDuplicate: item.hideDuplicate && rowPos > 0 && isSameSinceLeft(p, record, pagingTable[rowPos - 1]),
+                }" :key="p" :style="Object.assign(cellStyle(record, item), renderColumnCellStyle(item, record))"
+                @mouseover="cellMouseOver" @mousemove="cellMouseMove">
+                <template v-if="item.format == 'html'"><span
+                    v-html="item.toText(record[item.name].value, record, item, p)" /></template>
+                <template v-else>{{ item.toText(record[item.name].value, record, item, p) }}</template>
+              </td>
               <td v-if="vScroller.buttonHeight < vScroller.height" class="last-col"></td>
             </tr>
           </tbody>
           <tfoot>
             <tr v-show="pagingTable.length && summaryRow">
-              <td class="row-summary first-col" :class="{'hide': noNumCol}">&nbsp;</td>
-              <td v-for="(field, p) in fields"
-                  v-show="!field.invisible"
-                  class="row-summary"
-                  :colspan="p === fields.length - 1 && vScroller.buttonHeight < vScroller.height ? 2: 1"
-                  :class="{
-                    'sticky-column': field.sticky,
-                    'summary-column1': p+1 < fields.length && fields[p+1].summary,
-                    'summary-column2': field.summary
-                  }"
-                  :key="`f${p}`"
-                  :style="renderColumnCellStyle(field)"
-                  >{{ summary[field.name] }}</td>
+              <td class="row-summary first-col" :class="{ 'hide': noNumCol }">&nbsp;</td>
+              <td v-for="(field, p) in fields" v-show="!field.invisible" class="row-summary"
+                :colspan="p === fields.length - 1 && vScroller.buttonHeight < vScroller.height ? 2 : 1" :class="{
+                  'sticky-column': field.sticky,
+                  'summary-column1': p + 1 < fields.length && fields[p + 1].summary,
+                  'summary-column2': field.summary
+                }" :key="`f${p}`" :style="renderColumnCellStyle(field)">{{ summary[field.name] }}</td>
             </tr>
           </tfoot>
           <slot></slot>
@@ -160,147 +133,158 @@
         <div v-show="focused" ref="inputSquare" class="input-square" @mousedown="inputSquareClick">
           <div style="position: relative; height: 100%; padding: 2px 2px 1px">
             <div class="rb-square" />
-            <textarea ref="inputBox"
-                      id="inputBox"
-                      class="input-box"
-                      :style="{opacity: inputBoxShow}"
-                      @blur="inputBoxBlur"
-                      @mousemove="inputBoxMouseMove"
-                      @mousedown="inputBoxMouseDown"
-                      trim
-                      autocomplete="off"
-                      autocorrect="off"
-                      autocompitaize="off"
-                      :spellcheck="spellcheck"></textarea>
+            <textarea ref="inputBox" id="inputBox" name="inputBox" class="input-box" :style="{ opacity: inputBoxShow }"
+              @blur="inputBoxBlur" @mousemove="inputBoxMouseMove" @mousedown="inputBoxMouseDown" trim autocomplete="off"
+              autocorrect="off" autocompitaize="off" :spellcheck="spellcheck"></textarea>
           </div>
         </div>
 
         <!-- Date Picker -->
         <div ref="dpContainer" v-show="showDatePicker" style="z-index:20; position:fixed">
-          <date-picker ref="datepicker" inline auto-apply v-model="inputDateTime" @update:modelValue="datepickerClick" valueType="format"></date-picker>
+          <date-picker ref="datepicker" inline auto-apply v-model="inputDateTime" @update:modelValue="datepickerClick"
+            valueType="format"></date-picker>
         </div>
 
         <!-- Waiting scene -->
         <div v-show="processing" ref="frontdrop" class="front-drop">
-          <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="spinner" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-spinner fa-w-16 fa-spin fa-3x"><path fill="currentColor" d="M304 48c0 26.51-21.49 48-48 48s-48-21.49-48-48 21.49-48 48-48 48 21.49 48 48zm-48 368c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zm208-208c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zM96 256c0-26.51-21.49-48-48-48S0 229.49 0 256s21.49 48 48 48 48-21.49 48-48zm12.922 99.078c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48c0-26.509-21.491-48-48-48zm294.156 0c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48c0-26.509-21.49-48-48-48zM108.922 60.922c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.491-48-48-48z"></path></svg>
+          <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="spinner" role="img"
+            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+            class="svg-inline--fa fa-spinner fa-w-16 fa-spin fa-3x">
+            <path fill="currentColor"
+              d="M304 48c0 26.51-21.49 48-48 48s-48-21.49-48-48 21.49-48 48-48 48 21.49 48 48zm-48 368c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zm208-208c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zM96 256c0-26.51-21.49-48-48-48S0 229.49 0 256s21.49 48 48 48 48-21.49 48-48zm12.922 99.078c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48c0-26.509-21.491-48-48-48zm294.156 0c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48c0-26.509-21.49-48-48-48zM108.922 60.922c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.491-48-48-48z">
+            </path>
+          </svg>
         </div>
       </div>
 
       <!-- Vertical Scroll Bar -->
-      <div v-show="vScroller.buttonHeight < vScroller.height"
-           ref="vScroll"
-           class="v-scroll"
-           :style="{top: `${vScroller.top}px`, height: `${vScroller.height}px`}"
-           @mousedown="vsMouseDown">
-        <div ref="vScrollButton"
-             class="v-scroll-button"
-             :style="{marginTop: `${vScroller.buttonTop}px`, height: `${vScroller.buttonHeight}px`}"
-             @mousedown="vsbMouseDown">
+      <div v-show="vScroller.buttonHeight < vScroller.height" ref="vScroll" class="v-scroll"
+        :style="{ top: `${vScroller.top}px`, height: `${vScroller.height}px` }" @mousedown="vsMouseDown">
+        <div ref="vScrollButton" class="v-scroll-button"
+          :style="{ marginTop: `${vScroller.buttonTop}px`, height: `${vScroller.buttonHeight}px` }"
+          @mousedown="vsbMouseDown">
           <div v-show="vScroller.runner" class="runner" v-html="vScroller.runner" />
         </div>
       </div>
 
       <!-- Autocomplete List -->
       <ul ref="autocomplete" v-show="focused && autocompleteInputs.length" class="autocomplete-results">
-        <li v-for="(item,i) in autocompleteInputs"
-            :key="i"
-            :class="{select: autocompleteSelect === i}"
-            @mousedown.left.prevent="inputAutocompleteText($event.target.textContent, $event)"
-            class="autocomplete-result">{{ item }}</li>
+        <li v-for="(item, i) in autocompleteInputs" :key="i" :class="{ select: autocompleteSelect === i }"
+          @mousedown.left.prevent="inputAutocompleteText($event.target.textContent, $event)"
+          class="autocomplete-result">{{
+            item }}</li>
       </ul>
 
       <!-- Footer -->
-      <div ref="footer" class="footer center-text" :class="{hide: noFooter}" style="position:relative" @mousedown="ftMouseDown">
+      <div ref="footer" class="footer center-text" :class="{ hide: noFooter }" style="position:relative"
+        @mousedown="ftMouseDown">
         <div ref="hScroll" class="h-scroll" @mousedown="sbMouseDown" />
-        <span class="left-block" :class="{'hide': noNumCol}"></span>
+        <span class="left-block" :class="{ 'hide': noNumCol }"></span>
         <span v-show="!noPaging" class="footer-left">
           <span v-html="localizedLabel.footerLeft(pageTop + 1, pageBottom, table.length)"></span>
         </span>
         <span v-show="!noPaging && pageBottom - pageTop < table.length">
           <template v-if="processing">
-            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="spinner" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-spinner fa-w-16 fa-spin fa-sm"><path fill="currentColor" d="M304 48c0 26.51-21.49 48-48 48s-48-21.49-48-48 21.49-48 48-48 48 21.49 48 48zm-48 368c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zm208-208c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zM96 256c0-26.51-21.49-48-48-48S0 229.49 0 256s21.49 48 48 48 48-21.49 48-48zm12.922 99.078c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48c0-26.509-21.491-48-48-48zm294.156 0c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48c0-26.509-21.49-48-48-48zM108.922 60.922c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.491-48-48-48z"></path></svg>
+            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="spinner" role="img"
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+              class="svg-inline--fa fa-spinner fa-w-16 fa-spin fa-sm">
+              <path fill="currentColor"
+                d="M304 48c0 26.51-21.49 48-48 48s-48-21.49-48-48 21.49-48 48-48 48 21.49 48 48zm-48 368c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zm208-208c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.49-48-48-48zM96 256c0-26.51-21.49-48-48-48S0 229.49 0 256s21.49 48 48 48 48-21.49 48-48zm12.922 99.078c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48c0-26.509-21.491-48-48-48zm294.156 0c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48c0-26.509-21.49-48-48-48zM108.922 60.922c-26.51 0-48 21.49-48 48s21.49 48 48 48 48-21.49 48-48-21.491-48-48-48z">
+              </path>
+            </svg>
             &nbsp;
             <span v-html="localizedLabel.processing" />
           </template>
           <template v-else>
-            <a :class="{disabled: pageTop <= 0}" @mousedown="firstPage">
-              <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="step-backward" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="svg-inline--fa fa-step-backward fa-w-14 fa-sm"><path fill="currentColor" d="M64 468V44c0-6.6 5.4-12 12-12h48c6.6 0 12 5.4 12 12v176.4l195.5-181C352.1 22.3 384 36.6 384 64v384c0 27.4-31.9 41.7-52.5 24.6L136 292.7V468c0 6.6-5.4 12-12 12H76c-6.6 0-12-5.4-12-12z"></path></svg>
+            <a :class="{ disabled: pageTop <= 0 }" @mousedown="firstPage">
+              <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="step-backward" role="img"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
+                class="svg-inline--fa fa-step-backward fa-w-14 fa-sm">
+                <path fill="currentColor"
+                  d="M64 468V44c0-6.6 5.4-12 12-12h48c6.6 0 12 5.4 12 12v176.4l195.5-181C352.1 22.3 384 36.6 384 64v384c0 27.4-31.9 41.7-52.5 24.6L136 292.7V468c0 6.6-5.4 12-12 12H76c-6.6 0-12-5.4-12-12z">
+                </path>
+              </svg>
               &nbsp;
               <span v-html="localizedLabel.first" />
             </a>
             &nbsp;|&nbsp;
-            <a :class="{disabled: pageTop <= 0}" @mousedown="prevPage">
-              <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="backward" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-backward fa-w-16 fa-sm"><path fill="currentColor" d="M11.5 280.6l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2zm256 0l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2z"></path></svg>
+            <a :class="{ disabled: pageTop <= 0 }" @mousedown="prevPage">
+              <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="backward" role="img"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                class="svg-inline--fa fa-backward fa-w-16 fa-sm">
+                <path fill="currentColor"
+                  d="M11.5 280.6l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2zm256 0l192 160c20.6 17.2 52.5 2.8 52.5-24.6V96c0-27.4-31.9-41.8-52.5-24.6l-192 160c-15.3 12.8-15.3 36.4 0 49.2z">
+                </path>
+              </svg>
               &nbsp;
               <span v-html="localizedLabel.previous" />
             </a>
             &nbsp;|&nbsp;
-            <a :class="{disabled: pageTop + pageSize >= table.length}" @mousedown="nextPage">
+            <a :class="{ disabled: pageTop + pageSize >= table.length }" @mousedown="nextPage">
               <span v-html="localizedLabel.next" />
               &nbsp;
-              <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="forward" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-forward fa-w-16 fa-sm"><path fill="currentColor" d="M500.5 231.4l-192-160C287.9 54.3 256 68.6 256 96v320c0 27.4 31.9 41.8 52.5 24.6l192-160c15.3-12.8 15.3-36.4 0-49.2zm-256 0l-192-160C31.9 54.3 0 68.6 0 96v320c0 27.4 31.9 41.8 52.5 24.6l192-160c15.3-12.8 15.3-36.4 0-49.2z"></path></svg>
+              <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="forward" role="img"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
+                class="svg-inline--fa fa-forward fa-w-16 fa-sm">
+                <path fill="currentColor"
+                  d="M500.5 231.4l-192-160C287.9 54.3 256 68.6 256 96v320c0 27.4 31.9 41.8 52.5 24.6l192-160c15.3-12.8 15.3-36.4 0-49.2zm-256 0l-192-160C31.9 54.3 0 68.6 0 96v320c0 27.4 31.9 41.8 52.5 24.6l192-160c15.3-12.8 15.3-36.4 0-49.2z">
+                </path>
+              </svg>
             </a>
             &nbsp;|&nbsp;
-            <a :class="{disabled: pageTop + pageSize >= table.length}" @mousedown="lastPage">
+            <a :class="{ disabled: pageTop + pageSize >= table.length }" @mousedown="lastPage">
               <span v-html="localizedLabel.last" />
               &nbsp;
-              <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="step-forward" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="svg-inline--fa fa-step-forward fa-w-14 fa-sm"><path fill="currentColor" d="M384 44v424c0 6.6-5.4 12-12 12h-48c-6.6 0-12-5.4-12-12V291.6l-195.5 181C95.9 489.7 64 475.4 64 448V64c0-27.4 31.9-41.7 52.5-24.6L312 219.3V44c0-6.6 5.4-12 12-12h48c6.6 0 12 5.4 12 12z"></path></svg>
+              <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="step-forward" role="img"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
+                class="svg-inline--fa fa-step-forward fa-w-14 fa-sm">
+                <path fill="currentColor"
+                  d="M384 44v424c0 6.6-5.4 12-12 12h-48c-6.6 0-12-5.4-12-12V291.6l-195.5 181C95.9 489.7 64 475.4 64 448V64c0-27.4 31.9-41.7 52.5-24.6L312 219.3V44c0-6.6 5.4-12 12-12h48c6.6 0 12 5.4 12 12z">
+                </path>
+              </svg>
             </a>
           </template>
         </span>
         <span class="footer-right">
-          <a :class="{disabled: !showSelectedOnly && selectedCount <= 1}" @mousedown="toggleSelectView">
+          <a :class="{ disabled: !showSelectedOnly && selectedCount <= 1 }" @mousedown="toggleSelectView">
             <span v-html="localizedLabel.footerRight.selected" />
-            <span :style="{color: selectedCount>0 ? 'red': 'inherit'}">{{ selectedCount }}</span>
+            <span :style="{ color: selectedCount > 0 ? 'red' : 'inherit' }">{{ selectedCount }}</span>
           </a>
           &nbsp;|&nbsp;
-          <a :class="{disabled: columnFilterString === '{}'}" @mousedown="toggleFilterView">
+          <a :class="{ disabled: columnFilterString === '{}' }" @mousedown="toggleFilterView">
             <span v-html="localizedLabel.footerRight.filtered" />
-            <span :style="{color: table.length !== filteredValue.length ? 'red': 'inherit'}">{{ table.length }}</span>
+            <span :style="{ color: table.length !== filteredValue.length ? 'red' : 'inherit' }">{{ table.length
+              }}</span>
           </a>
           &nbsp;|&nbsp;
-          <a :class="{disabled: true}">
+          <a :class="{ disabled: true }">
             <span v-html="localizedLabel.footerRight.loaded" />
             <span>{{ filteredValue.length }}</span>
           </a>
         </span>
       </div>
 
-      <input type="file"
-             ref="importFile"
-             accept=".xlsx, .xls, xlsm, .csv"
-             style="position: absolute; top: 0; left: 0; width:0; height: 0; opacity:0; z-index:-1"
-             @keyup="componentTabInto"
-             @change="doImport" />
+      <input type="file" id="importFile" ref="importFile" accept=".xlsx, .xls, xlsm, .csv"
+        style="position: absolute; top: 0; left: 0; width:0; height: 0; opacity:0; z-index:-1" @keyup="componentTabInto"
+        @change="doImport" />
 
       <panel-filter ref="panelFilter" :n-filter-count="nFilterCount" :localized-label="localizedLabel" />
-      <panel-setting 
-      :show="showPanelSetting" 
-      v-model="fields" 
-      :localized-label="localizedLabel" 
-      @close="showPanelSetting = false"
-      @import="importTable"
-      @export="exportTable"
-      @resetColumn="resetColumn"
-      @calStickyLeft="calStickyLeft"
-      />
-      <panel-find 
-        :show="showPanelFind" 
-        @doFind="doFind" 
-        @close="showPanelFind = false"
-      />
+      <panel-setting :show="showPanelSetting" v-model="fields" :localized-label="localizedLabel"
+        @close="showPanelSetting = false" @import="importTable" @export="exportTable" @resetColumn="resetColumn"
+        @calStickyLeft="calStickyLeft" />
+      <panel-find :show="showPanelFind" @doFind="doFind" @close="showPanelFind = false" />
     </div>
   </div>
 </template>
 
 <script>
-import {getCurrentInstance, defineComponent} from 'vue'
+import { getCurrentInstance, defineComponent } from 'vue'
 import VueExcelFilter from './components/VueExcelFilter.vue'
 import PanelFilter from './components/filter/PanelFilter.vue'
 import PanelSetting from './components/settings/PanelSetting.vue'
 import PanelFind from './components/find/PanelFind.vue'
 import DatePicker from '@vuepic/vue-datepicker'
-import {read, writeFile, utils} from 'xlsx'
+import { read, writeFile, utils } from 'xlsx'
 
 import '@vuepic/vue-datepicker/dist/main.css'
 
@@ -313,7 +297,7 @@ export default defineComponent({
     'date-picker': DatePicker
   },
   props: {
-      disablePanelSetting: {
+    disablePanelSetting: {
       type: Boolean,
       default() {
         return false;
@@ -325,52 +309,52 @@ export default defineComponent({
         return false;
       }
     },
-    modelValue: {type: Array, default () {return []}},
-    rowStyle: {type: Function, default () {return {}}},
-    cellStyle: {type: Function, default () {return {}}},
+    modelValue: { type: Array, default() { return [] } },
+    rowStyle: { type: Function, default() { return {} } },
+    cellStyle: { type: Function, default() { return {} } },
     headerLabel: {
       type: Function,
-      default (label) {
+      default(label) {
         return label
       }
     },
     recordLabel: {                                  // return the row header
       type: Function,
-      default (pos) {
+      default(pos) {
         return pos
       }
     },
-    noFinding: {type: Boolean, default: false},
-    noFindingNext: {type: Boolean, default: false},
-    noSorting: {type: Boolean, default: false},
-    noMassUpdate: {type: Boolean, default: false},
-    filterRow: {type: Boolean, default: false},
-    freeSelect: {type: Boolean, default: false},
-    noFooter: {type: Boolean, default: false},
-    noPaging: {type: Boolean, default: false},
-    noNumCol: {type: Boolean, default: false},
-    noMouseScroll: {type: Boolean, default: false},
-    page: {type: Number, default: 0},               // prefer page size, auto-cal if not provided
-    enterToSouth: {type: Boolean, default: false},  // default enter to south
-    nFilterCount: {type: Number, default: 1000},    // show top n values in filter dialog
-    height: {type: String, default: ''},
-    width: {type: String, default: '100%'},
-    wheelSensitivity: {type: Number, default: 30},
-    autocomplete: {type: Boolean, default: false},  // Default autocomplete of all columns
-    autocompleteCount: {type: Number, default: 50},
-    readonly: {type: Boolean, default: false},
-    readonlyStyle: {type: Object, default () {return {}}},
-    remember: {type: Boolean, default: false},
-    register: {type: Function, default: null},
-    allowAddCol: {type: Boolean, default: false},
-    noHeaderEdit: {type: Boolean, default: false},
-    addColumn: {type: Function, default: null},
-    spellcheck: {type: Boolean, default: false},
-    newIfBottom: {type: Boolean, default: false},
-    validate: {type: Function, default: null},
+    noFinding: { type: Boolean, default: false },
+    noFindingNext: { type: Boolean, default: false },
+    noSorting: { type: Boolean, default: false },
+    noMassUpdate: { type: Boolean, default: false },
+    filterRow: { type: Boolean, default: false },
+    freeSelect: { type: Boolean, default: false },
+    noFooter: { type: Boolean, default: false },
+    noPaging: { type: Boolean, default: false },
+    noNumCol: { type: Boolean, default: false },
+    noMouseScroll: { type: Boolean, default: false },
+    page: { type: Number, default: 0 },               // prefer page size, auto-cal if not provided
+    enterToSouth: { type: Boolean, default: false },  // default enter to south
+    nFilterCount: { type: Number, default: 1000 },    // show top n values in filter dialog
+    height: { type: String, default: '' },
+    width: { type: String, default: '100%' },
+    wheelSensitivity: { type: Number, default: 30 },
+    autocomplete: { type: Boolean, default: false },  // Default autocomplete of all columns
+    autocompleteCount: { type: Number, default: 50 },
+    readonly: { type: Boolean, default: false },
+    readonlyStyle: { type: Object, default() { return {} } },
+    remember: { type: Boolean, default: false },
+    register: { type: Function, default: null },
+    allowAddCol: { type: Boolean, default: false },
+    noHeaderEdit: { type: Boolean, default: false },
+    addColumn: { type: Function, default: null },
+    spellcheck: { type: Boolean, default: false },
+    newIfBottom: { type: Boolean, default: false },
+    validate: { type: Function, default: null },
     localizedLabel: {
       type: Object,
-      default () {
+      default() {
         return {
           footerLeft: (top, bottom, total) => `Record ${top} to ${bottom} of ${total}`,
           first: 'First',
@@ -415,12 +399,12 @@ export default defineComponent({
     },
     recordFilter: {
       type: Function,
-      default () {
+      default() {
         return true
       }
     }
   },
-  data () {
+  data() {
     const pageSize = this.noPaging ? 999999 : 20
     const dataset = {
       version: '1.3',
@@ -501,41 +485,41 @@ export default defineComponent({
     return dataset
   },
   computed: {
-    numColWidth () {
+    numColWidth() {
       if (this.noNumCol) return 0
       else return 40
     },
     selectedCount: {
-      get () {
+      get() {
         return this._selectedCount
       },
-      set (value) {
+      set(value) {
         this._selectedCount = value
         this.$emit('update:selectedCount', value)
       }
     },
-    token () {
+    token() {
       const id = Array.from(document.querySelectorAll('.vue-excel-editor')).indexOf(this.$el)
       return `vue-excel-editor-${id}`
     },
-    columnFilterString () {
+    columnFilterString() {
       Object.keys(this.columnFilter).forEach((key) => {
         if (this.columnFilter[key].trim() === '') delete this.columnFilter[key]
       })
       return JSON.stringify(this.columnFilter)
     },
-    pagingTable () {
+    pagingTable() {
       return this.table.slice(this.pageTop, this.pageTop + this.pageSize)
     },
-    pageBottom () {
+    pageBottom() {
       if (this.filteredValue.length === 0) return 0
       else return this.pageTop + this.pageSize > this.table.length ? this.table.length : this.pageTop + this.pageSize
     },
     setting: {
-      get () {
+      get() {
         return null
       },
-      set (setter) {
+      set(setter) {
         if (setter.fields) {
           // ignore if fields counts are different
           if (setter.fields.length !== this.fields.length) return
@@ -560,14 +544,14 @@ export default defineComponent({
     }
   },
   watch: {
-    modelValue () {
+    modelValue() {
       this.lazy(() => {
         this.refresh()
         if (this.pageTop > this.table.length)
           this.lastPage()
       })
     },
-    columnFilterString () {
+    columnFilterString() {
       this.lastFilterTime = String(new Date().getTime() % 1e8)
       this.processing = true
       setTimeout(() => {
@@ -577,7 +561,7 @@ export default defineComponent({
       }, 0)
     },
     fields: {
-      handler () {
+      handler() {
         this.lazy(() => {
           const setting = this.getSetting()
           if (this.remember) localStorage[window.location.pathname + window.location.hash + '.' + this.token] = JSON.stringify(setting)
@@ -586,7 +570,7 @@ export default defineComponent({
       },
       deep: true
     },
-    processing (newVal) {
+    processing(newVal) {
       if (newVal) {
         const rect = this.$el.children[0].getBoundingClientRect()
         this.frontdrop.style.top = rect.top + 'px'
@@ -595,23 +579,23 @@ export default defineComponent({
         this.frontdrop.style.width = rect.width + 'px'
       }
     },
-    pageTop (newVal) {
+    pageTop(newVal) {
       this.$emit('page-changed', newVal, newVal + this.pageSize - 1)
     },
-    pageSize (newVal) {
+    pageSize(newVal) {
       this.$emit('page-changed', this.pageTop, this.pageTop + newVal - 1)
     }
   },
-  activated () {
+  activated() {
     this.addEventListener()
   },
-  deactivated () {
+  deactivated() {
     this.removeEventListener()
   },
-  beforeUnmount () {
+  beforeUnmount() {
     this.removeEventListener()
   },
-  mounted () {
+  mounted() {
     this.editor = this.$refs.editor
     this.tableContent = this.$refs.tableContent
     this.systable = this.$refs.systable
@@ -649,15 +633,15 @@ export default defineComponent({
     }
   },
   methods: {
-    addEventListener () {
+    addEventListener() {
       window.addEventListener('resize', this.winResize)
       window.addEventListener('paste', this.winPaste)
       window.addEventListener('keydown', this.winKeydown)
       window.addEventListener('keyup', this.winKeyup)
       window.addEventListener('scroll', this.winScroll)
-      window.addEventListener('wheel', this.mousewheel, {passive: false})
+      window.addEventListener('wheel', this.mousewheel, { passive: false })
     },
-    removeEventListener () {
+    removeEventListener() {
       window.removeEventListener('resize', this.winResize)
       window.removeEventListener('paste', this.winPaste)
       window.removeEventListener('keydown', this.winKeydown)
@@ -666,21 +650,21 @@ export default defineComponent({
       window.removeEventListener('wheel', this.mousewheel)
     },
     isSameSinceLeft(p, rec1, rec2) {
-      for(let i=0; i<=p; i++) {
+      for (let i = 0; i <= p; i++) {
         if (!this.fields[i].invisible && this.fields[i].hideDuplicate) {
           const name = this.fields[i].name
-          if (rec1[name] !== rec2[name]) return false
+          if (rec1[name].value !== rec2[name].value) return false
         }
       }
       return true
     },
-    componentTabInto (e) {
+    componentTabInto(e) {
       if (e.keyCode === 9) {
         if (!this.moveInputSquare(this.currentRowPos, this.currentColPos))
           this.moveInputSquare(0, 0)
       }
     },
-    reset () {
+    reset() {
       this.errmsg = {}
       this.redo = []
       this.showFilteredOnly = true
@@ -697,24 +681,24 @@ export default defineComponent({
       this.rowIndex = {}
       this.refresh()
     },
-    toggleSelectView (e) {
+    toggleSelectView(e) {
       if (e) e.stopPropagation()
       this.showSelectedOnly = !this.showSelectedOnly
       this.firstPage()
       return this.refresh()
     },
-    toggleFilterView (e) {
+    toggleFilterView(e) {
       if (e) e.stopPropagation()
       this.showFilteredOnly = !this.showFilteredOnly
       return this.refresh()
     },
-    resetColumn () {
+    resetColumn() {
       this.fields = []
       // this.$slots.default.forEach(col => col.componentInstance? col.componentInstance.init() : 0)
       this.tableContent.scrollTo(0, this.tableContent.scrollTop)
       this.calStickyLeft()
     },
-    registerColumn (field) {
+    registerColumn(field) {
       let pos = this.fields.findIndex(item => item.pos > field.pos)
       if (pos === -1) pos = this.fields.length
       this.fields.splice(pos, 0, field)
@@ -723,8 +707,8 @@ export default defineComponent({
       if (field.summary) this.summaryRow = true
       this.colHash = this.hashCode(this.version + JSON.stringify(this.fields))
     },
-    insertColumn (pos) {
-      const colname = 'COL-' + Math.random().toString().slice(2,6)
+    insertColumn(pos) {
+      const colname = 'COL-' + Math.random().toString().slice(2, 6)
       let colDef = {
         name: colname,
         label: colname,
@@ -758,17 +742,17 @@ export default defineComponent({
       if (this.addColumn) colDef = this.addColumn(colDef)
       this.newColumn(colDef, pos)
     },
-    newColumn (field, pos) {
+    newColumn(field, pos) {
       this.fields.splice(pos, 0, field)
       if (this.register) this.register(field, pos)
       if (field.register) field.register(field, pos)
       if (field.summary) this.summaryRow = true
       this.colHash = this.hashCode(this.version + JSON.stringify(this.fields))
     },
-    autoRegisterAllColumns (rows) {
+    autoRegisterAllColumns(rows) {
       // If no field is defined, this function will help to create all fields based on provided row sample argument
       const widths = rows.slice(0, 25)
-        .reduce((t, v) => Object.keys(v).map((s, i) => !t || v[s].length > t[i]? v[s].length: t[i]), 0)
+        .reduce((t, v) => Object.keys(v).map((s, i) => !t || v[s].length > t[i] ? v[s].length : t[i]), 0)
         .map(v => Math.min(Math.max(v * 8.2, 55), 250))
 
       Object.keys(rows[0]).forEach((col, i) => {
@@ -776,8 +760,8 @@ export default defineComponent({
         this.registerColumn({
           name: col,
           label: col,
-          type: widths[i]? 'string': 'number',
-          width: (widths[i]? widths[i]: 75) + 'px',
+          type: widths[i] ? 'string' : 'number',
+          width: (widths[i] ? widths[i] : 75) + 'px',
           validate: null,
           change: null,
           link: null,
@@ -788,7 +772,7 @@ export default defineComponent({
           mandatory: false,
           lengthLimit: 0,
           autocomplete: this.autocomplete,
-          initStyle: {textAlign: widths[i]? 'left': 'right'},
+          initStyle: { textAlign: widths[i] ? 'left' : 'right' },
           invisible: false,
           readonly: this.readonly,
           pos: 0,
@@ -801,7 +785,7 @@ export default defineComponent({
         })
       })
     },
-    refresh () {
+    refresh() {
       // this.pageTop = 0
       this.prevSelect = -1
       if (this.fields.length === 0 && this.modelValue.length && Object.keys(this.modelValue[0])) {
@@ -811,11 +795,12 @@ export default defineComponent({
       this.calStickyLeft()
       this.refreshPageSize()
     },
-    calTable () {
+
+    calTable() {
       this.textTip = ''
       // add unique key to each row if no key is provided
       let seed = String(new Date().getTime() % 1e8)
-      this.modelValue.forEach((rec,i) => {
+      this.modelValue.forEach((rec, i) => {
         if (!rec.$id) rec.$id = seed + '-' + ('000000' + i).slice(-7)
       })
 
@@ -828,44 +813,44 @@ export default defineComponent({
         filterColumnList.forEach((k) => {
           switch (true) {
             case this.columnFilter[k].startsWith('<='):
-              filter[k] = {type: 1, modelValue: this.columnFilter[k].slice(2).trim().toUpperCase()}
+              filter[k] = { type: 1, modelValue: this.columnFilter[k].slice(2).trim().toUpperCase() }
               if (this.fields[k].type === 'number') filter[k].modelValue = Number(filter[k].modelValue)
               break
             case this.columnFilter[k].startsWith('<>'):
-              filter[k] = {type: 9, modelValue: this.columnFilter[k].slice(2).trim().toUpperCase()}
+              filter[k] = { type: 9, modelValue: this.columnFilter[k].slice(2).trim().toUpperCase() }
               break
             case this.columnFilter[k].startsWith('<'):
-              filter[k] = {type: 2, modelValue: this.columnFilter[k].slice(1).trim().toUpperCase()}
+              filter[k] = { type: 2, modelValue: this.columnFilter[k].slice(1).trim().toUpperCase() }
               if (this.fields[k].type === 'number') filter[k].modelValue = Number(filter[k].modelValue)
               break
             case this.columnFilter[k].startsWith('>='):
-              filter[k] = {type: 3, modelValue: this.columnFilter[k].slice(2).trim().toUpperCase()}
+              filter[k] = { type: 3, modelValue: this.columnFilter[k].slice(2).trim().toUpperCase() }
               if (this.fields[k].type === 'number') filter[k].modelValue = Number(filter[k].modelValue)
               break
             case this.columnFilter[k].startsWith('>'):
-              filter[k] = {type: 4, modelValue: this.columnFilter[k].slice(1).trim().toUpperCase()}
+              filter[k] = { type: 4, modelValue: this.columnFilter[k].slice(1).trim().toUpperCase() }
               if (this.fields[k].type === 'number') filter[k].modelValue = Number(filter[k].modelValue)
               break
             case this.columnFilter[k].startsWith('='):
-              filter[k] = {type: 0, modelValue: this.columnFilter[k].slice(1).trim().toUpperCase()}
+              filter[k] = { type: 0, modelValue: this.columnFilter[k].slice(1).trim().toUpperCase() }
               break
             case this.columnFilter[k].startsWith('*') && this.columnFilter[k].endsWith('*'):
-              filter[k] = {type: 5, modelValue: this.columnFilter[k].slice(1).slice(0, -1).trim().toUpperCase()}
+              filter[k] = { type: 5, modelValue: this.columnFilter[k].slice(1).slice(0, -1).trim().toUpperCase() }
               break
             case this.columnFilter[k].startsWith('*') && !this.columnFilter[k].slice(1).includes('*'):
-              filter[k] = {type: 6, modelValue: this.columnFilter[k].slice(1).trim().toUpperCase()}
+              filter[k] = { type: 6, modelValue: this.columnFilter[k].slice(1).trim().toUpperCase() }
               break
             case this.columnFilter[k].startsWith('~'):
-              filter[k] = {type: 8, modelValue: this.columnFilter[k].slice(1).trim()}
+              filter[k] = { type: 8, modelValue: this.columnFilter[k].slice(1).trim() }
               break
             case this.columnFilter[k].endsWith('*') && !this.columnFilter[k].slice(0, -1).includes('*'):
-              filter[k] = {type: 7, modelValue: this.columnFilter[k].slice(0, -1).trim().toUpperCase()}
+              filter[k] = { type: 7, modelValue: this.columnFilter[k].slice(0, -1).trim().toUpperCase() }
               break
             case this.columnFilter[k].includes('*') || this.columnFilter[k].includes('?'):
-              filter[k] = {type: 8, modelValue: '^' + this.columnFilter[k].replace(/\*/g, '.*').replace(/\?/g, '.').trim() + '$'}
+              filter[k] = { type: 8, modelValue: '^' + this.columnFilter[k].replace(/\*/g, '.*').replace(/\?/g, '.').trim() + '$' }
               break
             default:
-              filter[k] = {type: 5, modelValue: this.columnFilter[k].trim().toUpperCase()}
+              filter[k] = { type: 5, modelValue: this.columnFilter[k].trim().toUpperCase() }
               break
           }
         })
@@ -889,7 +874,7 @@ export default defineComponent({
 
             const content = {}
             filterColumnList.forEach((k) => {
-              const val = record[this.fields[k].name]
+              const val = record[this.fields[k].name].value
               if (this.fields[k].type === 'number' && filter[k].type <= 4)
                 content[k] = val
               else
@@ -943,23 +928,24 @@ export default defineComponent({
       }
       this.calSummary()
     },
-    filterGrouping (rec, i, table) {
+    filterGrouping(rec, i, table) {
       if (i === 0) return true
-      const prec = table[i-1]
+      const prec = table[i - 1]
       let result = true
       this.fields.forEach(field => {
         const name = field.name
-        if (field.grouping && rec[name] === prec[name]) {
-          if (field.grouping === 'collapse' && this.ungroup[field.name + rec[name]] !== true)
+
+        if (field.grouping && rec[name].value === prec[name].value) {
+          if (field.grouping === 'collapse' && this.ungroup[field.name + rec[name].value] !== true)
             result = false
           else
-          if (field.grouping === 'expand' && this.ungroup[field.name + rec[name]])
-            result = false
+            if (field.grouping === 'expand' && this.ungroup[field.name + rec[name].value])
+              result = false
         }
       })
       return result
     },
-    calStickyLeft () {
+    calStickyLeft() {
       let left = 0, n = 0
       this.leftMost = -1
       // this.tableContent.scrollTo(0, this.tableContent.scrollTop)
@@ -977,7 +963,7 @@ export default defineComponent({
       const instance = getCurrentInstance()
       instance?.proxy?.$forceUpdate()
     },
-    renderColumnCellStyle (field, record) {
+    renderColumnCellStyle(field, record) {
       let result = field.initStyle
       if (typeof result === 'function') result = result(record, field)
       if (field.readonly) result = Object.assign(result, this.readonlyStyle)
@@ -986,17 +972,17 @@ export default defineComponent({
         result.color = (typeof field.color === 'function' ? field.color(record) : field.color)
       return result
     },
-    localeDate (d) {
+    localeDate(d) {
       if (typeof d === 'undefined') d = new Date()
-      const pad = n => n < 10 ? '0'+n : n;
+      const pad = n => n < 10 ? '0' + n : n;
       return d.getFullYear() + '-'
-            + pad(d.getMonth() + 1) + '-'
-            + pad(d.getDate()) + ' '
-            + pad(d.getHours()) + ':'
-            + pad(d.getMinutes()) + ':'
-            + pad(d.getSeconds())
-     },
-    calSummary (name) {
+        + pad(d.getMonth() + 1) + '-'
+        + pad(d.getDate()) + ' '
+        + pad(d.getHours()) + ':'
+        + pad(d.getMinutes()) + ':'
+        + pad(d.getSeconds())
+    },
+    calSummary(name) {
       this.fields.forEach(field => {
         if (!field.summary) return
         const i = field.name
@@ -1006,52 +992,52 @@ export default defineComponent({
         const currentDateTimeSec = this.localeDate()
         const currentDateTime = currentDateTimeSec.slice(0, 19)
         const currentDate = currentDateTimeSec.slice(0, 10)
-        switch(field.summary) {
+        switch (field.summary) {
           case 'sum':
-            result = this.table.reduce((a, b) => (a + Number(b[i] ? b[i] : 0)), 0)
+            result = this.table.reduce((a, b) => (a + Number(b[i].value ? b[i].value : 0)), 0)
             result = Number(Math.round(result + 'e+5') + 'e-5')  // solve the infinite .9 issue of javascript
             break
           case 'avg':
-            result = this.table.reduce((a, b) => (a + Number(b[i] ? b[i] : 0)), 0) / this.table.length
+            result = this.table.reduce((a, b) => (a + Number(b[i].value ? b[i].value : 0)), 0) / this.table.length
             result = Number(Math.round(result + 'e+5') + 'e-5')  // solve the infinite .9 issue of javascript
             break
           case 'max':
-            result = this.table.reduce((a, b) => (a > b[i] ? a : b[i]), Number.MIN_VALUE)
+            result = this.table.reduce((a, b) => (a > b[i].value ? a : b[i].value), Number.MIN_VALUE)
             break
           case 'min':
-            result = this.table.reduce((a, b) => (a < b[i] ? a : b[i]), Number.MAX_VALUE)
+            result = this.table.reduce((a, b) => (a < b[i].value ? a : b[i].value), Number.MAX_VALUE)
             break
           case 'count':
-            switch(field.type) {
+            switch (field.type) {
               case 'checkYN':
-                result = this.table.reduce((a, b) => (a + (b[i] === 'Y' ? 1 : 0)), 0)
+                result = this.table.reduce((a, b) => (a + (b[i].value === 'Y' ? 1 : 0)), 0)
                 break
               case 'check10':
-                result = this.table.reduce((a, b) => (a + (b[i] === '1' ? 1 : 0)), 0)
+                result = this.table.reduce((a, b) => (a + (b[i].value === '1' ? 1 : 0)), 0)
                 break
               case 'checkTF':
-                result = this.table.reduce((a, b) => (a + (b[i] === 'T' ? 1 : 0)), 0)
+                result = this.table.reduce((a, b) => (a + (b[i].value === 'T' ? 1 : 0)), 0)
                 break
               case 'date':
-                result = this.table.reduce((a, b) => (a + (b[i] >= currentDate ? 1 : 0)), 0)
+                result = this.table.reduce((a, b) => (a + (b[i].value >= currentDate ? 1 : 0)), 0)
                 this.summary[i] = result
                 return
               case 'datetime':
-                result = this.table.reduce((a, b) => (a + (b[i] >= currentDateTime ? 1 : 0)), 0)
+                result = this.table.reduce((a, b) => (a + (b[i].value >= currentDateTime ? 1 : 0)), 0)
                 this.summary[i] = result
                 return
               case 'datetimesec':
-                result = this.table.reduce((a, b) => (a + (b[i] >= currentDateTimeSec ? 1 : 0)), 0)
+                result = this.table.reduce((a, b) => (a + (b[i].value >= currentDateTimeSec ? 1 : 0)), 0)
                 this.summary[i] = result
                 return
               case 'datetick':
               case 'datetimetick':
               case 'datetimesectick':
-                result = this.table.reduce((a, b) => (a + (b[i] >= currentTick ? 1 : 0)), 0)
+                result = this.table.reduce((a, b) => (a + (b[i].value >= currentTick ? 1 : 0)), 0)
                 this.summary[i] = result
                 return
               default:
-                result = this.table.reduce((a, b) => (a + (b[i]? 1 : 0)), 0)
+                result = this.table.reduce((a, b) => (a + (b[i].value ? 1 : 0)), 0)
                 break
             }
             break
@@ -1060,16 +1046,16 @@ export default defineComponent({
         this.summary[i] = field.toText(result)
       })
     },
-    getKeys (rec) {
+    getKeys(rec) {
       if (!rec) rec = this.currentRecord
-      const key = this.fields.filter(field => field.keyField).map(field => rec[field.name])
+      const key = this.fields.filter(field => field.keyField).map(field => rec[field.name].value)
       if (key.length && key.join() !== '') return key
       return [rec.$id]
     },
-    getFieldByName (name) {
+    getFieldByName(name) {
       return this.fields.find(f => f.name === name)
     },
-    getFieldByLabel (label) {
+    getFieldByLabel(label) {
       return this.fields.find(f => f.label === label)
     },
 
@@ -1086,12 +1072,12 @@ export default defineComponent({
       else this.setFilter(name, '')
     },
 
-    columnSuppress () {
+    columnSuppress() {
       if (this.table.length === 0) return
       const cols = {}
       this.table.forEach((row) => {
         Object.keys(row).forEach((field) => {
-          if (row[field]) cols[field] = 1
+          if (row[field].value) cols[field] = 1
         })
       })
       const showCols = Object.keys(cols)
@@ -1103,7 +1089,7 @@ export default defineComponent({
     },
 
     /* Still evaluating */
-    columnAutoWidth (name) {
+    columnAutoWidth(name) {
       if (this.table.length === 0) return
       let doFields = this.fields
       if (name) doFields = [this.fields.find(f => f.name === name)]
@@ -1111,8 +1097,8 @@ export default defineComponent({
       const cols = {}
       this.table.forEach((row) => {
         doFields.forEach((field) => {
-          if (row[field.name] && (!cols[field.name] || cols[field.name] < row[field.name].length))
-            cols[field.name] = row[field.name].length
+          if (row[field.name] && (!cols[field.name] || cols[field.name] < row[field.name].value.length))
+            cols[field.name] = row[field.name].value.length
         })
       })
       doFields.forEach((field) => {
@@ -1123,7 +1109,7 @@ export default defineComponent({
       // this.refresh()
     },
 
-    columnFillWidth () {
+    columnFillWidth() {
       if (this.table.length === 0) return
       if (!this.editor) return
       const doFields = this.fields.filter(f => f.autoFillWidth)
@@ -1146,7 +1132,7 @@ export default defineComponent({
 
     /* *** Date Picker *********************************************************************************
      */
-    showDatePickerDiv () {
+    showDatePickerDiv() {
       if (!this.$refs.dpContainer) return
       const cellRect = this.currentCell.getBoundingClientRect()
       this.$refs.dpContainer.style.left = (cellRect.left) + 'px'
@@ -1162,10 +1148,10 @@ export default defineComponent({
           this.$refs.dpContainer.style.left = (window.innerWidth - r.width) + 'px'
       })
     },
-    datepickerClick () {
+    datepickerClick() {
       const offset = new Date().getTimezoneOffset() * 60 * 1000
       // const m = moment(this.inputDateTime)
-      switch(this.currentField.type) {
+      switch (this.currentField.type) {
         case 'date':
           // this.inputBox.value = m.format('YYYY-MM-DD')
           this.inputBox.value = new Date(new Date(this.inputDateTime) - offset).toISOString().slice(0, 10)
@@ -1189,10 +1175,9 @@ export default defineComponent({
       this.showDatePicker = false
       this.focused = true
     },
-
     /* *** Vertical Scrollbar *********************************************************************************
      */
-    calVScroll () {
+    calVScroll() {
       let d = this.labelTr.getBoundingClientRect().height
       if (this.filterRow) d += 29
       this.vScroller.top = d - 1
@@ -1200,14 +1185,14 @@ export default defineComponent({
       if (this.summaryRow) d += 27
       const fullHeight = this.$el.getBoundingClientRect().height
       this.vScroller.height = fullHeight - d
-      const ratio =  this.vScroller.height / (this.table.length * 24)
+      const ratio = this.vScroller.height / (this.table.length * 24)
       this.vScroller.buttonHeight = Math.max(24, this.vScroller.height * ratio)
       const prop = (this.tableContent.scrollTop + this.pageTop * 24) / (this.table.length * 24 - this.vScroller.height)
       this.vScroller.buttonTop = (this.vScroller.height - this.vScroller.buttonHeight) * prop
       const instance = getCurrentInstance()
       instance?.proxy?.$forceUpdate()
     },
-    vsMouseDown (e) {
+    vsMouseDown(e) {
       e.stopPropagation()
       const pos = e.offsetY - this.vScroller.buttonHeight / 2
       let ratio = Math.max(0, pos)
@@ -1221,7 +1206,7 @@ export default defineComponent({
         this.pageTop = Math.round((this.table.length - this.pageSize) * ratio)
       }
     },
-    vsbMouseDown (e) {
+    vsbMouseDown(e) {
       e.stopPropagation()
       if (!this.vScroller.mouseY) {
         this.vScroller.saveButtonTop = this.vScroller.buttonTop
@@ -1231,7 +1216,7 @@ export default defineComponent({
         this.$refs.vScrollButton.classList.add('focus')
       }
     },
-    vsbMouseUp () {
+    vsbMouseUp() {
       window.removeEventListener('mousemove', this.vsbMouseMove)
       window.removeEventListener('mouseup', this.vsbMouseUp)
       this.lazy(() => {
@@ -1247,7 +1232,7 @@ export default defineComponent({
       const instance = getCurrentInstance()
       instance?.proxy?.$forceUpdate()
     },
-    vsbMouseMove (e) {
+    vsbMouseMove(e) {
       if (e.buttons === 0)
         this.vsbMouseUp()
       else {
@@ -1263,10 +1248,15 @@ export default defineComponent({
           const ratio = this.vScroller.buttonTop / (this.vScroller.height - this.vScroller.buttonHeight)
           const recPos = Math.round((this.table.length - this.pageSize) * ratio) + 1
           const rec = this.table[recPos]
-          this.vScroller.runner = recPos + '<br>' + this.fields
-            .filter((field, i) => field.keyField || field.sticky || this.sortPos === i)
-            .map(field => field.label + ': ' + rec[field.name])
-            .join('<br>')
+          if (rec) { // Добавлено: проверка существования записи
+            this.vScroller.runner = recPos + '<br>' + this.fields
+              .filter((field, i) => field.keyField || field.sticky || this.sortPos === i)
+              .map(field => field.label + ': ' + (rec[field.name]?.value ?? ''))
+              .join('<br>')
+          }
+          else {
+            this.vScroller.runner = ''
+          }
           const instance = getCurrentInstance()
           instance?.proxy?.$forceUpdate()
         }
@@ -1275,14 +1265,14 @@ export default defineComponent({
 
     /* *** Horizontal Scrollbar *********************************************************************************
      */
-    ftMouseDown (e) {
+    ftMouseDown(e) {
       const footerRect = this.footer.getBoundingClientRect()
       const ratio = (e.x - footerRect.left - this.numColWidth) / (footerRect.width - this.numColWidth)
       const fullWidth = this.systable.getBoundingClientRect().width
       const viewWidth = this.tableContent.getBoundingClientRect().width
       this.tableContent.scrollTo(fullWidth * ratio - viewWidth / 2, this.tableContent.scrollTop)
     },
-    sbMouseDown (e) {
+    sbMouseDown(e) {
       e.stopPropagation()
       if (!this.hScroller.mouseX) {
         const sleft = this.$refs.hScroll.getBoundingClientRect().left
@@ -1294,7 +1284,7 @@ export default defineComponent({
         this.$refs.hScroll.classList.add('focus')
       }
     },
-    sbMouseUp () {
+    sbMouseUp() {
       window.removeEventListener('mousemove', this.sbMouseMove)
       window.removeEventListener('mouseup', this.sbMouseUp)
       this.lazy(() => {
@@ -1305,7 +1295,7 @@ export default defineComponent({
       const instance = getCurrentInstance()
       instance?.proxy?.$forceUpdate()
     },
-    sbMouseMove (e) {
+    sbMouseMove(e) {
       if (e.buttons === 0)
         this.sbMouseUp()
       else {
@@ -1317,7 +1307,7 @@ export default defineComponent({
 
     /* *** Window Event *******************************************************************************************
      */
-    tableScroll () {
+    tableScroll() {
       this.showDatePicker = false
       this.autocompleteInputs = []
       if (this.focused && this.currentField)
@@ -1343,11 +1333,11 @@ export default defineComponent({
       }
       this.hScroller.lastLeft = this.tableContent.scrollLeft
     },
-    winScroll () {
+    winScroll() {
       this.showDatePicker = false
       this.autocompleteInputs = []
     },
-    mousewheel (e) {
+    mousewheel(e) {
       if (this.noMouseScroll || !this.mousein || !e.deltaY) return
       let adjust = 0
       if (e.deltaY > 1 * this.wheelSensitivity && this.pageTop + this.pageSize < this.table.length) adjust = 1
@@ -1364,10 +1354,10 @@ export default defineComponent({
       e.stopPropagation()
       return false
     },
-    winResize () {
+    winResize() {
       this.lazy(this.refreshPageSize, 500)
     },
-    winPaste (e) {
+    winPaste(e) {
       if (e.target.tagName !== 'TEXTAREA') return
       if (!this.mousein && !this.focused) return
       if (!this.currentField || this.currentField.readonly) return
@@ -1379,7 +1369,7 @@ export default defineComponent({
       this.inputCellWrite(text)
       e.preventDefault()
     },
-    winKeyup (e) {
+    winKeyup(e) {
       if (!e.altKey) this.systable.classList.remove('alt')
       if (this.inputBoxShow && this.currentField.type === 'password') {
         setTimeout(() => {
@@ -1389,7 +1379,7 @@ export default defineComponent({
         })
       }
     },
-    winKeydown (e) {
+    winKeydown(e) {
       if (e.altKey) this.systable.classList.add('alt')
       if (!this.mousein && !this.focused) return
       if (e.ctrlKey || e.metaKey)
@@ -1448,17 +1438,17 @@ export default defineComponent({
             if (this.autocompleteInputs.length === 0)
               this.moveNorth()
             else
-            if (this.autocompleteSelect > 0) {
-              this.autocompleteSelect--
-              const showTop = this.autocompleteSelect * 23
-              if (showTop < this.$refs.autocomplete.scrollTop)
-                this.$refs.autocomplete.scrollTop = showTop
-            }
-            else
-            if (this.autocompleteSelect === -1) {
-              this.autocompleteSelect = 0
-              // this.autocompleteSelect = this.autocompleteInputs.length - 1
-            }
+              if (this.autocompleteSelect > 0) {
+                this.autocompleteSelect--
+                const showTop = this.autocompleteSelect * 23
+                if (showTop < this.$refs.autocomplete.scrollTop)
+                  this.$refs.autocomplete.scrollTop = showTop
+              }
+              else
+                if (this.autocompleteSelect === -1) {
+                  this.autocompleteSelect = 0
+                  // this.autocompleteSelect = this.autocompleteInputs.length - 1
+                }
             break
           case 9:  // Tab
             if (!this.focused) return
@@ -1604,7 +1594,7 @@ export default defineComponent({
 
     /* *** Column Separator *******************************************************************************************
      */
-    colSepMouseDown (e) {
+    colSepMouseDown(e) {
       e.preventDefault()
       e.stopPropagation()
       if (this.allowAddCol && !e.target.classList.contains('col-sep')) {
@@ -1620,7 +1610,7 @@ export default defineComponent({
       const index = Array.from(this.labelTr.children).indexOf(e.target.parentElement)
       this.sep = {}
       // this.sep.curCol = this.colgroupTr.children[Array.from(this.labelTr.children).indexOf(e.target.parentElement)]
-      this.sep.curCol = this.colgroupTr.children[index - (this.noNumCol ? 1: 0)]
+      this.sep.curCol = this.colgroupTr.children[index - (this.noNumCol ? 1 : 0)]
       this.sep.curField = this.fields[index - 1]
       // this.sep.nxtCol = this.sep.curCol.nextElementSibling
       this.sep.pageX = e.pageX
@@ -1637,7 +1627,7 @@ export default defineComponent({
       window.addEventListener('mousemove', this.colSepMouseMove)
       window.addEventListener('mouseup', this.colSepMouseUp)
     },
-    colSepMouseOver (e) {
+    colSepMouseOver(e) {
       if (e.target.classList.contains('col-sep')) {
         e.target.style.borderRight = '5px solid #cccccc'
         e.target.style.height = this.systable.getBoundingClientRect().height + 'px'
@@ -1651,7 +1641,7 @@ export default defineComponent({
           e.target.style.display = 'block'
       }
     },
-    colSepMouseOut (e) {
+    colSepMouseOut(e) {
       if (e.target.classList.contains('col-sep')) {
         e.target.style.borderRight = '5px solid transparent'
         e.target.style.height = '100%'
@@ -1661,10 +1651,10 @@ export default defineComponent({
       }
       else {
         // add-col-btn
-          e.target.style.display = 'none'
+        e.target.style.display = 'none'
       }
     },
-    colSepMouseMove (e) {
+    colSepMouseMove(e) {
       if (!this.sep || !this.sep.curCol) return
       const diffX = e.pageX - this.sep.pageX
       // this.sep.curCol.style.width = (this.sep.curColWidth + diffX) + 'px'
@@ -1673,7 +1663,7 @@ export default defineComponent({
       this.sep.curField.width = newWidth
       this.lazy(this.calStickyLeft, 200)
     },
-    colSepMouseUp (e) {
+    colSepMouseUp(e) {
       e.preventDefault()
       e.stopPropagation()
       delete this.sep
@@ -1686,19 +1676,19 @@ export default defineComponent({
 
     /* *** Finder *******************************************************************************************
      */
-    doFindNext () {
+    doFindNext() {
       return this.doFind()
     },
-    doFind (s) {
+    doFind(s) {
       if (typeof s === 'undefined') s = this.inputFind
       else this.inputFind = s
       s = s.toUpperCase()
       const row = Math.max(0, this.currentRowPos)
-      for(let r = row + this.pageTop; r < this.table.length; r++) {
+      for (let r = row + this.pageTop; r < this.table.length; r++) {
         const rec = this.table[r]
-        for(let c = (r === row + this.pageTop ? this.currentColPos + 1: 0); c < this.fields.length; c++) {
+        for (let c = (r === row + this.pageTop ? this.currentColPos + 1 : 0); c < this.fields.length; c++) {
           const field = this.fields[c].name
-          if (typeof rec[field] !== 'undefined' && String(rec[field]).toUpperCase().indexOf(s) >= 0) {
+          if (typeof rec[field] !== 'undefined' && String(rec[field].value).toUpperCase().indexOf(s) >= 0) {
             this.pageTop = this.findPageTop(r)
             setTimeout(() => {
               this.moveInputSquare(r - this.pageTop, c)
@@ -1709,11 +1699,11 @@ export default defineComponent({
           }
         }
       }
-      for(let r = 0; r <= row + this.pageTop; r++) {
+      for (let r = 0; r <= row + this.pageTop; r++) {
         const rec = this.table[r]
-        for(let c = 0; c < (r === row + this.pageTop ? this.currentColPos : this.fields.length); c++) {
+        for (let c = 0; c < (r === row + this.pageTop ? this.currentColPos : this.fields.length); c++) {
           const field = this.fields[c].name
-          if (typeof rec[field] !== 'undefined' && String(rec[field]).toUpperCase().indexOf(s) >= 0) {
+          if (typeof rec[field] !== 'undefined' && String(rec[field].value).toUpperCase().indexOf(s) >= 0) {
             this.pageTop = this.findPageTop(r)
             this.moveInputSquare(r - this.pageTop, c)
             setTimeout(() => {
@@ -1725,7 +1715,7 @@ export default defineComponent({
       }
       return false
     },
-    findPageTop (rowPos) {
+    findPageTop(rowPos) {
       for (let pt = this.pageTop; pt < this.table.length; pt += this.pageSize)
         if (rowPos >= pt && rowPos < pt + this.pageSize) return pt
       for (let pt = this.pageTop; pt > 0; pt -= this.pageSize)
@@ -1735,8 +1725,8 @@ export default defineComponent({
 
     /* *** Sort *******************************************************************************************
      */
-    headerClick (e, colPos) {
-      if(!this.noHeaderEdit && e.target.tagName === 'SPAN') {
+    headerClick(e, colPos) {
+      if (!this.noHeaderEdit && e.target.tagName === 'SPAN') {
         e.target.contentEditable = true
         e.target.addEventListener('focusout', this.completeHeaderChange)
         return
@@ -1751,12 +1741,12 @@ export default defineComponent({
           this.sort(0, colPos)
       }
     },
-    completeHeaderChange (e) {
+    completeHeaderChange(e) {
       const th = e.target.parentElement.parentElement
       const index = Array.from(th.parentElement.children).findIndex(v => v === th)
       this.fields[index - 1].label = e.target.textContent
     },
-    sort (n, pos) {
+    sort(n, pos) {
       const colPos = typeof pos === 'undefined' ? this.columnFilterRef.colPos : pos
       const field = this.fields[colPos]
       if (field.noSorting) return
@@ -1785,7 +1775,7 @@ export default defineComponent({
         else {
           this.modelValue.sort((a, b) => {
             if (field.sort) return field.sort(a, b) * -n
-            else return sorting(a[name], b[name]) * -n
+            else return sorting(a[name].value, b[name].value) * -n
           })
           this.sortPos = colPos
         }
@@ -1797,7 +1787,7 @@ export default defineComponent({
 
     /* *** Paging *******************************************************************************************
      */
-    refreshPageSize () {
+    refreshPageSize() {
       if (this.$refs.hScroll) {
         const fullWidth = this.systable.getBoundingClientRect().width
         const viewWidth = this.tableContent.getBoundingClientRect().width
@@ -1856,7 +1846,7 @@ export default defineComponent({
       this.columnFillWidth()
       setTimeout(this.calVScroll)
     },
-    firstPage (e) {
+    firstPage(e) {
       if (e) e.stopPropagation()
       this.pageTop = 0
       this.calVScroll()
@@ -1870,7 +1860,7 @@ export default defineComponent({
         })
       }
     },
-    lastPage (e) {
+    lastPage(e) {
       if (e) e.stopPropagation()
       this.pageTop = this.table.length - this.pageSize < 0 ? 0 : this.table.length - this.pageSize
       this.calVScroll()
@@ -1884,7 +1874,7 @@ export default defineComponent({
         })
       }
     },
-    prevPage (e) {
+    prevPage(e) {
       if (e) e.stopPropagation()
       this.pageTop = this.pageTop < this.pageSize ? 0 : this.pageTop - this.pageSize
       this.calVScroll()
@@ -1898,7 +1888,7 @@ export default defineComponent({
         })
       }
     },
-    nextPage (e) {
+    nextPage(e) {
       if (e) e.stopPropagation()
       if (this.pageTop + this.pageSize < this.table.length)
         this.pageTop = Math.min(this.pageTop + this.pageSize, this.table.length - this.pageSize)
@@ -1916,7 +1906,7 @@ export default defineComponent({
 
     /* *** Setting *******************************************************************************************
      */
-    getSetting () {
+    getSetting() {
       const colWidth = Array.from(this.colgroupTr.children).map(col => col.style.width)
       const fields = this.fields.map((field, i) => {
         return {
@@ -1944,12 +1934,12 @@ export default defineComponent({
 
     /* *** Import/Export ************************************************************************************
      */
-    importTable (cb, errCb) {
+    importTable(cb, errCb) {
       this.$refs.importFile.click()
       this.importCallback = cb
       this.importErrorCallback = errCb
     },
-    doImport (e) {
+    doImport(e) {
       this.processing = true
       // this.refresh()
       this.clearAllSelected()
@@ -1962,7 +1952,7 @@ export default defineComponent({
         fileReader.onload = async (e) => {
           try {
             const data = e.target.result
-            const wb = read(data, {type: 'binary', cellDates: true, cellStyle: false})
+            const wb = read(data, { type: 'binary', cellDates: true, cellStyle: false })
             const sheet = wb.SheetNames[0]
             let importData = utils.sheet_to_row_object_array(wb.Sheets[sheet])
             importData = importData.filter(rec => Object.keys(rec).length > 0).map((rec) => {
@@ -1983,9 +1973,9 @@ export default defineComponent({
             if (this.fields
               .filter(f => f.keyField)
               .filter(f => typeof importData[0][f.name] === 'undefined' && typeof importData[0][f.label] === 'undefined').length > 0) {
-                if (this.importErrorCallback) this.importErrorCallback('missingKeyColumn')
-                throw new Error(`VueExcelEditor: ${this.localizedLabel.missingKeyColumn}`)
-              }
+              if (this.importErrorCallback) this.importErrorCallback('missingKeyColumn')
+              throw new Error(`VueExcelEditor: ${this.localizedLabel.missingKeyColumn}`)
+            }
 
             let pass = 0
             let inserted = 0
@@ -1999,8 +1989,8 @@ export default defineComponent({
                   // locate match record
                   rowPos = this.table.findIndex(v =>
                     keys.filter(f =>
-                      typeof v[f.name] !== 'undefined'
-                      && (v[f.name] === line[f.name] || v[f.name] === line[f.label])).length === keys.length
+                      typeof v[f.name].value !== 'undefined'
+                      && (v[f.name].value === line[f.name] || v[f.name].value === line[f.label])).length === keys.length
                   )
                   if (rowPos === -1) {
                     // If this is a new line, avoid the line with duplicate key
@@ -2028,35 +2018,35 @@ export default defineComponent({
                   if (typeof val === 'undefined') val = null
                   else {
                     if (field.readonly) {
-                      if (this.importErrorCallback) this.importErrorCallback('readonlyColumnDetected', i+1)
-                      throw new Error(`VueExcelEditor: [row=${i+1}] ` + this.localizedLabel.readonlyColumnDetected + ': ' + field.name)
+                      if (this.importErrorCallback) this.importErrorCallback('readonlyColumnDetected', i + 1)
+                      throw new Error(`VueExcelEditor: [row=${i + 1}] ` + this.localizedLabel.readonlyColumnDetected + ': ' + field.name)
                     }
                     if (field.change) {
-                      let result = await field.change(val, rec[field.name], rec, field)
+                      let result = await field.change(val, rec[field.name]?.value, rec, field)
                       if (result === false) {
-                        if (this.importErrorCallback) this.importErrorCallback('columnHasValidationError', i+1)
-                        throw new Error(`VueExcelEditor: [row=${i+1}, val=${val}] ` + this.localizedLabel.columnHasValidationError(field.name, ''))
+                        if (this.importErrorCallback) this.importErrorCallback('columnHasValidationError', i + 1)
+                        throw new Error(`VueExcelEditor: [row=${i + 1}, val=${val}] ` + this.localizedLabel.columnHasValidationError(field.name, ''))
                       }
                     }
                     if (field.validate) {
                       let err
-                      if ((err = field.validate(val, rec[field.name], rec, field))) {
-                        if (this.importErrorCallback) this.importErrorCallback('columnHasValidationError', i+1, val)
-                        throw new Error(`VueExcelEditor: [row=${i+1}, val=${val}] ` + this.localizedLabel.columnHasValidationError(field.name, err))
+                      if ((err = field.validate(val, rec[field.name]?.value, rec, field))) {
+                        if (this.importErrorCallback) this.importErrorCallback('columnHasValidationError', i + 1, val)
+                        throw new Error(`VueExcelEditor: [row=${i + 1}, val=${val}] ` + this.localizedLabel.columnHasValidationError(field.name, err))
                       }
                     }
                     if (this.validate) {
                       let err
-                      if ((err = this.validate(val, rec[field.name], rec, field))) {
-                        if (this.importErrorCallback) this.importErrorCallback('rowHasValidationError', i+1, val)
-                        throw new Error(`VueExcelEditor: [row=${i+1}, val=${val}] ` + this.localizedLabel.rowHasValidationError(i + 1, field.name, err))
+                      if ((err = this.validate(val, rec[field.name]?.value, rec, field))) {
+                        if (this.importErrorCallback) this.importErrorCallback('rowHasValidationError', i + 1, val)
+                        throw new Error(`VueExcelEditor: [row=${i + 1}, val=${val}] ` + this.localizedLabel.rowHasValidationError(i + 1, field.name, err))
                       }
                     }
                   }
-                  if (val !== null) rec[field.name] = val
+                  if (val !== null) rec[field.name] = { value: val, anomaly: false, isSelected: false } //сомнительно но окей
                   else if (field.mandatory) {
-                    if (this.importErrorCallback) this.importErrorCallback(field.mandatory, i+1, val)
-                    throw new Error(`VueExcelEdutor: [row=${i+1}, val=${val}] ` + field.mandatory)
+                    if (this.importErrorCallback) this.importErrorCallback(field.mandatory, i + 1, val)
+                    throw new Error(`VueExcelEdutor: [row=${i + 1}, val=${val}] ` + field.mandatory)
                   }
                 }))
 
@@ -2066,12 +2056,21 @@ export default defineComponent({
                     updated++
                     Object.keys(rec).forEach(name => {
                       if (name.startsWith('$')) return
-                      this.updateCell(rowPos, name, rec[name])
+                      this.updateCell(rowPos, name, rec[name].value)
                     })
                     this.selected[rowPos] = this.table[rowPos].$id
                   }
                   else {
-                    this.newRecord(rec, true)
+                    const newRec = {}
+                    Object.keys(rec).forEach(name => {
+                      if (name.startsWith('$')) {
+                        newRec[name] = rec[name]
+                      }
+                      else {
+                        newRec[name] = { value: rec[name].value, anomaly: false, isSelected: false }
+                      }
+                    })
+                    this.newRecord(newRec, true)
                     inserted++
                   }
                 }
@@ -2104,7 +2103,7 @@ export default defineComponent({
         fileReader.readAsBinaryString(file)
       }, 500)
     },
-    exportTable (format, selectedOnly, filename) {
+    exportTable(format, selectedOnly, filename) {
       this.processing = true
       setTimeout(() => {
         const wb = utils.book_new()
@@ -2114,14 +2113,21 @@ export default defineComponent({
           data = this.table.filter((rec, i) => this.selected[i])
         const mapped = data.map(rec => {
           const conv = {}
-          this.fields.forEach(field => conv[field.name] = rec[field.name])
+          this.fields.forEach(field => {
+            if (rec[field.name]) {
+              conv[field.name] = rec[field.name].value
+            }
+            else {
+              conv[field.name] = null
+            }
+          })
           return conv
         })
         ws1 = utils.json_to_sheet(mapped, {
           header: this.fields.map(field => field.name)
         })
         const labels = Array.from(this.labelTr.children).slice(1).map(t => t.children[0].innerText)
-        utils.sheet_add_aoa(ws1, [labels], {origin: 0})
+        utils.sheet_add_aoa(ws1, [labels], { origin: 'A1' })
         ws1['!cols'] = Array.from(this.labelTr.children).slice(1).map((t) => {
           return {
             width: t.getBoundingClientRect().width / 6.5
@@ -2158,9 +2164,20 @@ export default defineComponent({
 
     /* *** Select *******************************************************************************************
      */
-    getSelectedRecords () {
+    getSelectedRecords() {
       return this.table.filter((rec, i) => this.selected[i])
     },
+//     getSelectedRecords() {
+//   // Возвращаем записи, которые выбраны, при необходимости можно извлечь только значения
+//   return this.table.filter((rec, i) => this.selected[i]).map(rec => {
+//     // Преобразуем запись, чтобы вернуть только значения полей
+//     const values = {};
+//     this.fields.forEach(field => {
+//       values[field.name] = rec[field.name].value; // Изменено: обращаемся к .value
+//     });
+//     return values;
+//   });
+// },
     /*
     deleteSelectedRecords () {
       this.table = this.table.filter((rec, i) => typeof this.selected[i] === 'undefined')
@@ -2168,7 +2185,7 @@ export default defineComponent({
       this.selectedCount = 0
     },
     */
-    rowLabelClick (e) {
+    rowLabelClick(e) {
       let target = e.target
       while (target.tagName !== 'TD') target = target.parentNode
       const rowPos = Number(target.getAttribute('pos')) + this.pageTop
@@ -2192,10 +2209,10 @@ export default defineComponent({
       }
       this.prevSelect = rowPos
     },
-    selectAllClick () {
+    selectAllClick() {
       this.toggleSelectAllRecords()
     },
-    reviseSelectedAfterTableChange () {
+    reviseSelectedAfterTableChange() {
       this.rowIndex = {}
       this.table.forEach((rec, i) => (this.rowIndex[rec.$id] = i))
       const temp = Object.assign(this.selected)
@@ -2207,11 +2224,11 @@ export default defineComponent({
       })
       this.selectedCount = Object.keys(this.selected).length
     },
-    toggleSelectRecord (rowPos) {
+    toggleSelectRecord(rowPos) {
       if (typeof this.selected[rowPos] !== 'undefined') this.unSelectRecord(rowPos)
       else this.selectRecord(rowPos)
     },
-    selectRecord (rowPos) {
+    selectRecord(rowPos) {
       if (typeof this.selected[rowPos] === 'undefined') {
         this.selectedCount++
         this.selected[rowPos] = this.table[rowPos].$id
@@ -2222,16 +2239,16 @@ export default defineComponent({
         })
       }
     },
-    selectRecordByKeys (keys) {
+    selectRecordByKeys(keys) {
       const rowPos = this.table.findIndex(v =>
-        this.fields.filter(f => f.keyField).filter(f => v[f.name] === keys[f.name]).length === keys.length)
+        this.fields.filter(f => f.keyField).filter(f => v[f.name].value === keys[f.name]).length === keys.length)
       if (rowPos >= 0) this.selectRecord(rowPos)
     },
-    selectRecordById (id) {
+    selectRecordById(id) {
       const rowPos = this.table.findIndex(v => v.$id === id)
       if (rowPos >= 0) this.selectRecord(rowPos)
     },
-    unSelectRecord (rowPos) {
+    unSelectRecord(rowPos) {
       if (typeof this.selected[rowPos] !== 'undefined') {
         delete this.selected[rowPos]
         this.selectedCount--
@@ -2242,7 +2259,7 @@ export default defineComponent({
         })
       }
     },
-    toggleSelectAllRecords (e) {
+    toggleSelectAllRecords(e) {
       if (e) e.preventDefault()
       if (this.selectedCount > 0)
         this.clearAllSelected()
@@ -2252,7 +2269,7 @@ export default defineComponent({
         this.selectedCount = this.table.length
       }
     },
-    clearAllSelected () {
+    clearAllSelected() {
       // for (let i = 0; i < this.$refs.systable.children[2].children.length; i++)
       //  this.unSelectRecord(this.pageTop + i)
       if (this.selectedCount > 0)
@@ -2263,7 +2280,7 @@ export default defineComponent({
 
     /* *** Cursor *******************************************************************************************
      */
-    moveTo (rowPos, colPos) {
+    moveTo(rowPos, colPos) {
       colPos = colPos || 0
       const done = this.moveInputSquare(rowPos - this.pageTop, colPos)
       this.focused = true
@@ -2275,36 +2292,36 @@ export default defineComponent({
       while (this.fields[goColPos].invisible && goColPos < this.fields.length - 1) goColPos++
       return this.moveTo(0, goColPos)
     },
-    moveToNorthEast () {
+    moveToNorthEast() {
       let goColPos = this.fields.length - 1
       while (this.fields[goColPos].invisible && goColPos > 0) goColPos--
       return this.moveTo(0, goColPos)
     },
-    moveToSouthWest () {
+    moveToSouthWest() {
       let goRowPos = this.table.length - 1
       let goColPos = 0
       while (this.fields[goColPos].invisible && goColPos < this.fields.length - 1) goColPos++
       return this.moveTo(goRowPos, goColPos)
     },
-    moveToSouthEast () {
+    moveToSouthEast() {
       let goRowPos = this.table.length - 1
       let goColPos = this.fields.length - 1
       while (this.fields[goColPos].invisible && goColPos > 0) goColPos--
       return this.moveTo(goRowPos, goColPos)
     },
-    moveToWest () {
+    moveToWest() {
       let goRowPos = this.currentRowPos
       let goColPos = 0
       while (this.fields[goColPos].invisible && goColPos < this.fields.length - 1) goColPos++
       return this.moveTo(goRowPos, goColPos)
     },
-    moveToEast () {
+    moveToEast() {
       let goRowPos = this.currentRowPos
       let goColPos = this.fields.length - 1
       while (this.fields[goColPos].invisible && goColPos > 0) goColPos--
       return this.moveTo(goRowPos, goColPos)
     },
-    moveWest () {
+    moveWest() {
       if (this.focused && this.currentColPos > 0) {
         let goColPos = this.currentColPos - 1
         while (this.fields[goColPos].invisible && goColPos > 0) goColPos--
@@ -2313,7 +2330,7 @@ export default defineComponent({
       }
       return false
     },
-    moveEast () {
+    moveEast() {
       if (this.focused && this.currentColPos < this.fields.length - 1) {
         let goColPos = this.currentColPos + 1
         while (this.fields[goColPos].invisible && goColPos < this.fields.length - 1) goColPos++
@@ -2322,7 +2339,7 @@ export default defineComponent({
       }
       return false
     },
-    moveNorth () {
+    moveNorth() {
       if (this.focused) {
         const done = this.moveInputSquare(this.currentRowPos - 1, this.currentColPos)
         this.calVScroll()
@@ -2339,10 +2356,10 @@ export default defineComponent({
       }
       return false
     },
-    moveSouth () {
+    moveSouth() {
       if (this.focused) {
         // if (this.currentRowPos + 1 >= this.table.length) {
-        if (this.currentRowPos+1 >= (this.pageBottom - this.pageTop) && this.pageBottom >= this.table.length) {
+        if (this.currentRowPos + 1 >= (this.pageBottom - this.pageTop) && this.pageBottom >= this.table.length) {
           if (this.readonly) return false
           if (!this.newIfBottom) return false
           this.newRecord({}, false, true)
@@ -2364,7 +2381,7 @@ export default defineComponent({
       }
       return false
     },
-    mouseDown (e) {
+    mouseDown(e) {
       if (e.target.parentNode.parentNode.tagName === 'TBODY' && !e.target.classList.contains('first-col')) {
         e.preventDefault()
         const row = e.target.parentNode
@@ -2378,7 +2395,7 @@ export default defineComponent({
         this.currentCell = row.children[colPos + 1]
         this.currentRecord = this.table[this.pageTop + rowPos]
 
-        this.$emit('cell-click', {rowPos, colPos}, this.currentCell.textContent, this.currentRecord, this.currentField, this)
+        this.$emit('cell-click', { rowPos, colPos }, this.currentCell.textContent, this.currentRecord, this.currentField, this)
         if (typeof this.currentField.cellClick === 'function')
           this.currentField.cellClick(this.currentCell.textContent, this.currentRecord, rowPos, colPos, this.currentField, this)
         if (this.currentField && this.currentField.link /* && e.altKey */ && this.currentCell.textContent)
@@ -2424,7 +2441,7 @@ export default defineComponent({
         if (e.target.classList.contains('datepick')) this.showDatePickerDiv()
       }
     },
-    cellMouseMove (e) {
+    cellMouseMove(e) {
       let cursor = 'cell'
       if (this.inputBoxShow) cursor = 'default'
       if (e.target.offsetWidth - e.offsetX < 25) {
@@ -2440,7 +2457,7 @@ export default defineComponent({
         cursor = 'pointer'
       e.target.style.cursor = cursor
     },
-    cellMouseOver (e) {
+    cellMouseOver(e) {
       const cell = e.target
       if (!cell.classList.contains('error')) return
       if (this.tipTimeout) clearTimeout(this.tipTimeout)
@@ -2450,7 +2467,7 @@ export default defineComponent({
       this.$refs.tooltip.style.left = (rect.right + 8) + 'px'
       cell.addEventListener('mouseout', this.cellMouseOut)
     },
-    numcolMouseOver (e) {
+    numcolMouseOver(e) {
       const cell = e.target
       if (!cell.classList.contains('error')) return
       if (this.tipTimeout) clearTimeout(this.tipTimeout)
@@ -2460,24 +2477,24 @@ export default defineComponent({
       this.$refs.tooltip.style.left = (rect.right + 8) + 'px'
       cell.addEventListener('mouseout', this.cellMouseOut)
     },
-    cellMouseOut (e) {
+    cellMouseOut(e) {
       this.tipTimeout = setTimeout(() => {
         this.tip = ''
       }, 1000)
       e.target.removeEventListener(e.type, this.cellMouseOut)
     },
-    mouseOver () {
+    mouseOver() {
       this.mousein = true
       this.systable.classList.add('mouseover')
     },
-    mouseOut () {
+    mouseOut() {
       this.mousein = false
       this.systable.classList.remove('mouseover')
     },
 
     /* *** InputBox *****************************************************************************************
      */
-    moveInputSquare (rowPos, colPos) {
+    moveInputSquare(rowPos, colPos) {
       this.textTip = ''
       if (colPos < 0) return false
       const top = this.pageTop
@@ -2525,7 +2542,7 @@ export default defineComponent({
       this.squareSavedLeft = this.tableContent.scrollLeft
       this.inputSquare.style.marginLeft = 0
       this.inputSquare.style.left = (cellRect.left - tableRect.left - 1) + 'px'
-      this.inputSquare.style.top =  (cellRect.top - tableRect.top - 1) + 'px'
+      this.inputSquare.style.top = (cellRect.top - tableRect.top - 1) + 'px'
       this.inputSquare.style.width = (cellRect.width + 1) + 'px'
       this.inputSquare.style.height = (cellRect.height + 1) + 'px'
       this.inputSquare.style.zIndex = this.currentField.sticky ? 3 : 1
@@ -2544,7 +2561,7 @@ export default defineComponent({
       this.currentCell = cell
       this.currentRecord = this.table[top + rowPos]
 
-      this.$emit('cell-focus', {rowPos, colPos, cell, record: this.currentRecord})
+      this.$emit('cell-focus', { rowPos, colPos, cell, record: this.currentRecord })
       this.currentCell.classList.add('focus')
       this.lastCell = this.currentCell
 
@@ -2566,7 +2583,7 @@ export default defineComponent({
       }
       return true
     },
-    inputSquareClick () {
+    inputSquareClick() {
       if (!this.currentField.readonly && !this.inputBoxShow && this.currentField.type !== 'select') {
         this.inputBox.value = this.currentCell.textContent
         this.inputBoxShow = 1
@@ -2575,7 +2592,7 @@ export default defineComponent({
         this.focused = true
       }
     },
-    inputBoxMouseMove (e) {
+    inputBoxMouseMove(e) {
       let cursor = 'text'
       if (!this.currentField.readonly
         && (this.currentField.options || this.currentField.type === 'date')
@@ -2583,7 +2600,7 @@ export default defineComponent({
         cursor = 'pointer'
       e.target.style.cursor = cursor
     },
-    inputBoxMouseDown (e) {
+    inputBoxMouseDown(e) {
       if (e.target.offsetWidth - e.offsetX > 15) return
       if (this.currentField.readonly) return
       if (this.currentField.options) {
@@ -2595,7 +2612,7 @@ export default defineComponent({
         this.showDatePickerDiv()
       }
     },
-    inputCellWrite (setText, colPos, recPos) {
+    inputCellWrite(setText, colPos, recPos) {
       let field = this.currentField
       if (typeof colPos !== 'undefined') field = this.fields[colPos]
       if (typeof recPos === 'undefined') recPos = this.pageTop + this.currentRowPos
@@ -2604,7 +2621,7 @@ export default defineComponent({
       else
         this.updateCell(recPos, field, field.toValue(setText, this.table[recPos], field))
     },
-    inputBoxBlur () {
+    inputBoxBlur() {
       if (!this.$refs.dpContainer) return
       if (this.$refs.dpContainer.querySelector(':hover')) return
       this.inputBoxComplete()
@@ -2615,7 +2632,7 @@ export default defineComponent({
       }
       this.lastCell?.classList.remove('focus')
     },
-    inputBoxComplete () {
+    inputBoxComplete() {
       if (this.inputBoxChanged) {
         const value = this.inputBox._value || this.inputBox.value
         this.inputBox._value = ''
@@ -2629,9 +2646,11 @@ export default defineComponent({
       this.focused = true
     },
 
+
+
     /* *** Update *******************************************************************************************
      */
-    undoTransaction (e) {
+    undoTransaction(e) {
       if (e) e.preventDefault()
       if (this.redo.length === 0) return
       const transaction = this.redo.pop()
@@ -2650,23 +2669,23 @@ export default defineComponent({
             }
           }
           else
-            this.updateCell(t.$id, t.field.name, t.oldVal, true)
+            this.updateCell(t.$id, t.field.name, t.oldVal.value, true)
 
           return true
         }
-        catch(e) {
+        catch (e) {
           return false
         }
       })
     },
-    newRecord (rec, selectAfterDone, noLastPage, isUndo) {
+    newRecord(rec, selectAfterDone, noLastPage, isUndo) {
       if (typeof rec === 'undefined') rec = {}
       this.fields.map(f => {
         if (typeof rec[f.name] === 'undefined') {
           if (f.keyField)
-            rec[f.name] = '§' + this.tempKey()
+            rec[f.name] = { value: '§' + this.tempKey(), anomaly: false, isSelected: false };
           else
-            rec[f.name] = null
+            rec[f.name] = { value: null, anomaly: false, isSelected: false };
         }
       })
       const id = rec.$id || this.tempKey()
@@ -2676,7 +2695,7 @@ export default defineComponent({
       if (selectAfterDone) this.selected[rowPos] = id
       Object.keys(rec).forEach(name => {
         const field = this.fields.find(f => f.name === name)
-        if (field) this.updateCell(rec, field, rec[name], isUndo)
+        if (field) this.updateCell(rec, field, rec[name].value, isUndo)
       })
       // this.refresh()
       if (!noLastPage) this.lazy(() => {
@@ -2685,7 +2704,7 @@ export default defineComponent({
       })
       return rec
     },
-    deleteSelectedRecords () {
+    deleteSelectedRecords() {
       Object.values(this.selected).forEach((id) => {
         const valueRowPos = this.modelValue.findIndex(v => v.$id === id)
         if (valueRowPos >= 0) this.deleteRecord(valueRowPos)
@@ -2693,7 +2712,7 @@ export default defineComponent({
       this.selected = {}
       this.selectedCount = 0
     },
-    deleteRecord (valueRowPos, isUndo) {
+    deleteRecord(valueRowPos, isUndo) {
       if (this.currentRowPos === valueRowPos) this.moveNorth()
       const rec = this.modelValue.splice(valueRowPos, 1)[0]
       setTimeout(() => {
@@ -2707,8 +2726,8 @@ export default defineComponent({
         })
       }, 100)
     },
-    async updateCell (row, field, newVal, isUndo) {
-      switch(row.constructor.name) {
+    async updateCell(row, field, newVal, isUndo) {
+      switch (row.constructor.name) {
         case 'String': // $id
           row = this.modelValue.find(r => r.$id === row) // id
           break
@@ -2720,7 +2739,7 @@ export default defineComponent({
         default:
           throw new Error('Invalid row argument type')
       }
-      switch(field.constructor.name) {
+      switch (field.constructor.name) {
         case 'String': // field name
           field = this.fields.find(f => f.name === field)
           break
@@ -2743,7 +2762,7 @@ export default defineComponent({
         if (result === false) return
       }
 
-      row[field.name] = newVal
+      row[field.name] = { value: newVal, anomaly: false, isSelected: false };
 
       setTimeout(() => {
         const transaction = {
@@ -2752,18 +2771,18 @@ export default defineComponent({
           oldKeys: oldKeys,
           name: field.name,
           field: field,
-          oldVal: typeof oldVal !== 'undefined' ? oldVal : '',
+          oldVal: typeof oldVal !== 'undefined' ? oldVal.value : '',
           newVal: newVal,
           err: ''
         }
 
         if (field.validate !== null) transaction.err = field.validate(newVal, oldVal, row, field)
-        if (field.mandatory && newVal === '')
+        if (field.mandatory && newVal.value === '')
           transaction.err += (transaction.err ? '\n' : '') + field.mandatory
         this.setFieldError(transaction.err, row, field)
 
         if (this.validate !== null) {
-          transaction.rowerr = this.validate(newVal, oldVal, row, field)
+          transaction.rowerr = this.validate(newVal, oldVal.value, row, field)
           this.setRowError(transaction.rowerr, row)
         }
 
@@ -2776,57 +2795,57 @@ export default defineComponent({
         }, 50)
       })
     },
-    updateSelectedRows (field, setText) {
+    updateSelectedRows(field, setText) {
       this.processing = true
       setTimeout(() => {
         Object.keys(this.selected).forEach(recPos => {
           const pos = parseInt(recPos)
-          this.updateCell(pos, field, field.toValue(setText, this.table[pos], field))
+          this.updateCell(pos, field.name, field.toValue(setText, this.table[pos], field))
         })
         this.processing = false
       }, 0)
     },
-    setFieldError (error, row, field) {
+    setFieldError(error, row, field) {
       const id = `id-${row.$id}-${field.name}`
-      const selector = this.systable.querySelector('td#'+id)
+      const selector = this.systable.querySelector('td#' + id)
       if (error) {
         this.errmsg[id] = error
         this.$emit('validate-error', error, row, field)
         if (selector) selector.classList.add('error')
       }
       else
-      if (this.errmsg[id]) {
-        delete this.errmsg[id]
-        this.$emit('validate-error', '', row, field)
-        if (selector) selector.classList.remove('error')
-      }
+        if (this.errmsg[id]) {
+          delete this.errmsg[id]
+          this.$emit('validate-error', '', row, field)
+          if (selector) selector.classList.remove('error')
+        }
     },
-    setRowError (error, row) {
+    setRowError(error, row) {
       const rid = `rid-${row.$id}`
-      const selector = this.systable.querySelector('td#'+rid)
+      const selector = this.systable.querySelector('td#' + rid)
       if (error) {
         this.rowerr[rid] = error
         this.$emit('validate-error', error, row)
         if (selector) selector.classList.add('error')
       }
       else
-      if (this.rowerr[rid]) {
-        delete this.rowerr[rid]
-        this.$emit('validate-error', '', row)
-        if (selector) selector.classList.remove('error')
-      }
+        if (this.rowerr[rid]) {
+          delete this.rowerr[rid]
+          this.$emit('validate-error', '', row)
+          if (selector) selector.classList.remove('error')
+        }
     },
     validateAll() {
       this.errmsg = {}
       this.rowerr = {}
-      return Promise.all(this.table.map(row => 
-        Promise.all(Object.keys(row).map(name => this.updateCell(row, name, row[name], false))
-      )))
+      return Promise.all(this.table.map(row =>
+        Promise.all(Object.keys(row).map(name => this.updateCell(row, name, row[name].value, false))
+        )))
     },
 
     /* *** Autocomplete ****************************************************************************************
      */
-    async calAutocompleteList (force) {
+    async calAutocompleteList(force) {
       if (!this.currentField.autocomplete) return
       if (force || (this.inputBoxChanged && this.inputBox.value.length > 0)) {
         if (typeof this.recalAutoCompleteList !== 'undefined') clearTimeout(this.recalAutoCompleteList)
@@ -2863,10 +2882,10 @@ export default defineComponent({
             }
           }
           else {
-            for(let i=0; i<this.modelValue.length; i++) {
+            for (let i = 0; i < this.modelValue.length; i++) {
               const rec = this.modelValue[i]
               if (typeof rec[name] !== 'undefined' && rec[name].toString().toUpperCase().startsWith(value) && list.indexOf(rec[name]) === -1)
-                list.push(rec[name])
+                list.push(rec[name].value)
               if (list.length >= listCount) break
             }
             list.sort()
@@ -2902,28 +2921,28 @@ export default defineComponent({
           this.lazy(doList, 700)
       }
     },
-    inputAutocompleteText (text, e) {
+    inputAutocompleteText(text, e) {
       if (e) e.preventDefault()
       this.autocompleteInputs = []
       this.autocompleteSelect = -1
       this.inputBoxShow = 0
       this.inputBoxChanged = false
       setTimeout(() => {
-        this.inputCellWrite(text)
+        this.inputCellWrite(text, this.currentColPos, this.currentRowPos + this.pageTop)
       })
     },
 
     /* *** Helper ****************************************************************************************
      */
-    tempKey () {
+    tempKey() {
       return (new Date().getTime() % 1e8) + '-' + Math.random().toString().slice(2, 7)
     },
-    hashCode (s) {
+    hashCode(s) {
       return s.split('').reduce((a, b) => {
         return a = ((a << 5) - a) + b.charCodeAt(0) | 0
       }, 0)
     },
-    lazy (p, delay, p1) {
+    lazy(p, delay, p1) {
       if (typeof p !== 'function') return this.lazyBuf(p, delay, p1)
       if (!delay) delay = 20
       const hash = this.hashCode(p.name + p.toString())
@@ -2933,7 +2952,7 @@ export default defineComponent({
         delete this.lazyTimeout[hash]
       }, delay)
     },
-    lazyBuf (item, p, delay) {
+    lazyBuf(item, p, delay) {
       if (!delay) delay = 20
       const hash = this.hashCode(p.name + p.toString())
       if (this.lazyBuffer[hash])
