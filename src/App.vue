@@ -11,6 +11,6 @@ import NestedTableWrapper from './components/ui/NestedTableWrapper.vue';
 <style scoped>
 
 .test {
-  width: 800px;
+  width: 80%;
 }
 </style>

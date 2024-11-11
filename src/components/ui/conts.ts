@@ -12,11 +12,7 @@ export default [
     },
     "scenarios": [
       {
-        "id": {
-          value: "fb8f2eacac8deefc9b527a5a710ca538",
-          anomaly: "",
-          isSelected: false,
-        },
+        "id": "fb8f2eacac8deefc9b527a5a710ca538",
         "name": {
           value: "test",
           anomaly: "",

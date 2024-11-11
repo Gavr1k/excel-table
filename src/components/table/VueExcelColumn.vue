@@ -2,315 +2,308 @@
   <div />
 </template>
 
-<script setup lang="ts">
-import { defineProps, defineEmits, onMounted, getCurrentInstance, ref, watch } from 'vue';
-import { ExcelColumn } from './const/types';
+<script>
+export default {
+  props: {
+    field: {type: String, default: 'dummy'},
+    label: {type: String, default: null},
+    type: {type: String, default: 'string'},
+    initStyle: {type: [Object, Function], default: null},
+    width: {type: String, default: '100px'},
+    invisible: {type: Boolean, default: false},
+    readonly: {type: Boolean, default: null},
+    textTransform: {type: String, default: null}, // replace uppercase prop
+    textAlign: {type: String, default: null},
+    keyField: {type: Boolean, default: false},
+    sticky: {type: Boolean, default: false},
+    listByClick: {type: Boolean, default: null},
 
-type FieldData = {
-  value: any;
-  anomaly: boolean;
-  isSelected: boolean;
-};
+    validate: {type: Function, default: null},
+    change: {type: Function, default: null},
+    link: {type: Function, default: null},
+    isLink: {type: Function, default: null},
+    format: {type: String, default: 'text'},
+    cellClick: {type: Function, default: null},
+    autoFillWidth: {type: Boolean, default: false},
+    hideDuplicate: {type: Boolean, default: false},
+    grouping: {type: String, default: null},
 
-type ToValueFunction = (text: string) => FieldData;
-type ToTextFunction = (fieldData: FieldData) => string;
+    allowKeys: {type: [Array, Function], default () {return null}},
+    mandatory: {type: String, default: ''},
+    lengthLimit: {type: Number, default: 0},
+    autocomplete: {type: Boolean, default: null},
+    pos: {type: Number, default: 0},
+    options: {type: [Array, Object, Function], default () {return null}},
+    summary: {type: String, default: null},
+    sort: {type: Function, default: null},
+    sorting: {type: Function, default: null},
+    noSorting: {type: Boolean, default: null},
+    masking: {type: String, default: '•'},
+    placeholder: {type: String, default: ''},
+    color: {type: [String, Function], default: null},
+    bgcolor: {type: [String, Function], default: null},
 
-interface ExcelColumnProps {
-  field: string;
-  label?: string | null;
-  type: string;
-  width?: number;
-  autoFillWidth?: boolean;
-  validate?: Function;
-  change?: Function;
-  link?: Function;
-  isLink?: Function;
-  sort?: boolean;
-  sorting?: Function;
-  noSorting?: boolean;
-  keyField?: boolean;
-  sticky?: boolean;
-  allowKeys?: string[];
-  mandatory?: string;
-  lengthLimit?: number;
-  textTransform?: 'uppercase' | 'lowercase';
-  autocomplete?: boolean;
-  initStyle?: Record<string, string | number> | Function;
-  invisible?: boolean;
-  readonly?: boolean;
-  pos?: number;
-  options?: Record<string, any> | Function;
-  summary?: boolean;
-  masking?: string;
-  format?: string;
-  toValue?: ToValueFunction;
-  toText?: ToTextFunction;
-  register?: Function;
-  placeholder?: string;
-  cellClick?: Function;
-  listByClick?: boolean;
-  color?: string;
-  bgcolor?: string;
-  hideDuplicate?: boolean;
-  grouping?: boolean;
+    toValue: {
+      type: Function,
+      default (text) {
+        switch (this.textTransform) {
+          case 'uppercase':
+            text = text.toUpperCase()
+            break
+          case 'lowercase':
+            text = text.toLowerCase()
+            break
+        }
+        switch (this.type) {
+          case 'datetick':
+            // return moment(text, 'YYYY-MM-DD').valueOf()
+            return new Date(text + ' GMT+0').getTime()
+          case 'datetimetick':
+            // return moment(text, 'YYYY-MM-DD HH:mm').valueOf()
+            return new Date(text + ' GMT+0').getTime()
+          case 'datetimesectick':
+            // return moment(text, 'YYYY-MM-DD HH:mm:ss').valueOf()
+            return new Date(text + ' GMT+0').getTime()
+          case 'check10':
+          case 'checkYN':
+          case 'checkTF':
+            return text.toUpperCase()
+          case 'map':
+            if (this.options.constructor.name.endsWith('Function')) {
+              const list = this.options(text)
+              return Object.keys(list).find(k => list[k] === text)
+            }
+            else
+              return Object.keys(this.options).find(k => this.options[k] === text)
+          default:
+            return text
+        }
+      }
+    },
+    toText: {
+      type: Function,
+      default (val) {
+        // § magic to hide the temp key
+        if (this.keyField && val && val.toString().startsWith('§')) return ''
+        const offset = new Date().getTimezoneOffset() * 60 * 1000
+        let d
+        switch (this.type) {
+          case 'date':
+            d = new Date(val).getTime()
+            if (!d) return ''
+            return new Date(d - offset).toISOString().slice(0, 10)
+            // return val? new Date(new Date(val) - offset).toISOString().slice(0, 10) : ''
+            // return val? moment(val).format('YYYY-MM-DD'): ''
+          case 'datetick':
+            d = new Date(val * 1 ? val * 1 : val).getTime()
+            if (!d) return ''
+            return new Date(d - offset).toISOString().slice(0, 10)
+            // return val? moment(Number(val)).format('YYYY-MM-DD'): ''
+            // return val? new Date(Number(val) - offset).toISOString().slice(0, 10) : ''
+          case 'datetimetick':
+            d = new Date(val * 1 ? val * 1 : val).getTime()
+            if (!d) return ''
+            return new Date(d - offset).toISOString().replace('T', ' ').slice(0, 16)
+            // return val? moment(Number(val)).format('YYYY-MM-DD HH:mm'): ''
+            // return val? new Date(Number(val) - offset).toISOString().replace('T', ' ').slice(0, 16) : ''
+          case 'datetimesectick':
+            d = new Date(val * 1 ? val * 1 : val).getTime()
+            if (!d) return ''
+            return new Date(d - offset).toISOString().replace('T', ' ').slice(0, 19)
+            // return val? moment(Number(val)).format('YYYY-MM-DD HH:mm:ss'): ''
+            // return val? new Date(Number(val) - offset).toISOString().replace('T', ' ').slice(0, 19) : ''
+          case 'map':
+            if (this.options.constructor.name.endsWith('Function'))
+              return this.options(val)[val]
+            else
+              return this.options[val]
+          case 'password':
+            return this.masking.repeat(val?.length || 0)
+          case 'action':
+            return ''
+          case 'badge':
+            if (this.bgcolor) {
+              let bgcolor = this.bgcolor
+              if (typeof bgcolor == 'function') bgcolor = bgcolor(val)
+              return `<span class='badge' style='background-color:${bgcolor}'>${val}</span>`
+            }
+            else
+              return `<span class='badge'>${val}</span>`
+          default:
+            return val
+        }
+      }
+    },
+    register: {type: Function, default: null}
+  },
+  created () {
+    this.init()
+  },
+  methods: {
+    init () {
+      const self = this
+      let style = this.initStyle || {}
+      let validate = this.validate
+      let allowKeys = this.allowKeys
+      let lengthLimit = this.lengthLimit
+
+      switch (this.type) {
+        case 'number':
+          style.textAlign = 'right'
+          allowKeys = allowKeys || ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-']
+          break
+        case 'date':
+          allowKeys = allowKeys || ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-']
+          /*
+          if (!validate) validate = (val) => {
+            if (val === '') return ''
+            // if (!moment(val, 'YYYY-MM-DD', true).isValid()) return this.$parent.localizedLabel.invalidInputValue
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(val)) return this.$parent.localizedLabel.invalidInputValue
+            return ''
+          }
+          */
+          break
+        case 'datetime':
+          allowKeys = allowKeys || ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', ' ', ':']
+          /*
+          if (!validate) validate = (val) => {
+            if (val === '') return ''
+            // if (!moment(val, 'YY-MM-DD hh:mm', true).isValid()) return this.$parent.localizedLabel.invalidInputValue
+            if (!/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(val)) return this.$parent.localizedLabel.invalidInputValue
+            return ''
+          }
+          */
+          break
+        case 'datetimesec':
+          allowKeys = allowKeys || ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', ' ', ':']
+          /*
+          if (!validate) validate = (val) => {
+            if (val === '') return ''
+            // if (!moment(val, 'YY-MM-DD hh:mm:ss', true).isValid()) return this.$parent.localizedLabel.invalidInputValue
+            if (!/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(val)) return this.$parent.localizedLabel.invalidInputValue
+            return ''
+          }
+          */
+          break
+        case 'datetick':
+          allowKeys = allowKeys || ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', ' ', ':']
+          break
+        case 'datetimetick':
+          allowKeys = allowKeys || ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', ' ', ':']
+          break
+        case 'datetimesectick':
+          allowKeys = allowKeys || ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', ' ', ':']
+          break
+        case 'check10':
+          style.textAlign = 'center'
+          style.textTransform = 'uppercase'
+          allowKeys = allowKeys || ['0', '1']
+          lengthLimit = lengthLimit || 1
+          break
+        case 'checkYN':
+          style.textAlign = 'center'
+          style.textTransform = 'uppercase'
+          allowKeys = allowKeys || ['Y', 'N']
+          lengthLimit = lengthLimit || 1
+          break
+        case 'checkTF':
+          style.textAlign = 'center'
+          style.textTransform = 'uppercase'
+          allowKeys = allowKeys || ['T', 'F']
+          lengthLimit = lengthLimit || 1
+          break
+        case 'map':
+          if (this.options.constructor.name === 'AsyncFunction')
+            throw new Error('VueExcelColumn: Map does not support Async Function')
+          break
+        case 'select':
+          break
+        case 'string':
+          break
+        case 'password':
+          break
+        case 'action':
+          this._listByClick = true
+          break
+        case 'badge':
+          this._color = 'white'
+          this._bgcolor = 'blue'
+          this._format = 'html'
+          style.textAlign = 'center'
+          break
+        default:
+          throw new Error('VueExcelColumn: Not supported type:' + this.type)
+      }
+
+      if (this.textTransform) style.textTransform = this.textTransform
+      if (this.textAlign) style.textAlign = this.textAlign
+      // if (this.readonly && this.$parent.readonlyStyle) style = Object.assign(style, this.$parent.readonlyStyle)
+
+      this._autocomplete = self.autocomplete || self.type === 'action'
+      this._readonly = self.readonly
+
+      this.$parent.registerColumn({
+        name: this.field,
+        label: this.label === null ? this.field : this.label,
+        type: this.type,
+        width: this.width,
+        origWidth: this.width,
+        autoFillWidth: this.autoFillWidth,
+
+        validate: validate,
+        change: this.change,
+        link: this.link,
+        isLink: this.isLink || (this.link ? () => true : null),
+        sort: this.sort,
+        sorting: this.sorting,
+        noSorting: this.noSorting !== null ? this.noSorting : self.$parent.noSorting,
+
+        keyField: this.keyField,
+        sticky: this.sticky,
+        allowKeys: allowKeys,
+        mandatory: this.mandatory,
+        lengthLimit: Number(lengthLimit),
+        textTransform: this.textTransform,
+
+        get autocomplete () {
+          if (self.type === 'map' || self.type === 'select') return true
+          if (self.type === 'password') return false
+          return self._autocomplete === null ? self.$parent.autocomplete : self._autocomplete
+        },
+        set autocomplete (val) {
+          self._autocomplete = val
+        },
+        initStyle: style,
+        invisible: this.invisible,
+        get readonly () {
+          if (self.link) return true
+          if (self.type === 'action') return false
+          return self._readonly === null ? self.$parent.readonly : self._readonly
+        },
+        set readonly (val) {
+          self._readonly = val
+        },
+        pos: Number(this.pos),
+        options: this.options,
+        summary: this.summary,
+        masking: this.masking,
+        format: this._format || this.format,
+        toValue: this.toValue,
+        toText: (...arg) => {
+          const result = this.toText(...arg)
+          if (this.placeholder && result === '') return this.placeholder
+          return result
+        },
+        register: this.register,
+        placeholder: this.placeholder,
+        cellClick: this.cellClick,
+        listByClick: this.listByClick || this._listByClick,
+        color: this.color || this._color,
+        bgcolor: this.bgcolor || this._bgcolor,
+        hideDuplicate: this.hideDuplicate || this.grouping,
+        grouping: this.grouping
+      })
+    }
+  }
 }
-
-const props = defineProps<ExcelColumnProps>();
-
-const instance = getCurrentInstance();
-const parent = instance?.proxy;
-
-const uid = `uid${Math.random().toString(36).substr(2, 9)}`;
-
-const _autocomplete = ref<boolean>(false);
-const _readonly = ref<boolean>(false);
-const _format = ref<string | undefined>(props.format);
-const _color = ref<string>('white');
-const _bgcolor = ref<string>('blue');
-const _listByClick = ref<boolean>(false);
-
-const defaultToValue: ToValueFunction = (text: string) => {
-  let transformedText = text;
-  if (props.textTransform === 'uppercase') {
-    transformedText = text.toUpperCase();
-  } else if (props.textTransform === 'lowercase') {
-    transformedText = text.toLowerCase();
-  }
-
-  let value: any;
-  switch (props.type) {
-    case 'datetick':
-    case 'datetimetick':
-    case 'datetimesectick':
-      value = new Date(transformedText + ' GMT+0').getTime();
-      break;
-    case 'check10':
-    case 'checkYN':
-    case 'checkTF':
-      value = transformedText.toUpperCase();
-      break;
-    case 'map':
-      if (typeof props.options === 'function') {
-        const list = props.options(transformedText);
-        value = Object.keys(list).find(k => list[k] === transformedText);
-      } else if (typeof props.options === 'object' && props.options !== null) {
-        value = Object.keys(props.options).find(k => (props.options as Record<string, any>)[k] === transformedText);
-      } else {
-        value = transformedText;
-      }
-      break;
-    default:
-      value = transformedText;
-      break;
-  }
-
-  return {
-    value: value,
-    anomaly: false,
-    isSelected: false
-  };
-};
-
-const defaultToText: ToTextFunction = (fieldData: FieldData): string => {
-  const val = fieldData.value;
-  if (props.keyField && val && val.toString().startsWith('§')) return '';
-  const offset = new Date().getTimezoneOffset() * 60 * 1000;
-  let d: number | undefined;
-
-  switch (props.type) {
-    case 'date':
-      d = new Date(val).getTime();
-      if (!d) return '';
-      return new Date(d - offset).toISOString().slice(0, 10);
-    case 'datetick':
-    case 'datetimetick':
-    case 'datetimesectick':
-      d = new Date(val * 1 ? val * 1 : val).getTime();
-      if (!d) return '';
-      if (props.type === 'datetick') {
-        return new Date(d - offset).toISOString().slice(0, 10);
-      } else if (props.type === 'datetimetick') {
-        return new Date(d - offset).toISOString().replace('T', ' ').slice(0, 16);
-      } else { // datetimesectick
-        return new Date(d - offset).toISOString().replace('T', ' ').slice(0, 19);
-      }
-    case 'map':
-      if (typeof props.options === 'function') {
-        const optionsResult = props.options(val);
-        return optionsResult[val] ?? val;
-      } else if (typeof props.options === 'object' && props.options !== null) {
-        return (props.options as Record<string, any>)[val] ?? val;
-      }
-      return val;
-    case 'password':
-      return props.masking.repeat(fieldData.value?.toString().length || 0);
-    case 'action':
-      return '';
-    case 'badge':
-      if (props.bgcolor) {
-        const bgcolor = typeof props.bgcolor === 'function' ? props.bgcolor(val) : props.bgcolor;
-        return `<span class='badge' style='background-color:${bgcolor}'>${val}</span>`;
-      } else {
-        return `<span class='badge'>${val}</span>`;
-      }
-    default:
-      return val;
-  }
-};
-
-// Назначение функций toValue и toText, если они не предоставлены
-const toValue: ToValueFunction = props.toValue ?? defaultToValue;
-const toText: ToTextFunction = props.toText ?? defaultToText;
-
-// Функция инициализации
-const init = () => {
-  let style: Record<string, string | number> = {};
-
-  if (typeof props.initStyle === 'function') {
-    style = props.initStyle();
-  } else if (typeof props.initStyle === 'object' && props.initStyle !== null) {
-    style = props.initStyle as Record<string, string | number>;
-  }
-
-  let validate = props.validate;
-  let allowKeys = props.allowKeys;
-  let lengthLimit = props.lengthLimit;
-
-  switch (props.type) {
-    case 'number':
-      style.textAlign = 'right';
-      allowKeys = allowKeys || ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-'];
-      break;
-    case 'date':
-      allowKeys = allowKeys || ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-'];
-      break;
-    case 'datetime':
-    case 'datetick':
-    case 'datetimetick':
-    case 'datetimesectick':
-      allowKeys = allowKeys || ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', ' ', ':'];
-      break;
-    case 'check10':
-      style.textAlign = 'center';
-      style.textTransform = 'uppercase';
-      allowKeys = allowKeys || ['0', '1'];
-      lengthLimit = lengthLimit || 1;
-      break;
-    case 'checkYN':
-      style.textAlign = 'center';
-      style.textTransform = 'uppercase';
-      allowKeys = allowKeys || ['Y', 'N'];
-      lengthLimit = lengthLimit || 1;
-      break;
-    case 'checkTF':
-      style.textAlign = 'center';
-      style.textTransform = 'uppercase';
-      allowKeys = allowKeys || ['T', 'F'];
-      lengthLimit = lengthLimit || 1;
-      break;
-    case 'map':
-      if (props.options && props.options.constructor.name === 'AsyncFunction') {
-        throw new Error('VueExcelColumn: Map does not support Async Function');
-      }
-      break;
-    case 'select':
-    case 'string':
-    case 'password':
-      break;
-    case 'action':
-      _listByClick.value = true;
-      break;
-    case 'badge':
-      _color.value = 'white';
-      _bgcolor.value = 'blue';
-      _format.value = 'html';
-      style.textAlign = 'center';
-      break;
-    default:
-      throw new Error(`VueExcelColumn: Not supported type: ${props.type}`);
-  }
-
-  if (props.textTransform) {
-    style.textTransform = props.textTransform;
-  }
-  if (props.textAlign) {
-    style.textAlign = props.textAlign;
-  }
-
-  // Обновление внутренних состояний
-  _autocomplete.value = props.autocomplete ?? (props.type === 'action');
-  _readonly.value = props.readonly ?? false;
-
-  // Регистрация столбца в родительском компоненте
-  if (parent && typeof parent.registerColumnWrapper === 'function') {
-    parent.registerColumnWrapper({
-      name: props.field,
-      label: props.label === null ? props.field : props.label,
-      type: props.type,
-      width: props.width,
-      origWidth: props.width,
-      autoFillWidth: props.autoFillWidth,
-
-      validate: validate,
-      change: props.change,
-      link: props.link,
-      isLink: props.isLink ? props.isLink : (props.link ? () => true : null),
-      sort: props.sort,
-      sorting: props.sorting,
-      noSorting: props.noSorting !== null ? props.noSorting : parent.noSorting,
-
-      keyField: props.keyField,
-      sticky: props.sticky,
-      allowKeys: allowKeys,
-      mandatory: props.mandatory,
-      lengthLimit: Number(lengthLimit),
-      textTransform: props.textTransform,
-
-      get autocomplete() {
-        if (props.type === 'map' || props.type === 'select') return true;
-        if (props.type === 'password') return false;
-        return _autocomplete.value === null ? parent.autocomplete : _autocomplete.value;
-      },
-      set autocomplete(val: boolean) {
-        _autocomplete.value = val;
-      },
-      initStyle: style,
-      invisible: props.invisible,
-      get readonly() {
-        if (props.link) return true;
-        if (props.type === 'action') return false;
-        return _readonly.value === null ? parent.readonly : _readonly.value;
-      },
-      set readonly(val: boolean) {
-        _readonly.value = val;
-      },
-      pos: Number(props.pos),
-      options: props.options,
-      summary: props.summary,
-      masking: props.masking,
-      format: _format.value ?? props.format,
-      toValue: toValue, // Теперь toValue возвращает объект
-      toText: (...args: any[]) => {
-        const fieldData: FieldData = args[0];
-        const result = toText(fieldData);
-        if (props.placeholder && result === '') return props.placeholder;
-        return result;
-      },
-      register: props.register,
-      placeholder: props.placeholder,
-      cellClick: props.cellClick,
-      listByClick: props.listByClick ?? _listByClick.value,
-      color: props.color ?? _color.value,
-      bgcolor: props.bgcolor ?? _bgcolor.value,
-      hideDuplicate: props.hideDuplicate ?? props.grouping,
-      grouping: props.grouping,
-    });
-  }
-};
-
-onMounted(() => {
-  init();
-});
 </script>
-
-<style scoped></style>
