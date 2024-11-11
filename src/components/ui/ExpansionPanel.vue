@@ -6,9 +6,11 @@
         <span class="icon" :class="{ 'open': isOpen }">▼</span>
       </div>
     </div>
+    <transition name="expand">
       <div v-if="isOpen" class="expansion-body">
         <slot></slot>
       </div>
+    </transition>
   </div>
 </template>
 
@@ -33,19 +35,17 @@ const togglePanel = () => {
 .expansion-panel {
   border: 1px solid #e0e0e0;
   border-radius: 4px;
-  margin-bottom: 15px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
 }
 
 .expansion-header {
-  padding: 15px;
+  padding: 16px;
   background-color: #f9f9f9;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #e0e0e0;
 }
 
 .expansion-header:hover {
@@ -76,16 +76,22 @@ const togglePanel = () => {
 }
 
 .expansion-body {
-  padding: 15px;
   background-color: #fff;
-}
-
-.expand-enter-active, .expand-leave-active {
-  transition: max-height 0.5s ease;
-}
-
-.expand-enter, .expand-leave-to {
-  max-height: 0;
   overflow: hidden;
+}
+
+/* Переходы для компонента <transition name="expand"> */
+.expand-enter-active, .expand-leave-active {
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+.expand-enter-from, .expand-leave-to {
+  max-height: 0;
+  opacity: 0;
+}
+
+.expand-enter-to, .expand-leave-from {
+  max-height: 500px; /* Достаточно большое значение для содержимого */
+  opacity: 1;
 }
 </style>
