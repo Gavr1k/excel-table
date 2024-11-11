@@ -26,16 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, computed, defineProps, defineEmits, useAttrs, nextTick } from 'vue';
-
-// Определение интерфейсов для пропсов
-interface Field {
-  // Определите свойства, если необходимо
-}
-
-interface LocalizedLabel {
-  // Если есть локализованные метки, добавьте сюда
-}
+import { ref, onMounted, watch, computed, defineProps, defineEmits, useAttrs} from 'vue';
 
 interface Props {
   modelValue?: string;
@@ -45,31 +36,24 @@ interface Props {
   style?: string | Record<string, any>;
 }
 
-// Определение пропсов с дефолтными значениями
 const props = defineProps<Props>();
 
-// Определение событий, которые компонент может эмитировать
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void;
   (e: 'showFilter'): void;
 }>();
 
-// Использование атрибутов для прослушивания дополнительных событий
 const attrs = useAttrs();
 
-// Определение ссылок на DOM элементы
 const cellRef = ref<HTMLElement | null>(null);
 const rowRef = ref<HTMLElement | null>(null);
 const theadRef = ref<HTMLElement | null>(null);
 const colLabelRef = ref<HTMLElement | null>(null);
 
-// Уникальный идентификатор для ячейки
 const uid = ref<string>('');
 
-// Позиция столбца
 const colPos = ref<number>(0);
 
-// Вычисляемые свойства для классов и стилей
 const listeners = computed(() => ({
   ...attrs,
   input: onInput,
@@ -78,20 +62,6 @@ const listeners = computed(() => ({
 const cellClass = computed(() => props.class);
 const cellStyle = computed(() => props.style);
 
-// Вычисляемое свойство для ошибок (если необходимо)
-const err = computed(() => {
-  // Если есть метод validate, можно его использовать
-  // if (validate)
-  //   return validate(props.modelValue)
-  // return ''
-  return '';
-});
-
-// Методы
-
-/**
- * Обновляет значение модели, если оно изменилось
- */
 const updateValue = (e: Event) => {
   const target = e.target as HTMLElement;
   const content = target.textContent || '';
@@ -100,18 +70,12 @@ const updateValue = (e: Event) => {
   }
 };
 
-/**
- * Обработчик события input
- */
 const onInput = (e: Event) => {
   if (props.interactive) {
     updateValue(e);
   }
 };
 
-/**
- * Обработчик события focus
- */
 const onFocus = () => {
   setTimeout(() => {
     if (colLabelRef.value) {
@@ -120,13 +84,9 @@ const onFocus = () => {
     if (cellRef.value) {
       selectAll(cellRef.value);
     }
-    // Если нужно взаимодействовать с родительским компонентом, используйте provide/inject или эмитируйте события
   }, 0);
 };
 
-/**
- * Выделяет весь текст внутри узла
- */
 const selectAll = (node: HTMLElement) => {
   const selection = window.getSelection();
   if (selection) {
@@ -137,9 +97,6 @@ const selectAll = (node: HTMLElement) => {
   }
 };
 
-/**
- * Обработчик события blur
- */
 const onBlur = (e: FocusEvent) => {
   updateValue(e);
   if (colLabelRef.value) {
@@ -149,9 +106,6 @@ const onBlur = (e: FocusEvent) => {
   target.classList.remove('edit');
 };
 
-/**
- * Обработчик нажатия клавиши "влево"
- */
 const keyWest = (e: KeyboardEvent) => {
   const sel = window.getSelection();
   if (!sel) return;
@@ -168,9 +122,6 @@ const keyWest = (e: KeyboardEvent) => {
   }
 };
 
-/**
- * Обработчик нажатия клавиши "вправо"
- */
 const keyEast = (e: KeyboardEvent) => {
   const sel = window.getSelection();
   if (!sel) return;
@@ -187,9 +138,6 @@ const keyEast = (e: KeyboardEvent) => {
   }
 };
 
-/**
- * Обработчик нажатия клавиши "Enter"
- */
 const keyEnter = (e: KeyboardEvent) => {
   e.preventDefault();
   if (cellRef.value) {
@@ -198,9 +146,6 @@ const keyEnter = (e: KeyboardEvent) => {
   }
 };
 
-/**
- * Обработчик нажатия клавиши "Delete"
- */
 const keyDelete = (e: KeyboardEvent) => {
   const target = e.target as HTMLElement;
   if (target.textContent === '') {
@@ -210,9 +155,6 @@ const keyDelete = (e: KeyboardEvent) => {
   }
 };
 
-/**
- * Обработчик события mousemove для изменения курсора
- */
 const mouseMove = (e: MouseEvent) => {
   if (cellRef.value) {
     const cursorPosition = cellRef.value.offsetWidth - e.offsetX;
@@ -220,9 +162,6 @@ const mouseMove = (e: MouseEvent) => {
   }
 };
 
-/**
- * Обработчик события mousedown для отображения фильтра при клике возле края ячейки
- */
 const mouseDown = (e: MouseEvent) => {
   if (e.button === 0 && cellRef.value) {
     const cursorPosition = cellRef.value.offsetWidth - e.offsetX;
@@ -230,15 +169,11 @@ const mouseDown = (e: MouseEvent) => {
       e.preventDefault();
       setTimeout(() => {
         emit('showFilter');
-        // Если нужно взаимодействовать с родительским компонентом, используйте provide/inject или эмитируйте события
       }, 0);
     }
   }
 };
 
-/**
- * Обработчик события dragenter
- */
 const handleDragEnter = (event: DragEvent) => {
   event.preventDefault();
   if (event.dataTransfer) {
@@ -246,9 +181,6 @@ const handleDragEnter = (event: DragEvent) => {
   }
 };
 
-/**
- * Обработчик события dragover
- */
 const handleDragOver = (event: DragEvent) => {
   event.preventDefault();
   if (event.dataTransfer) {
@@ -256,16 +188,12 @@ const handleDragOver = (event: DragEvent) => {
   }
 };
 
-// Логика инициализации после монтирования
 onMounted(() => {
-  // Генерация уникального ID
   uid.value = 'uid' + Math.random().toString(36).substr(2, 9);
 
-  // Установка содержимого ячейки
   if (cellRef.value) {
     cellRef.value.textContent = props.modelValue;
 
-    // Поиск родительских элементов row и thead
     rowRef.value = cellRef.value.parentElement;
     theadRef.value = rowRef.value?.parentElement;
 
@@ -280,7 +208,6 @@ onMounted(() => {
   }
 });
 
-// Наблюдение за изменениями modelValue для обновления содержимого ячейки
 watch(() => props.modelValue, (newVal) => {
   if (cellRef.value && newVal !== cellRef.value.textContent) {
     cellRef.value.textContent = newVal;
@@ -294,10 +221,5 @@ watch(() => props.modelValue, (newVal) => {
   background-repeat: no-repeat;
   background-size: 36px;
   background-position: right -12px top -1px;
-}
-
-.cell.column-filter {
-  /* Дополнительные стили при необходимости */
-  /* Например, можно добавить padding или изменить фон */
 }
 </style>
