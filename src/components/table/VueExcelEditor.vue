@@ -83,12 +83,33 @@
             </tr>
             <tr v-else v-for="(record, rowPos) in pagingTable" :key="rowPos"
               :class="{ select: typeof selected[pageTop + rowPos] !== 'undefined' }" :style="rowStyle(record)">
-              <td class="center-text first-col" :id="`rid-${record.id}`" :class="{
+
+              <td
+                v-if="selectable"
+                class="center-text first-col"
+                :id="`rid-${record.id}`"
+                :class="{
+                  hide: noNumCol,
+                  error: rowerr[`rid-${record.id}`],
+                }"
+                :pos="rowPos"
+              >
+                <input
+                  class="table__checkbox"
+                  type="checkbox"
+                  :checked="selected[rowPos] === record.id"
+                  @click="rowLabelClick"
+                />
+              </td>
+
+              <td v-else class="center-text first-col" :id="`rid-${record.id}`" :class="{
                 hide: noNumCol,
                 error: rowerr[`rid-${record.id}`]
               }" :pos="rowPos" @mouseover="numcolMouseOver" @click="rowLabelClick">
                 <span v-html="recordLabel(pageTop + rowPos + 1, record)"></span>
               </td>
+
+
               <td v-for="(item, p) in fields" v-show="!item.invisible" :id="`id-${record.id}-${item.name}`"
                 :cell-RC="`${rowPos}-${item.name}`" :class="{
                   readonly: item.readonly,
@@ -309,6 +330,7 @@ export default defineComponent({
         return false;
       }
     },
+    selectable: { type: Boolean, default: false },
     modelValue: { type: Array, default() { return [] } },
     rowStyle: { type: Function, default() { return {} } },
     cellStyle: { type: Function, default() { return {} } },

@@ -8,6 +8,7 @@
           :noPaging="true"
           :noNumCol="false"
           :noFooter="true"
+          selectable
         >
         <VueExcelColumn
           v-for="(column, colIndex) in columns"
