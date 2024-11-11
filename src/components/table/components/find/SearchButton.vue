@@ -21,9 +21,10 @@
 <script setup lang="ts">
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+$tableBaseColor: #009639;
 .panel-input-button {
-  background-color: #28a745;
+  background-color: $tableBaseColor;
   color: white;
   border: none;
   padding: 0.5rem;

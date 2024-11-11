@@ -1,4 +1,4 @@
-import {LocalizedLabel} from './constVars';
+import {LocalizedLabel} from '../../ui/constVars';
 
 /**
  * Интерфейс для компонента vue-excel-column

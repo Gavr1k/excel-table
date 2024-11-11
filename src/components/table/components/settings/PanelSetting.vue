@@ -231,8 +231,14 @@ const hidePanel = () => {
 const getKey = (element: any, index: number) => index;
 </script>
 
-<style scoped>
-input:focus, button:focus {
+<style scoped lang="scss">
+
+$tableBaseColor: #009639;
+$cellAnomalyColor: rgba(237, 110, 28, 0.5);
+$textBaseFontSize: 10px;
+
+input:focus,
+button:focus {
   outline: none !important;
   box-shadow: inset 0 -1px 0 #ddd !important;
 }
@@ -278,7 +284,8 @@ input:focus, button:focus {
   border-bottom: 1px solid lightgray;
 }
 
-div.panel-title span, button.panel-button span {
+div.panel-title span,
+button.panel-button span {
   margin-left: 6px;
 }
 
@@ -290,7 +297,7 @@ div.panel-title span, button.panel-button span {
 
 .panel-content .panel-button {
   width: 48%;
-  background-color: #17a2b8;
+  background-color: $tableBaseColor;
 }
 
 .panel-action {
@@ -310,11 +317,10 @@ div.panel-title span, button.panel-button span {
 }
 
 .panel-button {
-  width: 120px;
   font-size: 0.88rem;
   border-radius: 5px;
   border: 0;
-  background-color: #007bff;
+  background-color: $tableBaseColor;
   margin-left: 10px;
   color: white;
   padding: 0.6rem;
@@ -338,8 +344,14 @@ div.panel-title span, button.panel-button span {
   flex-direction: column;
 }
 .panel-checkbox {
+  background-color: $tableBaseColor;
   vertical-align: 2px;
 }
+
+input[type="checkbox"] {
+  accent-color: $tableBaseColor;
+}
+
 .panel-list span {
   margin-left: 10px;
   color: gray;
@@ -350,7 +362,7 @@ div.panel-title span, button.panel-button span {
   cursor: pointer;
 }
 .panel-list-item:hover {
-  background-color: lightskyblue;
+  background-color: lightskyblue; // другой зеленый
 }
 .panel-list-item:not(:last-child) {
   border-bottom: 1px solid lightgray;

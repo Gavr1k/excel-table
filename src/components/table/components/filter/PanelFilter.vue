@@ -404,7 +404,11 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+$tableBaseColor: #009639;
+$cellAnomalyColor: rgba(237, 110, 28, 0.5);
+$textBaseFontSize: 10px;
+
 input:focus,
 button:focus {
   outline: none !important;
@@ -460,12 +464,12 @@ button.panel-button span {
 .panel-content {
   padding: 1rem;
   text-align: left;
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
 .panel-content .panel-button {
   width: 48%;
-  background-color: #17a2b8;
+  background-color: $tableBaseColor;
 }
 
 .panel-action {
@@ -491,7 +495,7 @@ button.panel-button span {
   border: 0;
   box-shadow: none;
   padding: 0.6rem;
-  width: 100%;
+  width: calc(100% - 2.2rem);
   font-size: 0.88rem;
   background-color: transparent;
 }
@@ -500,8 +504,8 @@ button.panel-button span {
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
   color: white;
-  background-color: #28a745;
-  border: 1px solid #28a745;
+  background-color: $tableBaseColor;
+  border: 1px solid $tableBaseColor;
   font-size: 1.3rem;
   width: 2.2rem;
   height: 2.35rem;
@@ -514,14 +518,15 @@ button.panel-button span {
   position: absolute;
   left: 0;
   top: 2.4rem;
-  display: none;
+  display: inline-block;
   background-color: white;
   border: 1px solid gray;
   margin-top: -1px;
+  display: none;
 }
 
 .panel-dropdown.show {
-  display: block;
+  display: inline-block;
 }
 
 .panel-dropdown-item {
@@ -551,11 +556,11 @@ button.panel-button span {
 }
 
 .panel-button {
-  width: 120px;
+  width: 140px;
   font-size: 0.88rem;
   border-radius: 5px;
   border: 0;
-  background-color: #007bff;
+  background-color: $tableBaseColor;
   color: white;
   padding: 0.6rem;
   cursor: pointer;
@@ -570,7 +575,7 @@ button.panel-button span {
 }
 
 .panel-list {
-  overflow-y: auto;
+  overflow-y: scroll;
   max-height: 20rem;
   border: 1px solid #ced4da;
   border-radius: 0.25rem;
@@ -592,8 +597,6 @@ button.panel-button span {
   font-size: 0.88rem;
   cursor: pointer;
   white-space: nowrap;
-  display: flex;
-  align-items: center;
 }
 
 .panel-list-item:hover {

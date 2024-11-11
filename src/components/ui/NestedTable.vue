@@ -24,7 +24,7 @@
           auto-fill-width
           v-slot="scope"
         >
-      </VueExcelColumn>
+        </VueExcelColumn>
       </VueExcelEditor>
       </ExpansionPanel>
     </template>

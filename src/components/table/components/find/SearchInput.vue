@@ -29,7 +29,9 @@ const emitSearch = () => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+$tableBaseColor: #009639;
+
 .panel-input-b {
   display: flex;
   align-items: center;
