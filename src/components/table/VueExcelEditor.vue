@@ -86,7 +86,7 @@
 
               <td
                 v-if="selectable"
-                class="center-text first-col"
+                class="center-text first-col-selectable"
                 :id="`rid-${record.id}`"
                 :class="{
                   hide: noNumCol,
@@ -606,7 +606,10 @@ export default defineComponent({
     },
     pageSize(newVal) {
       this.$emit('page-changed', this.pageTop, this.pageTop + newVal - 1)
-    }
+    },
+    selectable(newValue) {
+      if (newValue) this.noNumCol = false;
+    },
   },
   activated() {
     this.addEventListener()

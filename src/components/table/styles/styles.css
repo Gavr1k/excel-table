@@ -316,6 +316,21 @@ input.active:focus {
   z-index: 5;
 }
 
+.systable .first-col-selectable {
+  background: #e9ecef;
+  width: 40px;
+  position: sticky;
+  left: 0;
+  top: auto;
+  cursor: default !important;
+  text-overflow: inherit !important;
+  text-align: center;
+  padding-left: 0;
+  padding-right: 0;
+  overflow: hidden;
+  z-index: 5;
+}
+
 .systable .sticky-column {
   position: sticky;
   z-index: 2;

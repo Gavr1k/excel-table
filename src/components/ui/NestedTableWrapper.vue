@@ -4,11 +4,12 @@
       <ExpansionPanel :title="table.company_name.value">
         <VueExcelEditor
           v-model="table.scenarios"
-          :page="3"
-          :noPaging="true"
-          :noNumCol="false"
-          :noFooter="true"
+          noPaging
+          noFooter
+          no-header-edit
+          :no-mouse-scroll="false"
           selectable
+          free-select
         >
         <VueExcelColumn
           v-for="(column, colIndex) in columns"
@@ -17,7 +18,6 @@
           :label="column.label"
           :type="column.type"
           :width="column.width"
-          :placeholder="column.placeholder"
           readonly
           :init-style="{ padding: '2px 4px', height: '15px' }"
           auto-fill-width
