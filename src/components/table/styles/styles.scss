@@ -9,6 +9,9 @@ $gray: #bdc1c6;
 $white: #fff;
 $green: #06842c;
 
+$font-size: 10px;
+$font-family: "Montserrat";
+
 .cell-selected {
   background-color: #ddd;
 }
@@ -63,7 +66,8 @@ input.active:focus {
   border: 1px solid rgb(108, 143, 108);
   /*height: fit-content;*/
   overflow-y: scroll;
-  font-size: 0.88rem;
+  font-size: $font-size;
+  font-family: $font-family;
   max-width: 300px;
   max-height: 235px;
   animation: 0.3s ease 0s normal forwards 1 fadein;
@@ -116,7 +120,8 @@ input.active:focus {
   font-family: inherit;
   color: inherit;
   text-shadow: inherit;
-  font-size: 0.88rem;
+  font-size: $font-size;
+  font-family: $font-family;
   width: 100%;
   height: 100%;
   border: 0;
@@ -143,7 +148,8 @@ input.active:focus {
 
 .table-content {
   flex: 1 1 auto;
-  font-size: 1rem;
+  font-size: $font-size;
+  font-family: $font-family;
   text-shadow: 0.3px 0.3px 1px #ccc;
   overflow: scroll;
   -webkit-touch-callout: none;
@@ -218,7 +224,8 @@ input.active:focus {
 .systable td {
   vertical-align: bottom;
   padding: 0.2rem 0.3rem;
-  font-size: 0.88rem;
+  font-size: $font-size;
+  font-family: $font-family;
   height: 24px;
   border-top: 0;
   border-left: 0;
@@ -282,7 +289,8 @@ input.active:focus {
 }
 
 .systable thead th {
-  background-color: #e9ecef;
+  background-color: #009639;
+  color: #fff;
   cursor: s-resize;
   z-index: 6;
 }
@@ -414,7 +422,8 @@ input.active:focus {
 .footer {
   z-index: 5;
   padding: 0;
-  font-size: 12px;
+  font-size: $font-size;
+  font-family: $font-family;
   color: dimgray;
   background-color: white;
   width: 100%;
@@ -511,7 +520,8 @@ input.active:focus {
 }
 
 .runner {
-  font-size: 0.88rem;
+  font-size: $font-size;
+  font-family: $font-family;
   padding: 0.5rem;
   position: absolute;
   right: 23px;
@@ -690,7 +700,8 @@ a:disabled {
 .text-tip {
   display: inline-block;
   position: fixed;
-  font-size: 0.88rem;
+  font-size: $font-size;
+  font-family: $font-family;
   text-align: left;
   color: gray;
   background-color: lightyellow;
@@ -704,7 +715,8 @@ a:disabled {
 
 .norecord {
   z-index: 1;
-  font-size: smaller;
+  font-size: $font-size;
+  font-family: $font-family;
   position: absolute;
   left: 50%;
   transform: translate(-50%, 0%);
