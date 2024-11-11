@@ -3,6 +3,7 @@
     <template v-for="table in tableData" :key="table.company_id.value">
       <ExpansionPanel :title="table.company_name.value">
         <VueExcelEditor
+          class="excel-table"
           v-model="table.scenarios"
           noPaging
           noFooter
@@ -89,5 +90,20 @@ const jsondata = reactive([
 ]);
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
+::v-deep .excel-table table > thead > tr > th {
+  background-color: #009639;
+  color: #fff;
+}
+
+::v-deep .excel-table td,
+::v-deep .excel-table th {
+  font-size: 10px;
+  font-family: "Montserrat";
+}
+
+.excel-table::v-deep .component-content .table-content .systable {
+  width: auto !important;
+}
 </style>

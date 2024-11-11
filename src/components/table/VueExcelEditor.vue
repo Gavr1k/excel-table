@@ -2999,5 +2999,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@import './styles/styles.css';
+@import './styles/styles.scss';
 </style>
