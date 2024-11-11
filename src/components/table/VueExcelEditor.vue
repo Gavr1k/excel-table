@@ -83,16 +83,16 @@
             </tr>
             <tr v-else v-for="(record, rowPos) in pagingTable" :key="rowPos"
               :class="{ select: typeof selected[pageTop + rowPos] !== 'undefined' }" :style="rowStyle(record)">
-              <td class="center-text first-col" :id="`rid-${record.$id}`" :class="{
+              <td class="center-text first-col" :id="`rid-${record.id}`" :class="{
                 hide: noNumCol,
-                error: rowerr[`rid-${record.$id}`]
+                error: rowerr[`rid-${record.id}`]
               }" :pos="rowPos" @mouseover="numcolMouseOver" @click="rowLabelClick">
                 <span v-html="recordLabel(pageTop + rowPos + 1, record)"></span>
               </td>
-              <td v-for="(item, p) in fields" v-show="!item.invisible" :id="`id-${record.$id}-${item.name}`"
+              <td v-for="(item, p) in fields" v-show="!item.invisible" :id="`id-${record.id}-${item.name}`"
                 :cell-RC="`${rowPos}-${item.name}`" :class="{
                   readonly: item.readonly,
-                  error: errmsg[`id-${record.$id}-${item.name}`],
+                  error: errmsg[`id-${record.id}-${item.name}`],
                   link: item.link && item.isLink && item.isLink(record),
                   select: item.options,
                   grouping: item.grouping,
@@ -756,7 +756,7 @@ export default defineComponent({
         .map(v => Math.min(Math.max(v * 8.2, 55), 250))
 
       Object.keys(rows[0]).forEach((col, i) => {
-        if (col === '$id') return
+        if (col === 'id') return
         this.registerColumn({
           name: col,
           label: col,
@@ -801,7 +801,7 @@ export default defineComponent({
       // add unique key to each row if no key is provided
       let seed = String(new Date().getTime() % 1e8)
       this.modelValue.forEach((rec, i) => {
-        if (!rec.$id) rec.$id = seed + '-' + ('000000' + i).slice(-7)
+        if (!rec.id) rec.id = seed + '-' + ('000000' + i).slice(-7)
       })
 
       if (this.showFilteredOnly === false) {
@@ -862,7 +862,7 @@ export default defineComponent({
           this.table = this.filteredValue.filter((record) => {
 
             // Record is created after the filter time
-            if (record.$id > this.lastFilterTime) return true
+            if (record.id > this.lastFilterTime) return true
 
             // Assume new record contains § in any of the key fields
             /*
@@ -1050,7 +1050,7 @@ export default defineComponent({
       if (!rec) rec = this.currentRecord
       const key = this.fields.filter(field => field.keyField).map(field => rec[field.name].value)
       if (key.length && key.join() !== '') return key
-      return [rec.$id]
+      return [rec.id]
     },
     getFieldByName(name) {
       return this.fields.find(f => f.name === name)
@@ -1769,7 +1769,7 @@ export default defineComponent({
             }
         }
         if (n === 0) {
-          this.modelValue.sort((a, b) => a.$id > b.$id ? 1 : -1)
+          this.modelValue.sort((a, b) => a.id > b.id ? 1 : -1)
           this.sortPos = 0
         }
         else {
@@ -2007,7 +2007,7 @@ export default defineComponent({
                   rowPos = this.table.findIndex(v => Object.keys(v).filter(f => !f.startsWith('$')).length === 0)
 
                 const rec = {
-                  $id: typeof line.$id === 'undefined' ? keyStart + '-' + ('000000' + i).slice(-7) : line.$id
+                  id: typeof line.id === 'undefined' ? keyStart + '-' + ('000000' + i).slice(-7) : line.id
                 }
 
                 // Raise exception if readonly not not pass validation
@@ -2058,7 +2058,7 @@ export default defineComponent({
                       if (name.startsWith('$')) return
                       this.updateCell(rowPos, name, rec[name].value)
                     })
-                    this.selected[rowPos] = this.table[rowPos].$id
+                    this.selected[rowPos] = this.table[rowPos].id
                   }
                   else {
                     const newRec = {}
@@ -2214,7 +2214,7 @@ export default defineComponent({
     },
     reviseSelectedAfterTableChange() {
       this.rowIndex = {}
-      this.table.forEach((rec, i) => (this.rowIndex[rec.$id] = i))
+      this.table.forEach((rec, i) => (this.rowIndex[rec.id] = i))
       const temp = Object.assign(this.selected)
       this.selected = {}
       Object.keys(temp).forEach((p) => {
@@ -2231,7 +2231,7 @@ export default defineComponent({
     selectRecord(rowPos) {
       if (typeof this.selected[rowPos] === 'undefined') {
         this.selectedCount++
-        this.selected[rowPos] = this.table[rowPos].$id
+        this.selected[rowPos] = this.table[rowPos].id
         if (this.recordBody.children[rowPos - this.pageTop])
           this.recordBody.children[rowPos - this.pageTop].classList.add('select')
         this.lazy(rowPos, (buf) => {
@@ -2245,7 +2245,7 @@ export default defineComponent({
       if (rowPos >= 0) this.selectRecord(rowPos)
     },
     selectRecordById(id) {
-      const rowPos = this.table.findIndex(v => v.$id === id)
+      const rowPos = this.table.findIndex(v => v.id === id)
       if (rowPos >= 0) this.selectRecord(rowPos)
     },
     unSelectRecord(rowPos) {
@@ -2662,14 +2662,14 @@ export default defineComponent({
           }
           else if (t.field && t.field.keyField && t.oldKeys.includes(t.newVal)) {
             // newRecord() transaction
-            const valueRowPos = this.modelValue.findIndex(v => v.$id === t.$id)
+            const valueRowPos = this.modelValue.findIndex(v => v.id === t.id)
             if (valueRowPos >= 0) {
               this.deleteRecord(valueRowPos, true)
               // return false
             }
           }
           else
-            this.updateCell(t.$id, t.field.name, t.oldVal.value, true)
+            this.updateCell(t.id, t.field.name, t.oldVal.value, true)
 
           return true
         }
@@ -2688,8 +2688,8 @@ export default defineComponent({
             rec[f.name] = { value: null, anomaly: false, isSelected: false };
         }
       })
-      const id = rec.$id || this.tempKey()
-      rec.$id = id
+      const id = rec.id || this.tempKey()
+      rec.id = id
       this.modelValue.push(rec)
       const rowPos = this.table.push(rec) - 1
       if (selectAfterDone) this.selected[rowPos] = id
@@ -2706,7 +2706,7 @@ export default defineComponent({
     },
     deleteSelectedRecords() {
       Object.values(this.selected).forEach((id) => {
-        const valueRowPos = this.modelValue.findIndex(v => v.$id === id)
+        const valueRowPos = this.modelValue.findIndex(v => v.id === id)
         if (valueRowPos >= 0) this.deleteRecord(valueRowPos)
       })
       this.selected = {}
@@ -2729,7 +2729,7 @@ export default defineComponent({
     async updateCell(row, field, newVal, isUndo) {
       switch (row.constructor.name) {
         case 'String': // $id
-          row = this.modelValue.find(r => r.$id === row) // id
+          row = this.modelValue.find(r => r.id === row) // id
           break
         case 'Number':
           row = this.table[row] // tablePos
@@ -2766,7 +2766,7 @@ export default defineComponent({
 
       setTimeout(() => {
         const transaction = {
-          $id: row.$id,
+          id: row.id,
           keys: this.getKeys(row),
           oldKeys: oldKeys,
           name: field.name,
@@ -2806,7 +2806,7 @@ export default defineComponent({
       }, 0)
     },
     setFieldError(error, row, field) {
-      const id = `id-${row.$id}-${field.name}`
+      const id = `id-${row.id}-${field.name}`
       const selector = this.systable.querySelector('td#' + id)
       if (error) {
         this.errmsg[id] = error
@@ -2821,7 +2821,7 @@ export default defineComponent({
         }
     },
     setRowError(error, row) {
-      const rid = `rid-${row.$id}`
+      const rid = `rid-${row.id}`
       const selector = this.systable.querySelector('td#' + rid)
       if (error) {
         this.rowerr[rid] = error

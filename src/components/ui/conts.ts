@@ -75,11 +75,7 @@ export default [
         },
       },
       {
-        "id": {
-          value: "6b3bde66d27b490e44cd65904fc0c826",
-          anomaly: "",
-          isSelected: false,
-        },
+        "id": "6b3bde66d27b490e44cd65904fc0c826",
         "name": {
           value: "123",
           anomaly: "",
@@ -142,11 +138,7 @@ export default [
         },
       },
       {
-        "id": {
-          value: "ca492c8522a83e792720117d53c531c7",
-          anomaly: "",
-          isSelected: false,
-        },
+        "id": "ca492c8522a83e792720117d53c531c7",
         "name": {
           value: "test",
           anomaly: "",
