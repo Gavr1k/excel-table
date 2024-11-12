@@ -174,7 +174,6 @@ export default {
       this.hidePanel()
     },
     filterPanelSelect (opt) {
-      // this.columnFilter[this.columnFilterRef.colPos] = el  // Cannot use this, dunno why
       this.columnFilterRef.$el.textContent = '=' + opt
       this.columnFilterRef.$emit('update:modelValue', '=' + opt)
       this.hidePanel()
@@ -216,9 +215,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+$tableBaseColor: #009639;
+$cellAnomalyColor: rgba(237, 110, 28, 0.5);
+$textBaseFontSize: 10px;
 
-input:focus, button:focus {
+input:focus,
+button:focus {
   outline: none !important;
   box-shadow: none !important;
 }
@@ -263,7 +266,8 @@ input:focus, button:focus {
   border-bottom: 1px solid lightgray;
 }
 
-div.panel-title span, button.panel-button span {
+div.panel-title span,
+button.panel-button span {
   margin-left: 6px;
   vertical-align: text-top;
 }
@@ -276,7 +280,7 @@ div.panel-title span, button.panel-button span {
 
 .panel-content .panel-button {
   width: 48%;
-  background-color: #17a2b8;
+  background-color: $tableBaseColor;
 }
 
 .panel-action {
@@ -297,6 +301,7 @@ div.panel-title span, button.panel-button span {
   margin-left: -4px;
   height: 2.3rem;
 }
+
 .panel-input {
   border: 0;
   box-shadow: none;
@@ -305,12 +310,13 @@ div.panel-title span, button.panel-button span {
   font-size: 0.88rem;
   background-color: transparent;
 }
+
 .panel-input-button {
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
   color: white;
-  background-color: #28a745;
-  border: 1px solid #28a745;
+  background-color: $tableBaseColor;
+  border: 1px solid $tableBaseColor;
   font-size: 1.3rem;
   width: 2.2rem;
   height: 2.35rem;
@@ -333,17 +339,21 @@ div.panel-title span, button.panel-button span {
 .panel-dropdown.show {
   display: inline-block;
 }
+
 .panel-dropdown-item {
   padding: 0.35rem 0.65rem;
   cursor: pointer;
 }
+
 .panel-dropdown-item:hover {
   background-color: lightskyblue;
 }
+
 .panel-dropdown-item span {
   margin-right: 6px;
   color: gray;
 }
+
 .panel-dropdown-item:not(:last-child) {
   border-bottom: 1px solid lightgray;
 }
@@ -357,11 +367,11 @@ div.panel-title span, button.panel-button span {
 }
 
 .panel-button {
-  width: 120px;
+  width: 140px;
   font-size: 0.88rem;
   border-radius: 5px;
   border: 0;
-  background-color: #007bff;
+  background-color: $tableBaseColor;
   color: white;
   padding: 0.6rem;
   cursor: pointer;
@@ -383,25 +393,31 @@ div.panel-title span, button.panel-button span {
   display: flex;
   flex-direction: column;
 }
+
 .panel-checkbox {
   vertical-align: bottom;
 }
+
 .panel-list span {
   margin-left: 10px;
   color: gray;
 }
+
 .panel-list-item {
   padding: 10px 10px;
   font-size: 0.88rem;
   cursor: pointer;
   white-space: nowrap;
 }
+
 .panel-list-item:hover {
   background-color: lightskyblue;
 }
+
 .panel-list-item:not(:last-child) {
   border-bottom: 1px solid lightgray;
 }
+
 .normal-text {
   font-size: 0.88rem;
   color: gray;
@@ -411,15 +427,19 @@ div.panel-title span, button.panel-button span {
   -webkit-animation: fa-spin 2s infinite linear;
   animation: fa-spin 2s infinite linear;
 }
+
 .svg-inline--fa.fa-w-14 {
   width: 0.875em;
 }
+
 .svg-inline--fa.fa-w-16 {
   width: 1em;
 }
+
 .svg-inline--fa.fa-fw {
   width: 1.25em;
 }
+
 .svg-inline--fa {
   display: inline-block;
   font-size: inherit;
@@ -427,22 +447,28 @@ div.panel-title span, button.panel-button span {
   overflow: visible;
   vertical-align: -0.125em;
 }
+
 .fa-fw {
   text-align: center;
   width: 1.25em;
 }
+
 .fa-xs {
   font-size: 0.75em;
 }
+
 .fa-sm {
   font-size: 0.875em;
 }
+
 .fa-1x {
   font-size: 1em;
 }
+
 .fa-2x {
   font-size: 2em;
 }
+
 .fa-3x {
   font-size: 3em;
 }
