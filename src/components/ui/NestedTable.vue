@@ -11,6 +11,8 @@
           :no-mouse-scroll="false"
           selectable
           free-select
+          disableMultiCopy
+          disableMultiPaste
         >
         <VueExcelColumn
           v-for="(column, colIndex) in columns"
@@ -19,7 +21,6 @@
           :label="column.label"
           :type="column.type"
           :width="column.width"
-          readonly
           :init-style="{ padding: '2px 4px', height: '15px' }"
           auto-fill-width
           v-slot="scope"

@@ -1,5 +1,11 @@
 <template>
-  <div ref="editor" class="vue-excel-editor" :style="{ display: 'inline-block', width }">
+  <div 
+    ref="editor" 
+    class="vue-excel-editor" 
+    :style="{ display: 'inline-block', width }"
+    @paste="handlePaste"
+    @copy="handleCopy"
+  >
     <div class="component-content">
       <!-- No record -->
       <div v-if="localizedLabel.noRecordIndicator && pagingTable.length == 0" class="norecord"
@@ -87,22 +93,12 @@
             <tr v-else v-for="(record, rowPos) in pagingTable" :key="rowPos"
               :class="{ select: typeof selected[pageTop + rowPos] !== 'undefined' }" :style="rowStyle(record)">
 
-              <td
-                v-if="selectable"
-                class="center-text first-col-selectable"
-                :id="`rid-${record.id}`"
-                :class="{
-                  hide: noNumCol,
-                  error: rowerr[`rid-${record.id}`],
-                }"
-                :pos="rowPos"
-              >
-                <input
-                  class="table__checkbox"
-                  type="checkbox"
-                  :checked="selected[rowPos] === record.id"
-                  @click="rowLabelClick"
-                />
+              <td v-if="selectable" class="center-text first-col-selectable" :id="`rid-${record.id}`" :class="{
+                hide: noNumCol,
+                error: rowerr[`rid-${record.id}`],
+              }" :pos="rowPos">
+                <input class="table__checkbox" type="checkbox" :checked="selected[rowPos] === record.id"
+                  @click="rowLabelClick" />
               </td>
 
               <td v-else class="center-text first-col" :id="`rid-${record.id}`" :class="{
@@ -330,6 +326,24 @@ export default defineComponent({
         return false;
       }
     },
+    disableMultiCopy: {
+      type: Boolean,
+      default() {
+        return false;
+      }
+    },
+    disableMultiPaste: {
+      type: Boolean,
+      default() {
+        return false;
+      }
+    },
+    columns: {
+      type: Array,
+      default() {
+        return [];
+      },
+    },
     disablePanelFilter: {
       type: Boolean,
       default() {
@@ -512,6 +526,14 @@ export default defineComponent({
       ungroup: {},
       showPanelFind: false,
       showPanelSetting: false,
+      currentColPosition: 0,
+      currentRowPosition: 0,
+      isShiftPressed: false,
+      isCtrlOrMetaPressed: false,
+      selectedCells: new Set(),
+      startCell: null,
+      selectedRowIndex: 0,
+      selectedColIndex: 0,
     }
     return dataset
   },
@@ -1404,6 +1426,14 @@ export default defineComponent({
       e.preventDefault()
     },
     winKeyup(e) {
+      if (e.key === 'Shift') {
+        this.isShiftPressed = false;
+      }
+
+      if (e.key === 'Control' || e.metaKey) {
+        this.isCtrlOrMetaPressed = false;
+      }
+
       if (!e.altKey) this.systable.classList.remove('alt')
       if (this.inputBoxShow && this.currentField.type === 'password') {
         setTimeout(() => {
@@ -1414,6 +1444,14 @@ export default defineComponent({
       }
     },
     winKeydown(e) {
+      if (e.key === 'Shift') {
+        this.isShiftPressed = true;
+      }
+
+      if (e.key === 'Control' || e.metaKey) {
+        this.isCtrlOrMetaPressed = true;
+      }
+
       if (e.altKey) this.systable.classList.add('alt')
       if (!this.mousein && !this.focused) return
       if (e.ctrlKey || e.metaKey)
@@ -2201,17 +2239,17 @@ export default defineComponent({
     getSelectedRecords() {
       return this.table.filter((rec, i) => this.selected[i])
     },
-//     getSelectedRecords() {
-//   // Возвращаем записи, которые выбраны, при необходимости можно извлечь только значения
-//   return this.table.filter((rec, i) => this.selected[i]).map(rec => {
-//     // Преобразуем запись, чтобы вернуть только значения полей
-//     const values = {};
-//     this.fields.forEach(field => {
-//       values[field.name] = rec[field.name].value; // Изменено: обращаемся к .value
-//     });
-//     return values;
-//   });
-// },
+    //     getSelectedRecords() {
+    //   // Возвращаем записи, которые выбраны, при необходимости можно извлечь только значения
+    //   return this.table.filter((rec, i) => this.selected[i]).map(rec => {
+    //     // Преобразуем запись, чтобы вернуть только значения полей
+    //     const values = {};
+    //     this.fields.forEach(field => {
+    //       values[field.name] = rec[field.name].value; // Изменено: обращаемся к .value
+    //     });
+    //     return values;
+    //   });
+    // },
     /*
     deleteSelectedRecords () {
       this.table = this.table.filter((rec, i) => typeof this.selected[i] === 'undefined')
@@ -2429,7 +2467,14 @@ export default defineComponent({
         this.currentCell = row.children[colPos + 1]
         this.currentRecord = this.table[this.pageTop + rowPos]
 
-        this.$emit('cell-click', { rowPos, colPos }, this.currentCell.textContent, this.currentRecord, this.currentField, this)
+        this.handleCellClick(
+          { rowPos, colPos },
+          this.currentCell.textContent,
+          this.currentRecord,
+          this.currentField,
+          this
+        );
+
         if (typeof this.currentField.cellClick === 'function')
           this.currentField.cellClick(this.currentCell.textContent, this.currentRecord, rowPos, colPos, this.currentField, this)
         if (this.currentField && this.currentField.link /* && e.altKey */ && this.currentCell.textContent)
@@ -3002,7 +3047,175 @@ export default defineComponent({
           delete this.lazyBuffer[hash]
         })
       }, delay)
-    }
+    },
+    handlePaste(event) {
+      if (this.disableMultiPaste) return;
+      
+      event.preventDefault();
+      const clipboardData = event.clipboardData;
+      const pastedData = clipboardData.getData("text");
+
+      const rows = [];
+      let currentRow = [];
+      let inQuotes = false;
+      let cell = "";
+
+      for (let i = 0; i < pastedData.length; i++) {
+        const char = pastedData[i];
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === "\t" && !inQuotes) {
+          currentRow.push(cell.trim());
+          cell = "";
+        } else if ((char === "\n" || char === "\r") && !inQuotes) {
+          if (cell !== "") {
+            currentRow.push(cell.trim());
+            cell = "";
+          }
+          if (currentRow.length > 0) {
+            rows.push(currentRow);
+            currentRow = [];
+          }
+        } else {
+          cell += char;
+        }
+      }
+
+      if (cell.trim()) currentRow.push(cell.trim());
+      if (currentRow.length > 0) rows.push(currentRow);
+
+      const filteredRows = rows.map((row) => row.filter((cell) => cell !== ""));
+
+      filteredRows.forEach((row, rowIndex) => {
+        const rowOffset = this.selectedRowIndex + rowIndex;
+        row.forEach((cellData, cellIndex) => {
+          const cellOffSet = this.selectedColIndex + cellIndex;
+          const key = this.columns[cellOffSet]?.field;
+          if  (key) {
+            this.table[rowOffset][key].value = cellData;
+            this.table[rowOffset][key].isSelected = true;
+          }
+        });
+      });
+
+      // this.$emit("pasteData", event);
+    },
+    handleCopy(event) {
+      if (this.disableMultiCopy) return;
+
+      event.preventDefault();
+
+      let copyData = "";
+
+      const sortedCells = Array.from(this.selectedCells).sort((a, b) => {
+        const [rowA, colA] = a.split("-").map(Number);
+        const [rowB, colB] = b.split("-").map(Number);
+
+        return rowA === rowB ? colA - colB : rowA - rowB;
+      });
+
+      let currentRow = -1;
+
+      sortedCells.forEach((cellKey, index) => {
+        const [rowIndex, colindex] = cellKey.split("-").map(Number);
+        const columnKey = this.columns[colindex]?.field;
+
+        if (this.modelValue[rowIndex] && columnKey) {
+          if (rowIndex !== currentRow) {
+            if (currentRow !== -1) {
+              copyData += "\n";
+            }
+            currentRow = rowIndex;
+          }
+
+          let cellValue = this.modelValue[rowIndex][columnKey].value;
+
+          if (typeof cellValue === "number") {
+            cellValue = cellValue.toString().replace(".", ",");
+          } else if (
+            typeof cellValue === "string" &&
+            cellValue.startsWith("=")
+          ) {
+          } else {
+            cellValue = `"${cellValue}"`;
+          }
+          copyData += cellValue;
+
+          const nextCell = sortedCells[index + 1];
+          const [nextRow] = nextCell ? nextCell.split("-").map(Number) : [-1];
+          if (nextRow === rowIndex) {
+            copyData += "\t";
+          }
+        }
+      });
+
+      copyData = copyData.trimEnd();
+
+      event.clipboardData.setData("text/plain", copyData);
+
+      // this.$emit("copyData", event);
+    },
+    handleCellClick(position, text, record, currentField, context) {
+      if (this.disableMultiCopy) {
+        this.$emit("cell-click", position, text, record, currentField, context);
+        return;
+      }
+
+      this.selectedRowIndex = position.rowPos;
+      this.selectedColIndex = position.colPos;
+
+      const cellKey = `${this.selectedRowIndex}-${this.selectedColIndex}`;
+
+      if (this.isShiftPressed && this.startCell) {
+        const [startRow, startCol] = this.startCell;
+        this.selectRange(
+          startRow,
+          startCol,
+          this.selectedRowIndex,
+          this.selectedColIndex
+        );
+      } else {
+        this.clearSelection();
+        this.toggleCellSelection(cellKey);
+      }
+
+      if (!this.isShiftPressed) {
+        this.startCell = [this.selectedRowIndex, this.selectedColIndex];
+      }
+
+      this.$emit("cell-click", position, text, record, currentField, context);
+    },
+    selectRange(startRow, startCol, endRow, endCol) {
+      this.clearSelection();
+      for (
+        let row = Math.min(startRow, endRow);
+        row <= Math.max(startRow, endRow);
+        row++
+      ) {
+        for (
+          let col = Math.min(startCol, endCol);
+          col <= Math.max(startCol, endCol);
+          col++
+        ) {
+          this.selectedCells.add(`${row}-${col}`);
+          const columnKey = this.columns[col]?.field;
+          this.table[row][columnKey].isSelected = true;
+        }
+      }
+    },
+    clearSelection() {
+      this.selectedCells.clear();
+      this.table.forEach((row) => {
+        this.fields.forEach((el) => {
+          row[el.name].isSelected = false;
+        });
+      });
+    },
+    toggleCellSelection(cellKey) {
+      this.selectedCells.has(cellKey)
+        ? this.selectedCells.delete(cellKey)
+        : this.selectedCells.add(cellKey);
+    },
   }
 })
 </script>
