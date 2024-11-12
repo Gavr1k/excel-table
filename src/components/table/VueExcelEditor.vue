@@ -110,7 +110,9 @@
 
 
               <td v-for="(item, p) in fields" v-show="!item.invisible" :id="`id-${record.id}-${item.name}`"
-                :cell-RC="`${rowPos}-${item.name}`" :class="{
+                :cell-RC="`${rowPos}-${item.name}`" 
+                :class="{
+                  'cell-selected': record[item.name].isSelected,
                   readonly: item.readonly,
                   error: errmsg[`id-${record.id}-${item.name}`],
                   link: item.link && item.isLink && item.isLink(record),
@@ -1414,6 +1416,7 @@ export default defineComponent({
       this.lazy(this.refreshPageSize, 500)
     },
     winPaste(e) {
+      return;
       if (e.target.tagName !== 'TEXTAREA') return
       if (!this.mousein && !this.focused) return
       if (!this.currentField || this.currentField.readonly) return

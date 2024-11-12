@@ -1,14 +1,17 @@
 <template>
   <div class="test">
-      <NestedTableWrapper
+      <!-- <NestedTableWrapper
         :tableData="tableData"
         :columns="columns"
-      ></NestedTableWrapper>
+      ></NestedTableWrapper> -->
+      <MainTable
+      ></MainTable>
   </div>
 </template>
 
 <script setup lang="ts">
 import NestedTableWrapper from './components/ui/NestedTable.vue';
+import MainTable from './components/ui/MainTable.vue';
 import { reactive } from 'vue';
 
 import table from './components/ui/conts';
