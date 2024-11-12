@@ -25,6 +25,10 @@
           v-slot="scope"
         >
         </VueExcelColumn>
+        <template v-slot:actions-header>Ссылки</template>
+        <template v-slot:actions="{ record }">
+          <button>Открыть</button>
+        </template>
       </VueExcelEditor>
       </ExpansionPanel>
     </template>

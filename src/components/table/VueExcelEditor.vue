@@ -57,6 +57,9 @@
                   <div class="add-col-btn"> + </div>
                 </div>
               </th>
+              <th v-if="$slots.actions" class="actions-header">
+                <slot name="actions-header"></slot>
+              </th>
             </tr>
             <tr :class="{ hide: !filterRow }">
               <td class="center-text first-col tl-filter" :class="{ hide: noNumCol }"
@@ -117,15 +120,18 @@
                   link: item.link && item.isLink && item.isLink(record),
                   select: item.options,
                   grouping: item.grouping,
-                  expand: item.grouping && ungroup[item.name + record[item.name].value],
+                  expand: item.grouping && ungroup[item.name + record[item.name]?.value],
                   datepick: item.type == 'date',
                   'sticky-column': item.sticky,
                   hideDuplicate: item.hideDuplicate && rowPos > 0 && isSameSinceLeft(p, record, pagingTable[rowPos - 1]),
                 }" :key="p" :style="Object.assign(cellStyle(record, item), renderColumnCellStyle(item, record))"
                 @mouseover="cellMouseOver" @mousemove="cellMouseMove">
                 <template v-if="item.format == 'html'"><span
-                    v-html="item.toText(record[item.name].value, record, item, p)" /></template>
-                <template v-else>{{ item.toText(record[item.name].value, record, item, p) }}</template>
+                    v-html="item.toText(record[item.name]?.value, record, item, p)" /></template>
+                <template v-else>{{ item.toText(record[item.name]?.value, record, item, p) }}</template>
+              </td>
+              <td v-if="$slots.actions" class="actions-column">
+                <slot name="actions" :record="record" />
               </td>
               <td v-if="vScroller.buttonHeight < vScroller.height" class="last-col"></td>
             </tr>
