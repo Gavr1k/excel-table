@@ -1406,8 +1406,8 @@ export default defineComponent({
           this.lazy(() => this.$refs.vScrollButton.classList.remove('focus'), 1000)
         }
       }
-      e.preventDefault()
-      e.stopPropagation()
+      // e.preventDefault()
+      // e.stopPropagation()
       return false
     },
     winResize() {

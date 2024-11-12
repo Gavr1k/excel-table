@@ -1,14 +1,14 @@
 <template>
   <div>
-    <template v-for="table in tableData" :key="table.company_id.value">
-      <ExpansionPanel :title="table.company_name.value">
+    <template v-for="table in tableData" :key="table.company_id">
+      <ExpansionPanel :title="table.company_name">
         <VueExcelEditor
           class="excel-table"
           v-model="table.scenarios"
+          page="1"
           noPaging
           noFooter
           no-header-edit
-          :no-mouse-scroll="false"
           selectable
           free-select
           disableMultiCopy
@@ -46,8 +46,6 @@ const props = defineProps({
   columns: Array,
 });
 
-
-console.log(props);
 
 </script>
 

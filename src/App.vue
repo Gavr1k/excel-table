@@ -20,7 +20,7 @@ const columns = reactive([
   { field: "pra_version_id", type: "string", label: "Версия" },
   { field: "field_id", type: "string", label: "Месторождение" },
   { field: "name", type: "string", label: "Сценарий" },
-  { field: "confirmed", type: "string", label: "Утвержденный" },
+  { field: "confirmed", type: "boolean", label: "Утвержденный" },
   { field: "npv_gep", type: "string", label: "NVP ГЭП, млн.руб" },
   { field: "npv", type: "string", label: "NVP, млн.руб" },
   { field: "qn_cumul", type: "string", label: "Нак.нефть, тыс.т." },

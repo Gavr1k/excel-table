@@ -88,6 +88,8 @@ export default {
         const offset = new Date().getTimezoneOffset() * 60 * 1000
         let d
         switch (this.type) {
+          case 'boolean':
+            return val ? 'Да' : 'Нет'
           case 'date':
             d = new Date(val).getTime()
             if (!d) return ''
@@ -152,6 +154,8 @@ export default {
           style.textAlign = 'right'
           allowKeys = allowKeys || ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-']
           break
+        case 'boolean':
+          break;
         case 'date':
           allowKeys = allowKeys || ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-']
           /*
