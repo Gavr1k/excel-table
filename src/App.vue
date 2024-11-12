@@ -1,11 +1,11 @@
 <template>
   <div class="test">
-      <!-- <NestedTableWrapper
+      <NestedTableWrapper
         :tableData="tableData"
         :columns="columns"
-      ></NestedTableWrapper> -->
-      <MainTable
-      ></MainTable>
+      ></NestedTableWrapper>
+      <!-- <MainTable
+      ></MainTable> -->
   </div>
 </template>
 
