@@ -2309,9 +2309,7 @@ export default defineComponent({
         this.selected[rowPos] = this.table[rowPos].id
         if (this.recordBody.children[rowPos - this.pageTop])
           this.recordBody.children[rowPos - this.pageTop].classList.add('select')
-        this.lazy(rowPos, (buf) => {
-          this.$emit('select', buf, true)
-        })
+          this.$emit('select', [this.selected[rowPos]], true)
       }
     },
     selectRecordByKeys(keys) {
@@ -2325,12 +2323,13 @@ export default defineComponent({
     },
     unSelectRecord(rowPos) {
       if (typeof this.selected[rowPos] !== 'undefined') {
+        const deletedId = this.selected[rowPos];
         delete this.selected[rowPos]
         this.selectedCount--
         if (this.recordBody.children[rowPos - this.pageTop])
           this.recordBody.children[rowPos - this.pageTop].classList.remove('select')
         this.lazy(rowPos, (buf) => {
-          this.$emit('select', buf, false)
+          this.$emit('select', [deletedId], false)
         })
       }
     },
@@ -2345,10 +2344,8 @@ export default defineComponent({
       }
     },
     clearAllSelected() {
-      // for (let i = 0; i < this.$refs.systable.children[2].children.length; i++)
-      //  this.unSelectRecord(this.pageTop + i)
       if (this.selectedCount > 0)
-        this.$emit('select', Object.keys(this.selected).map(rowPos => Number(rowPos)), false)
+        this.$emit('select', Object.values(this.selected), false)
       this.selected = {}
       this.selectedCount = 0
     },

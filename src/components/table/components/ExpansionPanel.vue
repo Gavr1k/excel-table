@@ -7,8 +7,8 @@
       </div>
     </div>
     <transition name="expand">
-      <div v-if="isOpen" class="expansion-body">
-        <slot></slot>
+      <div v-show="isOpen" class="expansion-body">
+          <slot></slot>
       </div>
     </transition>
   </div>
