@@ -3,7 +3,12 @@
       <NestedTableWrapper
         :tableData="tableData"
         :columns="columns"
-      ></NestedTableWrapper>
+      >
+      <template #actions-header>Ссылки</template>
+      <template #actions="{ record }">
+        <button @click="">Открыть</button>
+      </template>
+    </NestedTableWrapper>
       <!-- <MainTable
       ></MainTable> -->
   </div>

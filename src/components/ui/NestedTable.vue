@@ -18,9 +18,11 @@
             :label="column.label" :type="column.type" :width="column.width"
             :init-style="{ padding: '2px 4px', height: '15px' }" auto-fill-width v-slot="scope">
           </VueExcelColumn>
-          <template v-slot:actions-header>Ссылки</template>
-          <template v-slot:actions="{ record }">
-            <button>Открыть</button>
+          <template v-if="$slots.actions" v-slot:actions-header>
+            <slot name="actions-header"></slot>
+          </template>
+          <template v-if="$slots.actions" v-slot:actions="{record}">
+            <slot name="actions" :record="record"></slot>
           </template>
         </VueExcelEditor>
       </ExpansionPanel>
