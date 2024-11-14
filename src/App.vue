@@ -10,7 +10,8 @@
       </template>
     </NestedTableWrapper> -->
       <ExcelTable
-      :columns="columns"
+        v-model="singleTable"
+        :columns="columns"
       ></ExcelTable>
   </div>
 </template>
@@ -21,6 +22,8 @@ import ExcelTable from './components/ui/ExcelTable.vue';
 import { reactive } from 'vue';
 
 import nestedTable_ from './components/ui/conts';
+import singleTable_ from './components/ui/single-table';
+import singleTable from './components/ui/single-table';
 
 const nestedTable = reactive(nestedTable_);
 
@@ -38,6 +41,8 @@ const nestedColumns = reactive([
 ]);
 
 //----------single table
+
+const singleTableData = reactive(singleTable_);
 
 const columns = reactive([
   { field: "date_dt", type: "string", label: "Дата" },
