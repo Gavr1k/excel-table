@@ -2,7 +2,7 @@ export default[
   {
       "id": "30acecbe-80ee-41f1-97ab-996135f0cc65",
       "date_dt": {
-          "value": "2024-10-01",
+          "value": "2024-10-01T00:00:00.000",
           "anomaly": "",
           "isSelected": false
       },

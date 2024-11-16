@@ -8,26 +8,41 @@
     </div>
     <transition name="expand">
       <div v-show="isOpen" class="expansion-body">
-          <slot></slot>
+        <slot></slot>
       </div>
     </transition>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
   title: {
     type: String,
     required: true,
   },
+  show: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-const isOpen = ref(false);
+const emit = defineEmits(['update:show']);
+
+const isOpen = ref(props.show);
 
 const togglePanel = () => {
   isOpen.value = !isOpen.value;
+  emitUpdate();
+};
+
+watch(() => props.show, (newVal) => {
+  isOpen.value = newVal;
+});
+
+const emitUpdate = () => {
+  emit('update:show', isOpen.value);
 };
 </script>
 
@@ -80,7 +95,6 @@ const togglePanel = () => {
   overflow: hidden;
 }
 
-/* Переходы для компонента <transition name="expand"> */
 .expand-enter-active, .expand-leave-active {
   transition: max-height 0.5s ease, opacity 0.5s ease;
 }
@@ -91,7 +105,7 @@ const togglePanel = () => {
 }
 
 .expand-enter-to, .expand-leave-from {
-  max-height: 500px; /* Достаточно большое значение для содержимого */
+  max-height: 500px;
   opacity: 1;
 }
 </style>
