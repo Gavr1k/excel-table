@@ -15,6 +15,7 @@
           free-select
           disableMultiCopy
           disableMultiPaste
+          highlightRowKey="cons_ready"
           @select="handleSelect"
         >
           <VueExcelColumn 
@@ -23,8 +24,8 @@
             :field="column.field"
             :label="column.label" 
             :type="column.type" 
-            :width="column.width"
-            :init-style="{ padding: '2px 4px', height: '15px' }" 
+            width="100px"
+            :init-style="{ padding: '2px 4px', height: '15px'}" 
             auto-fill-width 
             v-slot="scope"
           >

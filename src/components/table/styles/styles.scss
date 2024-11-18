@@ -1,4 +1,5 @@
 $tableBaseColor: #009639;
+$baseColorTransparent: #0096395d;
 $cellAnomalyColor: rgba(237, 110, 28, 0.5);
 $textBaseFontSize: 10px;
 
@@ -11,6 +12,10 @@ $green: #06842c;
 
 $font-size: 10px;
 $font-family: "Montserrat";
+
+.highlight-row {
+  background-color: $baseColorTransparent;
+}
 
 .cell-selected {
   background-color: #ddd;

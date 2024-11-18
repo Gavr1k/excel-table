@@ -5,6 +5,7 @@ export default [
     "scenarios": [
       {
         "id": "8107960f6dbf6ab47c2429b3822bb301",
+        "cons_ready": true,
         "name": {
           "value": "123"
         },
@@ -42,6 +43,7 @@ export default [
       },
       {
         "id": "fb8f2eacac8deefc9b527a5a710ca538",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -79,6 +81,7 @@ export default [
       },
       {
         "id": "6b3bde66d27b490e44cd65904fc0c826",
+        "cons_ready": true,
         "name": {
           "value": "123"
         },
@@ -116,6 +119,7 @@ export default [
       },
       {
         "id": "ca492c8522a83e792720117d53c531c7",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -159,6 +163,7 @@ export default [
     "scenarios": [
       {
         "id": "32b77a68b8f58aef2ad8406ba4bdadd6",
+        "cons_ready": false,
         "name": {
           "value": "123123"
         },
@@ -196,6 +201,7 @@ export default [
       },
       {
         "id": "bf85823bd15bc65511da3e07b8ef1dbc",
+        "cons_ready": false,
         "name": {
           "value": "123"
         },
@@ -233,6 +239,7 @@ export default [
       },
       {
         "id": "d5c342277ad009eab9ca90d421217376",
+        "cons_ready": false,
         "name": {
           "value": "tteeee"
         },
@@ -276,6 +283,7 @@ export default [
     "scenarios": [
       {
         "id": "9ea3ce0761833f159b165363b6716846",
+        "cons_ready": false,
         "name": {
           "value": "123"
         },
@@ -313,6 +321,7 @@ export default [
       },
       {
         "id": "0bf0934c8e0bf1262670beafa8bfad42",
+        "cons_ready": false,
         "name": {
           "value": "ungp test"
         },
@@ -350,6 +359,7 @@ export default [
       },
       {
         "id": "688a0dec5e21ff6ca224bd908934bf4e",
+        "cons_ready": false,
         "name": {
           "value": "ungp test horizons"
         },
@@ -387,6 +397,7 @@ export default [
       },
       {
         "id": "03aeb622809200e362a679486936568f",
+        "cons_ready": false,
         "name": {
           "value": "group creation testing"
         },
@@ -430,6 +441,7 @@ export default [
     "scenarios": [
       {
         "id": "ca507cd7c0d3c86d313d10d0a1581ea9",
+        "cons_ready": false,
         "name": {
           "value": "ung tesstt"
         },
@@ -467,6 +479,7 @@ export default [
       },
       {
         "id": "3d1a7cd92e146a67b9509246a2432e90",
+        "cons_ready": false,
         "name": {
           "value": "ung test"
         },
@@ -504,6 +517,7 @@ export default [
       },
       {
         "id": "7547b52b408d1bc6d313b7cf7a4f3d31",
+        "cons_ready": false,
         "name": {
           "value": "errr"
         },
@@ -541,6 +555,7 @@ export default [
       },
       {
         "id": "c327980237df6f6df06c435b127983ed",
+        "cons_ready": false,
         "name": {
           "value": "qee"
         },
@@ -578,6 +593,7 @@ export default [
       },
       {
         "id": "e72356ffbcda285c3183b891628d96d3",
+        "cons_ready": false,
         "name": {
           "value": ""
         },
@@ -615,6 +631,7 @@ export default [
       },
       {
         "id": "0a9b4561b9b5793e728460edf3530335",
+        "cons_ready": false,
         "name": {
           "value": "ung test 2"
         },
@@ -652,6 +669,7 @@ export default [
       },
       {
         "id": "439296f1eb422244015a24243800a82c",
+        "cons_ready": false,
         "name": {
           "value": ""
         },
@@ -689,6 +707,7 @@ export default [
       },
       {
         "id": "303cfc548580f17d7f40f37e65912018",
+        "cons_ready": false,
         "name": {
           "value": "цфывфц"
         },
@@ -726,6 +745,7 @@ export default [
       },
       {
         "id": "817fbca580cb7ae394018cfa8bfea57d",
+        "cons_ready": false,
         "name": {
           "value": "qee"
         },
@@ -763,6 +783,7 @@ export default [
       },
       {
         "id": "f88ef4b302811da060287db4ad44fdeb",
+        "cons_ready": false,
         "name": {
           "value": "qee"
         },
@@ -800,6 +821,7 @@ export default [
       },
       {
         "id": "05c85f87805b7d919e7ccec1767dc05f",
+        "cons_ready": false,
         "name": {
           "value": "[object Object]"
         },
@@ -837,6 +859,7 @@ export default [
       },
       {
         "id": "f5e7c7e13708b184f3ad52e2c09f74b6",
+        "cons_ready": false,
         "name": {
           "value": "36 Конд"
         },
@@ -874,6 +897,7 @@ export default [
       },
       {
         "id": "8a5d267a369210dba846c6b9fad276ae",
+        "cons_ready": false,
         "name": {
           "value": "[object Object]"
         },
@@ -911,6 +935,7 @@ export default [
       },
       {
         "id": "5bc4a4570b32ca50e76fcc4e3aa93852",
+        "cons_ready": false,
         "name": {
           "value": "awdawd"
         },
@@ -948,6 +973,7 @@ export default [
       },
       {
         "id": "9ca2a39254016246a0e9318c94c3a043",
+        "cons_ready": false,
         "name": {
           "value": "test_kondakov"
         },
@@ -985,6 +1011,7 @@ export default [
       },
       {
         "id": "5d77c793348dd518efad8f6403877478",
+        "cons_ready": false,
         "name": {
           "value": "test_k0nd"
         },
@@ -1022,6 +1049,7 @@ export default [
       },
       {
         "id": "a788e462dc8f2352daae5a8a94262bae",
+        "cons_ready": false,
         "name": {
           "value": "тест_295"
         },
@@ -1065,6 +1093,7 @@ export default [
     "scenarios": [
       {
         "id": "f244756627704df764a328a997f127f3",
+        "cons_ready": false,
         "name": {
           "value": "ono test 2"
         },
@@ -1102,6 +1131,7 @@ export default [
       },
       {
         "id": "b6f61be92edb10f3fbf98aa7c8b8e612",
+        "cons_ready": false,
         "name": {
           "value": "Кирсановское_v.1"
         },
@@ -1139,6 +1169,7 @@ export default [
       },
       {
         "id": "6c252183ff1963ba49c9c6483595323e",
+        "cons_ready": false,
         "name": {
           "value": "test new thing"
         },
@@ -1176,6 +1207,7 @@ export default [
       },
       {
         "id": "b47fa27e7e75c91a6ad371661c7d2b7d",
+        "cons_ready": false,
         "name": {
           "value": "Ожид 2024"
         },
@@ -1213,6 +1245,7 @@ export default [
       },
       {
         "id": "74c2e11940d78dbacf419354eb7c9255",
+        "cons_ready": true,
         "name": {
           "value": "Пашк"
         },
@@ -1250,6 +1283,7 @@ export default [
       },
       {
         "id": "10415e398b4e3484aa41a56e63745165",
+        "cons_ready": true,
         "name": {
           "value": "ono test"
         },
@@ -1287,6 +1321,7 @@ export default [
       },
       {
         "id": "fbe7baa28a309dd1a639569d34b65fa4",
+        "cons_ready": false,
         "name": {
           "value": "test new cache"
         },
@@ -1324,6 +1359,7 @@ export default [
       },
       {
         "id": "a821919b74c66cb0486febd216dbddeb",
+        "cons_ready": false,
         "name": {
           "value": "Ожид 2024"
         },
@@ -1361,6 +1397,7 @@ export default [
       },
       {
         "id": "b1f8d943d3824a36e1abfb68db56621e",
+        "cons_ready": false,
         "name": {
           "value": "kirs test"
         },
@@ -1398,6 +1435,7 @@ export default [
       },
       {
         "id": "13d81d49ebb56a74c5d3976402080196",
+        "cons_ready": true,
         "name": {
           "value": "Пашк"
         },
@@ -1435,6 +1473,7 @@ export default [
       },
       {
         "id": "d40a087d5beb1fbfa8927d9f63a36f7d",
+        "cons_ready": false,
         "name": {
           "value": "ono test horizons"
         },
@@ -1472,6 +1511,7 @@ export default [
       },
       {
         "id": "44656dc26f9cb453a3b9c2c0edb8bb86",
+        "cons_ready": false,
         "name": {
           "value": "gtm test"
         },
@@ -1509,6 +1549,7 @@ export default [
       },
       {
         "id": "006fa1d27ff46c083c8b53c75e667938",
+        "cons_ready": false,
         "name": {
           "value": "gtm test"
         },
@@ -1546,6 +1587,7 @@ export default [
       },
       {
         "id": "9ec3db5704002f3cca688f64b0617ae6",
+        "cons_ready": false,
         "name": {
           "value": "123"
         },
@@ -1583,6 +1625,7 @@ export default [
       },
       {
         "id": "0e300b6b4d9bac08a7007be408355214",
+        "cons_ready": false,
         "name": {
           "value": "Пашкинское"
         },
@@ -1620,6 +1663,7 @@ export default [
       },
       {
         "id": "32ba991299e7a48d3ffc98e0acbdc6be",
+        "cons_ready": false,
         "name": {
           "value": "Проверка ГТМ"
         },
@@ -1657,6 +1701,7 @@ export default [
       },
       {
         "id": "6f21c3fcf453491d465fb29457a7a0ae",
+        "cons_ready": false,
         "name": {
           "value": "test_pashkin"
         },
@@ -1700,6 +1745,7 @@ export default [
     "scenarios": [
       {
         "id": "19ebd582f85e25f9cac128ecbdfeffca",
+        "cons_ready": false,
         "name": {
           "value": "утв.ПРА"
         },
@@ -1737,6 +1783,7 @@ export default [
       },
       {
         "id": "d48c933e3dc4e94ff537e73e81a89902",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -1774,6 +1821,7 @@ export default [
       },
       {
         "id": "f83f7ad762ac283eee82dd82fc6ede6d",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -1811,6 +1859,7 @@ export default [
       },
       {
         "id": "446a0665fa63089433f4d8c150b3037c",
+        "cons_ready": false,
         "name": {
           "value": "Test"
         },
@@ -1848,6 +1897,7 @@ export default [
       },
       {
         "id": "fb5f9ce3114765332e64ac0a8f4549bf",
+        "cons_ready": false,
         "name": {
           "value": "123"
         },
@@ -1885,6 +1935,7 @@ export default [
       },
       {
         "id": "d64618a0f6807c542f3fb4355d13b1fe",
+        "cons_ready": false,
         "name": {
           "value": "ПРА ЗНДХ 2023"
         },
@@ -1922,6 +1973,7 @@ export default [
       },
       {
         "id": "5071fef851160d02987148bc3da2d512",
+        "cons_ready": true,
         "name": {
           "value": "ПРА2024_test_кон"
         },
@@ -1959,6 +2011,7 @@ export default [
       },
       {
         "id": "58288d9b0525b361a6a29df125405c97",
+        "cons_ready": false,
         "name": {
           "value": "ПРА_конф"
         },
@@ -1996,6 +2049,7 @@ export default [
       },
       {
         "id": "819ff80d8d4e3c53bc6eaee7b8738240",
+        "cons_ready": false,
         "name": {
           "value": "testtt"
         },
@@ -2033,6 +2087,7 @@ export default [
       },
       {
         "id": "af9c027040d0827771cf12b22c96f780",
+        "cons_ready": false,
         "name": {
           "value": "testtt"
         },
@@ -2070,6 +2125,7 @@ export default [
       },
       {
         "id": "ac9dea8529138f3769208592cc5b0e29",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -2107,6 +2163,7 @@ export default [
       },
       {
         "id": "13047a32bd85b2b92699eb1546feccfe",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -2144,6 +2201,7 @@ export default [
       },
       {
         "id": "0726361587eec6c7fe593b2f2f535190",
+        "cons_ready": false,
         "name": {
           "value": "Утв. ПРА Харьягинское"
         },
@@ -2181,6 +2239,7 @@ export default [
       },
       {
         "id": "55e693d529e7c3eda5f952882cd951ab",
+        "cons_ready": true,
         "name": {
           "value": "test"
         },
@@ -2218,6 +2277,7 @@ export default [
       },
       {
         "id": "f5dbf36b391954d6e7694e3bd9ebd087",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -2255,6 +2315,7 @@ export default [
       },
       {
         "id": "f5c28fb9f8d18a7b094a1f26f1095037",
+        "cons_ready": false,
         "name": {
           "value": "test_groups"
         },
@@ -2292,6 +2353,7 @@ export default [
       },
       {
         "id": "88e12d926642d801c806f2b1f9192692",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -2329,6 +2391,7 @@ export default [
       },
       {
         "id": "fa4fda6d19f46cd3ac0c061819d4ab31",
+        "cons_ready": false,
         "name": {
           "value": "tteee"
         },
@@ -2366,6 +2429,7 @@ export default [
       },
       {
         "id": "16a2354e14ecaca0f6e6fa121ffb5d7d",
+        "cons_ready": false,
         "name": {
           "value": ""
         },
@@ -2403,6 +2467,7 @@ export default [
       },
       {
         "id": "c525a7849db345443bc043c3977c42e8",
+        "cons_ready": true,
         "name": {
           "value": "test"
         },
@@ -2440,6 +2505,7 @@ export default [
       },
       {
         "id": "3154a5b42bfdd5b5a225314360f96cc0",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -2477,6 +2543,7 @@ export default [
       },
       {
         "id": "2948072cb79e5af5b8512268217a6846",
+        "cons_ready": true,
         "name": {
           "value": "test"
         },
@@ -2514,6 +2581,7 @@ export default [
       },
       {
         "id": "3cf94288a5cdb09097de934e0f989f06",
+        "cons_ready": false,
         "name": {
           "value": "хар_тест_292"
         },
@@ -2551,6 +2619,7 @@ export default [
       },
       {
         "id": "f09caeb037f630e61644b90165d8e403",
+        "cons_ready": true,
         "name": {
           "value": "1212"
         },
@@ -2588,6 +2657,7 @@ export default [
       },
       {
         "id": "13529fd64773cd106c6a29ccbb68826b",
+        "cons_ready": false,
         "name": {
           "value": "сценарий"
         },
@@ -2625,6 +2695,7 @@ export default [
       },
       {
         "id": "3256f0b0c33bfff363d9ffbf2adc4415",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -2662,6 +2733,7 @@ export default [
       },
       {
         "id": "7d817babce3b27d9c8e3efb4f008d2c6",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -2699,6 +2771,7 @@ export default [
       },
       {
         "id": "09c5406393675bac36a5bf00a12e9588",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -2736,6 +2809,7 @@ export default [
       },
       {
         "id": "e21ce8bb987f79970a5bd193d7248808",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -2773,6 +2847,7 @@ export default [
       },
       {
         "id": "6c1d4565db53112765781d1e476b9dff",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -2816,6 +2891,7 @@ export default [
     "scenarios": [
       {
         "id": "e7247b8fbfa8b1be966581cf6c7507fe",
+        "cons_ready": false,
         "name": {
           "value": "в_кол"
         },
@@ -2853,6 +2929,7 @@ export default [
       },
       {
         "id": "fb3302b70fe382ff2414a3e90757fac4",
+        "cons_ready": false,
         "name": {
           "value": "modals-fix-bugs"
         },
@@ -2890,6 +2967,7 @@ export default [
       },
       {
         "id": "765cf67242f2d769ee4b9404a091fa94",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -2927,6 +3005,7 @@ export default [
       },
       {
         "id": "c37df9868a034d1632e27c37fd7b6322",
+        "cons_ready": false,
         "name": {
           "value": "123"
         },
@@ -2964,6 +3043,7 @@ export default [
       },
       {
         "id": "961a6424cbbb2e1eb152d30ba730b95c",
+        "cons_ready": false,
         "name": {
           "value": "123"
         },
@@ -3001,6 +3081,7 @@ export default [
       },
       {
         "id": "8f02c39e0408893db5b3acd23f1ca879",
+        "cons_ready": false,
         "name": {
           "value": "qwe"
         },
@@ -3038,6 +3119,7 @@ export default [
       },
       {
         "id": "b2dad103f64495a181bde8f72194ecf1",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -3075,6 +3157,7 @@ export default [
       },
       {
         "id": "07662b70913a9ca78f43c4574ccdbded",
+        "cons_ready": true,
         "name": {
           "value": "test"
         },
@@ -3112,6 +3195,7 @@ export default [
       },
       {
         "id": "f646720b3ed2c1391bf4af94e9fda58e",
+        "cons_ready": false,
         "name": {
           "value": "gg"
         },
@@ -3149,6 +3233,7 @@ export default [
       },
       {
         "id": "51f0b0e7e37eaebe086692564789519d",
+        "cons_ready": false,
         "name": {
           "value": "rererer"
         },
@@ -3186,6 +3271,7 @@ export default [
       },
       {
         "id": "cafcc570a7ceb5e5ae322f0c5b00f0a0",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -3223,6 +3309,7 @@ export default [
       },
       {
         "id": "7d73460e90b25061d5bffa4a3c860f10",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -3260,6 +3347,7 @@ export default [
       },
       {
         "id": "8b42f57b1bca5eb31ddb5580f0c5009e",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -3297,6 +3385,7 @@ export default [
       },
       {
         "id": "86a72b41577ae570a70ed68d87ec24b7",
+        "cons_ready": false,
         "name": {
           "value": "www"
         },
@@ -3334,6 +3423,7 @@ export default [
       },
       {
         "id": "db57f8134720ab10c5aebb66b53227be",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -3371,6 +3461,7 @@ export default [
       },
       {
         "id": "092cda97a55a30f9e615afac47b7986f",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -3408,6 +3499,7 @@ export default [
       },
       {
         "id": "02de59b306664c09dabf698c7ea888be",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -3445,6 +3537,7 @@ export default [
       },
       {
         "id": "3a1db11ff58348c59b31b050d41dabb0",
+        "cons_ready": false,
         "name": {
           "value": "123"
         },
@@ -3482,6 +3575,7 @@ export default [
       },
       {
         "id": "8c29a0be02df61dfa3b18d65a2af4cba",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -3519,6 +3613,7 @@ export default [
       },
       {
         "id": "d652c1aac5bea47b8115a0e8ca98e94b",
+        "cons_ready": false,
         "name": {
           "value": "Тестовый"
         },
@@ -3556,6 +3651,7 @@ export default [
       },
       {
         "id": "31d1f9e41522a6931c8ee9008b1a8862",
+        "cons_ready": false,
         "name": {
           "value": "222"
         },
@@ -3593,6 +3689,7 @@ export default [
       },
       {
         "id": "1a56f1bc4b74b75d2d5ce322a8b64a36",
+        "cons_ready": false,
         "name": {
           "value": "123"
         },
@@ -3630,6 +3727,7 @@ export default [
       },
       {
         "id": "40c63cca2f9c5ba2419350bb60bd3208",
+        "cons_ready": false,
         "name": {
           "value": "тест нов филд"
         },
@@ -3667,6 +3765,7 @@ export default [
       },
       {
         "id": "635cf006a7a0a701d02bfef499036fb3",
+        "cons_ready": false,
         "name": {
           "value": "excel-table-test-save"
         },
@@ -3704,6 +3803,7 @@ export default [
       },
       {
         "id": "31bac0dd2d684355c2b8e84f6777fea7",
+        "cons_ready": false,
         "name": {
           "value": "test-excel-table-scenario"
         },
@@ -3741,6 +3841,7 @@ export default [
       },
       {
         "id": "1acf1e7ac3d37f3a79a1a0b45a62f4e5",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -3778,6 +3879,7 @@ export default [
       },
       {
         "id": "468a460fef08b7b63aa41b995440b35e",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -3815,6 +3917,7 @@ export default [
       },
       {
         "id": "4903ed5e1d2c42582da7fb0fc835075a",
+        "cons_ready": true,
         "name": {
           "value": "123"
         },
@@ -3852,6 +3955,7 @@ export default [
       },
       {
         "id": "91b20f4a3ac1b7f732d9ba9be17f30f8",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -3889,6 +3993,7 @@ export default [
       },
       {
         "id": "3696f9472f869956b4852d49c43cc94d",
+        "cons_ready": false,
         "name": {
           "value": "Утв. ПРА З_Хос"
         },
@@ -3926,6 +4031,7 @@ export default [
       },
       {
         "id": "ef4aff02c0a76c5b18d2392119a66866",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -3963,6 +4069,7 @@ export default [
       },
       {
         "id": "c25ee864bdd31389d739b2c443ecd1ac",
+        "cons_ready": true,
         "name": {
           "value": "test"
         },
@@ -4000,6 +4107,7 @@ export default [
       },
       {
         "id": "ca51ec7dfe6f7b7e02ec60910fdfed02",
+        "cons_ready": false,
         "name": {
           "value": "123"
         },
@@ -4037,6 +4145,7 @@ export default [
       },
       {
         "id": "256b51c0ba6208b6fdd2b46d9c50d951",
+        "cons_ready": false,
         "name": {
           "value": "test_groooups"
         },
@@ -4074,6 +4183,7 @@ export default [
       },
       {
         "id": "1d9279504966d2d1155be7ebb11f9071",
+        "cons_ready": false,
         "name": {
           "value": "123123123"
         },
@@ -4111,6 +4221,7 @@ export default [
       },
       {
         "id": "d4583be1dabcf05adb5ad7d329dc0ac1",
+        "cons_ready": false,
         "name": {
           "value": "еуые"
         },
@@ -4148,6 +4259,7 @@ export default [
       },
       {
         "id": "5063b8910a01d8f673fc67a0ec262206",
+        "cons_ready": false,
         "name": {
           "value": "ttt"
         },
@@ -4185,6 +4297,7 @@ export default [
       },
       {
         "id": "bb4ae8dd6c7f82a17dec3abd4f02ed45",
+        "cons_ready": true,
         "name": {
           "value": "test-gavrik(save)"
         },
@@ -4222,6 +4335,7 @@ export default [
       },
       {
         "id": "3c2509f11b44043c242710107b0d4c83",
+        "cons_ready": false,
         "name": {
           "value": "9+3"
         },
@@ -4259,6 +4373,7 @@ export default [
       },
       {
         "id": "35b3e8da4a395a7ee24d0b2189f9f398",
+        "cons_ready": false,
         "name": {
           "value": "ghdn;"
         },
@@ -4296,6 +4411,7 @@ export default [
       },
       {
         "id": "e72e1b10b3bb98bfc8fb68a091a44f49",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -4333,6 +4449,7 @@ export default [
       },
       {
         "id": "d3cf812a7ba6b3babcdf4a5f4619bda9",
+        "cons_ready": false,
         "name": {
           "value": "Тестовый расчет"
         },
@@ -4370,6 +4487,7 @@ export default [
       },
       {
         "id": "684bf4ccc9a9273f66a4c9fa33f4d168",
+        "cons_ready": false,
         "name": {
           "value": "Западно-Хоседаюское тест"
         },
@@ -4407,6 +4525,7 @@ export default [
       },
       {
         "id": "bc8b2217a97acd1c6dcc422c7d88c1b9",
+        "cons_ready": false,
         "name": {
           "value": "тест ФЭМ"
         },
@@ -4444,6 +4563,7 @@ export default [
       },
       {
         "id": "f9d7818bfde5c0393e7e538dfedb1279",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },
@@ -4481,6 +4601,7 @@ export default [
       },
       {
         "id": "728acc0c9571c918ec5d83870a162c7d",
+        "cons_ready": false,
         "name": {
           "value": "123"
         },
@@ -4518,6 +4639,7 @@ export default [
       },
       {
         "id": "521bd8f1cf01c9a4e1b5ee454423dc3c",
+        "cons_ready": false,
         "name": {
           "value": "uuuuuuuuuuuu"
         },
@@ -4555,6 +4677,7 @@ export default [
       },
       {
         "id": "80dc7c006482bd719a6e59823c91504d",
+        "cons_ready": false,
         "name": {
           "value": "тест изменение добычи"
         },
@@ -4592,6 +4715,7 @@ export default [
       },
       {
         "id": "6be04b6e9bf0d1c6cb4faec165dba219",
+        "cons_ready": false,
         "name": {
           "value": "New"
         },
@@ -4629,6 +4753,7 @@ export default [
       },
       {
         "id": "c4780ccb927f1fed104df22c44c4f2f6",
+        "cons_ready": false,
         "name": {
           "value": "тест_291"
         },
@@ -4666,6 +4791,7 @@ export default [
       },
       {
         "id": "4a5c549aa240edbbbfe581efc2972780",
+        "cons_ready": false,
         "name": {
           "value": "iiiiiiiiii"
         },
@@ -4703,6 +4829,7 @@ export default [
       },
       {
         "id": "733065af1efb12edf30e59bac308752a",
+        "cons_ready": true,
         "name": {
           "value": "тест_295"
         },
@@ -4740,6 +4867,7 @@ export default [
       },
       {
         "id": "b853c37f24bf3d9b3d63a0b6aa32c215",
+        "cons_ready": true,
         "name": {
           "value": "тест_295"
         },
@@ -4777,6 +4905,7 @@ export default [
       },
       {
         "id": "de2a1712f47a931de24259100c97a0ba",
+        "cons_ready": false,
         "name": {
           "value": "test"
         },

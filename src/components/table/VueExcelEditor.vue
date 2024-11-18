@@ -112,6 +112,7 @@
               <td v-for="(item, p) in fields" v-show="!item.invisible" :id="`id-${record.id}-${item.name}`"
                 :cell-RC="`${rowPos}-${item.name}`" 
                 :class="{
+                  'highlight-row': highlightRowKey && record[highlightRowKey],
                   'cell-selected': record[item.name].isSelected,
                   readonly: item.readonly,
                   error: errmsg[`id-${record.id}-${item.name}`],
@@ -128,7 +129,13 @@
                     v-html="item.toText(record[item.name]?.value, record, item, p)" /></template>
                 <template v-else>{{ item.toText(record[item.name]?.value, record, item, p) }}</template>
               </td>
-              <td v-if="$slots.actions" class="actions-column">
+              <td 
+                v-if="$slots.actions" 
+                class="actions-column"
+                :class="{
+                  'highlight-row': highlightRowKey && record[highlightRowKey],
+                }"
+              >
                 <slot name="actions" :record="record" />
               </td>
               <td v-if="vScroller.buttonHeight < vScroller.height" class="last-col"></td>
@@ -449,7 +456,13 @@ export default defineComponent({
       default() {
         return true
       }
-    }
+    },
+    highlightRowKey: {
+      type: String,
+      defaut() {
+        return null
+      }
+    },
   },
   data() {
     const pageSize = this.noPaging ? 999999 : 20
