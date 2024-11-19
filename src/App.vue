@@ -1,6 +1,6 @@
 <template>
   <div class="test">
-      <NestedTableWrapper
+      <!-- <NestedTableWrapper
         :tableData="nestedTable"
         :columns="nestedColumns"
       >
@@ -8,8 +8,8 @@
       <template #actions="{ record }">
         <button @click="">Открыть</button>
       </template>
-    </NestedTableWrapper>
-      <!-- <ExcelTable
+    </NestedTableWrapper> -->
+      <ExcelTable
         v-model="singleTable"
         :columns="columns"
         noPaging 
@@ -17,7 +17,8 @@
         no-header-edit
         selectable
         free-select
-      ></ExcelTable> -->
+      ></ExcelTable>
+      <!-- <OldTable></OldTable> -->
   </div>
 </template>
 
@@ -25,6 +26,7 @@
 import NestedTableWrapper from './components/ui/NestedTable.vue';
 import ExcelTable from './components/ui/ExcelTable.vue';
 import { reactive } from 'vue';
+import OldTable from './components/OldTable.vue';
 
 import nestedTable_ from './components/ui/conts';
 import singleTable_ from './components/ui/single-table';
