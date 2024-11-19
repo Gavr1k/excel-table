@@ -80,7 +80,6 @@ const handleSelect = (selectedId: string[], status: boolean): void => {
       allSelectedIds.value.push(id);
     }
   });
-  console.log(allSelectedIds.value);
 };
 </script>
 

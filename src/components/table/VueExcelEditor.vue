@@ -48,13 +48,16 @@
                 </span>
               </th>
               <th v-for="(item, p) in fields" v-show="!item.invisible" :key="`th-${p}`"
-                :colspan="p === fields.length - 1 && vScroller.buttonHeight < vScroller.height ? 2 : 1" :class="{
+                :colspan="p === fields.length - 1 && vScroller.buttonHeight < vScroller.height ? 2 : 1" 
+                :class="{
                   'sort-asc-sign': sortPos == p && sortDir == 1,
                   'sort-des-sign': sortPos == p && sortDir == -1,
                   'sticky-column': item.sticky,
                   'no-sorting': item.noSorting
-                }" :style="{ left: item.left }" @mousedown="headerClick($event, p)"
-                @contextmenu.prevent="panelFilterClick(item)">
+                }" :style="{ left: item.left }" 
+                @mousedown="headerClick($event, p)"
+                @contextmenu.prevent="panelFilterClick(item)"
+                >
                 <div :class="{ 'filter-sign': columnFilter[p] }">
                   <span :class="{ 'table-col-header': !noHeaderEdit }" v-html="headerLabel(item.label, item)"></span>
                 </div>
@@ -64,7 +67,17 @@
                 </div>
               </th>
               <th v-if="$slots.actions" class="actions-header">
-                <slot name="actions-header"></slot>
+                <div :class="{ 'filter-sign': columnFilter[p] }">
+                  <span 
+                  :class="{ 'table-col-header': !noHeaderEdit }"
+                  >
+                  <slot name="actions-header"></slot>
+                </span>
+                </div>
+                <div class="col-sep" @mousedown="colSepMouseDown" @mouseover="colSepMouseOver"
+                  @mouseout="colSepMouseOut">
+                  <div class="add-col-btn"> + </div>
+                </div>
               </th>
             </tr>
             <tr :class="{ hide: !filterRow }">
@@ -672,6 +685,7 @@ export default defineComponent({
     this.systable = this.$refs.systable
     this.colgroupTr = this.systable.children[0]
     this.labelTr = this.systable.children[1].children[0]
+    console.log(this.systable.children[1].children[0]);
     this.filterTr = this.systable.children[1].children[1]
     this.recordBody = this.systable.children[2]
     this.footer = this.$refs.footer
