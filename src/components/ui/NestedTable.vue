@@ -25,7 +25,7 @@
             :label="column.label" 
             :type="column.type" 
             width="100px"
-            :init-style="{ padding: '2px 4px', height: '15px'}" 
+            :init-style="{ padding: '2px 4px', height: '15px', 'vertical-align': 'middle'}" 
             auto-fill-width 
             v-slot="scope"
           >

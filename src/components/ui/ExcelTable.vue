@@ -6,15 +6,15 @@
     v-bind="editorProps"
   >
     <VueExcelColumn 
-    v-for="(column, colIndex) in columns" 
-    :key="colIndex" 
-    :field="column.field" 
-    :label="column.label"
-    :type="column.type" 
-    :width="column.width" 
-    :init-style="{ padding: '2px 4px', height: '15px' }" 
-    auto-fill-width
-    v-slot="scope"
+      v-for="(column, colIndex) in columns" 
+      :key="colIndex" 
+      :field="column.field" 
+      :label="column.label"
+      :type="column.type" 
+      :width="column.width" 
+      :init-style="{ padding: '2px 4px', height: '15px', 'text-align': 'center' }" 
+      auto-fill-width
+      v-slot="scope"
     >
     </VueExcelColumn>
   </VueExcelEditor>
