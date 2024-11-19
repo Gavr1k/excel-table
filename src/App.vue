@@ -1,6 +1,6 @@
 <template>
   <div class="test">
-      <NestedTableWrapper
+      <!-- <NestedTableWrapper
         :tableData="nestedTable"
         :columns="nestedColumns"
       >
@@ -8,11 +8,16 @@
       <template #actions="{ record }">
         <button @click="">Открыть</button>
       </template>
-    </NestedTableWrapper>
-      <!-- <ExcelTable
+    </NestedTableWrapper> -->
+      <ExcelTable
         v-model="singleTable"
         :columns="columns"
-      ></ExcelTable> -->
+        noPaging 
+        noFooter 
+        no-header-edit
+        selectable
+        free-select
+      ></ExcelTable>
   </div>
 </template>
 
