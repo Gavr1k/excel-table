@@ -94,9 +94,16 @@
                   </svg>
                 </span>
               </td>
-              <vue-excel-filter v-for="(item, p) in fields" v-show="!item.invisible" :ref="`filter-${item.name}`"
-                :colspan="p === fields.length - 1 ? 2 : 1" :key="`th2-${p}`" v-model="columnFilter[p]"
-                :class="{ 'sticky-column': item.sticky }" :style="{ left: item.left }" class="column-filter" />
+              <vue-excel-filter 
+                v-for="(item, p) in fields" 
+                v-show="!item.invisible" 
+                :ref="`filter-${item.name}`"
+                :colspan="p === fields.length - 1 ? 2 : 1" 
+                :key="`th2-${p}`" 
+                v-model="columnFilter[p]"
+                :class="{ 'sticky-column': item.sticky }" :style="{ left: item.left }" 
+                class="column-filter" 
+              />
             </tr>
           </thead>
           <tbody @mousedown="mouseDown">
@@ -685,7 +692,6 @@ export default defineComponent({
     this.systable = this.$refs.systable
     this.colgroupTr = this.systable.children[0]
     this.labelTr = this.systable.children[1].children[0]
-    console.log(this.systable.children[1].children[0]);
     this.filterTr = this.systable.children[1].children[1]
     this.recordBody = this.systable.children[2]
     this.footer = this.$refs.footer
@@ -946,16 +952,10 @@ export default defineComponent({
         else {
           this.table = this.filteredValue.filter((record) => {
 
-            // Record is created after the filter time
-            if (record.id > this.lastFilterTime) return true
-
-            // Assume new record contains § in any of the key fields
-            /*
-            const isNew = this.fields.filter((field) => {
-              return field.keyField && record[field.name] && record[field.name].startsWith('§')
-            }).length > 0
-            if (isNew) return true // Always show new record in filter mode
-            */
+            // if (record.id > this.lastFilterTime) {
+            //   console.log('true 1');
+            //   return true
+            // }
 
             const content = {}
             filterColumnList.forEach((k) => {
@@ -1440,7 +1440,7 @@ export default defineComponent({
       return false
     },
     winResize() {
-      this.lazy(this.refreshPageSize, 500)
+      this.lazy(this.refreshPageSize, 0)
     },
     winPaste(e) {
       return;
