@@ -3,7 +3,6 @@
     class="excel-table" 
     v-model="localTableData" 
     @update:modelValue="localTableData = $event"
-    @pasteData="handlePastedData"
     v-bind="editorProps"
     :selectedRows="selectedRows"
     @select="handleSelect"
@@ -34,15 +33,22 @@ const { modelValue, ...editorProps } = props;
 
 const selectedRows = ref(['30acecbe-80ee-41f1-97ab-996135f0cc65']);
 
-const emit = defineEmits(['update:modelValue']);
+const allSelectedIds = ref<string[]>([]);
 
-const handleSelect = (selectedId: string[], status: boolean): void => {
-  console.log(selectedId);
+const emit = defineEmits(['update:modelValue', 'selected']);
+
+const handleSelect = (selectedId: string[], status: boolean,): void => {
+  selectedId.forEach((id: string) => {
+    const indexIfExist: number = allSelectedIds.value.indexOf(id);
+    if (!status) {
+      allSelectedIds.value.splice(indexIfExist, 1);
+    } else {
+      allSelectedIds.value.push(id);
+    }
+  });
+
+  emit('selected', allSelectedIds.value);
 };
-
-const handlePastedData = (data) => {
-  console.log(data);
-}
 
 const localTableData = computed({
   get: () => props.modelValue,
@@ -51,6 +57,17 @@ const localTableData = computed({
 </script>
 
 <style scoped lang="scss">
+::v-deep .excel-table table > thead > tr > th {
+  background-color: #009639;
+  color: #fff;
+}
+
+::v-deep .excel-table td,
+::v-deep .excel-table th {
+  font-size: 10px;
+  font-family: "Montserrat";
+}
+
 .excel-table::v-deep .component-content .table-content .systable {
   width: auto !important;
 }

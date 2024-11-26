@@ -2860,6 +2860,7 @@ export default defineComponent({
       }, 100)
     },
     async updateCell(row, field, newVal, isUndo) {
+      const rowIndex = row;
       switch (row.constructor.name) {
         case 'String': // $id
           row = this.modelValue.find(r => r.id === row) // id
@@ -2900,6 +2901,7 @@ export default defineComponent({
       setTimeout(() => {
         const transaction = {
           id: row.id,
+          rowIndex: rowIndex,
           keys: this.getKeys(row),
           oldKeys: oldKeys,
           name: field.name,
