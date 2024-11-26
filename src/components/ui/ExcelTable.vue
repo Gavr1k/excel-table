@@ -38,6 +38,9 @@ const allSelectedIds = ref<string[]>([]);
 const emit = defineEmits(['update:modelValue', 'selected']);
 
 const handleSelect = (selectedId: string[], status: boolean,): void => {
+  if (allSelectedIds.value.length || props.singleSelect) {
+    allSelectedIds.value = [];
+  }
   selectedId.forEach((id: string) => {
     const indexIfExist: number = allSelectedIds.value.indexOf(id);
     if (!status) {

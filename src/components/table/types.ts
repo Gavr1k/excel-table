@@ -33,6 +33,7 @@ export interface TableProps {
   noMouseScroll?: boolean;
   noSorting?: boolean;
   noMassUpdate?: boolean;
+  singleSelect: boolean,
 }
 
 export interface Column {

@@ -2369,11 +2369,7 @@ export default defineComponent({
       const rowPos = this.table.findIndex(v => v.id === id)
       if (rowPos >= 0) this.selectRecord(rowPos)
     },
-    unSelectRecord(rowPos) {
-      if (this.singleSelect) {
-        this.selected = {}
-      }
-      
+    unSelectRecord(rowPos) {      
       if (typeof this.selected[rowPos] !== 'undefined') {
         const deletedId = this.selected[rowPos];
         delete this.selected[rowPos]
