@@ -483,6 +483,18 @@ export default defineComponent({
         return null
       }
     },
+    selectedRows: {
+      type: Array,
+      default() {
+        return []
+      }
+    },
+    singleSelect: {
+      type: Boolean,
+      default() {
+        return false
+      }
+    }
   },
   data() {
     const pageSize = this.noPaging ? 999999 : 20
@@ -676,6 +688,15 @@ export default defineComponent({
     selectable(newValue) {
       if (newValue) this.noNumCol = false;
     },
+    selectedRows: {
+      handler: (newValue) => {
+        this.clearSelection();
+        newValue.forEach((id) => {
+          const rowPos = this.modelValue.findIndex((el) => el.id == id);
+          this.selectRecord(rowPos);
+        })
+      },
+    }
   },
   activated() {
     this.addEventListener()
@@ -687,6 +708,8 @@ export default defineComponent({
     this.removeEventListener()
   },
   mounted() {
+    console.log('Is props reactive?', isReactive(this.$props)); // true
+    console.log('Is someProp a proxy?', isReactive(this.disablePanelSetting));
     this.editor = this.$refs.editor
     this.tableContent = this.$refs.tableContent
     this.systable = this.$refs.systable
@@ -2331,6 +2354,10 @@ export default defineComponent({
       else this.selectRecord(rowPos)
     },
     selectRecord(rowPos) {
+      if (this.singleSelect) {
+        this.selected = {}
+      }
+
       if (typeof this.selected[rowPos] === 'undefined') {
         this.selectedCount++
         this.selected[rowPos] = this.table[rowPos].id
@@ -2349,6 +2376,10 @@ export default defineComponent({
       if (rowPos >= 0) this.selectRecord(rowPos)
     },
     unSelectRecord(rowPos) {
+      if (this.singleSelect) {
+        this.selected = {}
+      }
+      
       if (typeof this.selected[rowPos] !== 'undefined') {
         const deletedId = this.selected[rowPos];
         delete this.selected[rowPos]
@@ -2361,6 +2392,7 @@ export default defineComponent({
       }
     },
     toggleSelectAllRecords(e) {
+      if (this.singleSelect) return;
       if (e) e.preventDefault()
       if (this.selectedCount > 0)
         this.clearAllSelected()
@@ -2371,6 +2403,7 @@ export default defineComponent({
       }
     },
     clearAllSelected() {
+      if (this.singleSelect) return;
       if (this.selectedCount > 0)
         this.$emit('select', Object.values(this.selected), false)
       this.selected = {}

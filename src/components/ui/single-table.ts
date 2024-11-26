@@ -4,12 +4,10 @@ export default[
       "date_dt": {
           "value": "2024-10-01T00:00:00.000",
           "anomaly": "",
-          "isSelected": false
       },
       "liq_prod_rate_tn": {
           "value": 109.2,
           "anomaly": "",
-          "isSelected": false
       },
       "oil_prod_rate_tn": {
           "value": 16,
