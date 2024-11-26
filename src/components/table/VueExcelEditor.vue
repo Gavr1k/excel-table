@@ -708,8 +708,6 @@ export default defineComponent({
     this.removeEventListener()
   },
   mounted() {
-    console.log('Is props reactive?', isReactive(this.$props)); // true
-    console.log('Is someProp a proxy?', isReactive(this.disablePanelSetting));
     this.editor = this.$refs.editor
     this.tableContent = this.$refs.tableContent
     this.systable = this.$refs.systable
@@ -974,11 +972,6 @@ export default defineComponent({
           this.table = this.filteredValue
         else {
           this.table = this.filteredValue.filter((record) => {
-
-            // if (record.id > this.lastFilterTime) {
-            //   console.log('true 1');
-            //   return true
-            // }
 
             const content = {}
             filterColumnList.forEach((k) => {
