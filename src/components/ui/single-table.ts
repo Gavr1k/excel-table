@@ -7,7 +7,7 @@ export default[
       },
       "liq_prod_rate_tn": {
           "value": 109.2,
-          "anomaly": "",
+          "anomaly": "kdsmf;sdm;gksm",
       },
       "oil_prod_rate_tn": {
           "value": 16,

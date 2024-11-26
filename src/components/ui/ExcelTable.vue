@@ -3,6 +3,7 @@
     class="excel-table" 
     v-model="localTableData" 
     @update:modelValue="localTableData = $event"
+    @pasteData="handlePastedData"
     v-bind="editorProps"
     :selectedRows="selectedRows"
     @select="handleSelect"
@@ -38,6 +39,10 @@ const emit = defineEmits(['update:modelValue']);
 const handleSelect = (selectedId: string[], status: boolean): void => {
   console.log(selectedId);
 };
+
+const handlePastedData = (data) => {
+  console.log(data);
+}
 
 const localTableData = computed({
   get: () => props.modelValue,

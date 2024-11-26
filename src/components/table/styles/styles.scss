@@ -13,6 +13,12 @@ $green: #06842c;
 $font-size: 14px;
 $font-family: "Montserrat";
 
+$cellAnomalyColor: rgba(237, 110, 28, 0.5);
+
+.anomaly {
+  background-color: $cellAnomalyColor;
+}
+
 .highlight-row {
   background-color: $baseColorTransparent;
 }

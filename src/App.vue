@@ -17,7 +17,7 @@
         no-header-edit
         selectable
         free-select
-        :singleSelect="true"
+        singleSelect
       ></ExcelTable>
       <!-- <OldTable></OldTable> -->
   </div>

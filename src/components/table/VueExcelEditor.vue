@@ -133,12 +133,13 @@
                 :cell-RC="`${rowPos}-${item.name}`" 
                 :class="{
                   'highlight-row': highlightRowKey && record[highlightRowKey],
-                  'cell-selected': record[item.name].isSelected,
+                  'cell-selected': record[item.name]?.isSelected,
                   readonly: item.readonly,
                   error: errmsg[`id-${record.id}-${item.name}`],
                   link: item.link && item.isLink && item.isLink(record),
                   select: item.options,
                   grouping: item.grouping,
+                  anomaly: record[item.name].anomaly,
                   expand: item.grouping && ungroup[item.name + record[item.name]?.value],
                   datepick: item.type == 'date',
                   'sticky-column': item.sticky,
@@ -3138,20 +3139,31 @@ export default defineComponent({
       if (currentRow.length > 0) rows.push(currentRow);
 
       const filteredRows = rows.map((row) => row.filter((cell) => cell !== ""));
+      const updates = [];
 
       filteredRows.forEach((row, rowIndex) => {
         const rowOffset = this.selectedRowIndex + rowIndex;
+        const rowUpdates = [];
         row.forEach((cellData, cellIndex) => {
           const cellOffSet = this.selectedColIndex + cellIndex;
           const key = this.columns[cellOffSet]?.field;
           if  (key) {
             this.table[rowOffset][key].value = cellData;
             this.table[rowOffset][key].isSelected = true;
+            rowUpdates.push({column: key, value: cellData});
           }
         });
+
+        if (rowUpdates.length > 0) {
+          updates.push({
+            rowIndex: rowOffset,
+            rowId: this.table[rowOffset].id,
+            updates: rowUpdates,
+          });
+        }
       });
 
-      // this.$emit("pasteData", event);
+      this.$emit("pasteData", updates);
     },
     handleCopy(event) {
       if (this.disableMultiCopy) return;
