@@ -17,6 +17,7 @@
         no-header-edit
         selectable
         free-select
+        :selectedRows="selectedRows"
         singleSelect
       ></ExcelTable>
       <!-- <OldTable></OldTable> -->
@@ -32,6 +33,10 @@ import OldTable from './components/OldTable.vue';
 import nestedTable_ from './components/ui/conts';
 import singleTable_ from './components/ui/single-table';
 import singleTable from './components/ui/single-table';
+
+import {ref} from 'vue';
+
+const selectedRows = ref(['30acecbe-80ee-41f1-97ab-996135f0cc65', '9978633e-4899-400c-9801-3da99f522716']);
 
 const nestedTable = reactive(nestedTable_);
 

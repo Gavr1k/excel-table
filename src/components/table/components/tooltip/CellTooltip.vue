@@ -12,7 +12,7 @@ import { ref, computed, onMounted } from 'vue';
 
 const props = defineProps<{
     content: string;
-    position: 'top' | 'bottom' | 'left' | 'right';
+    position?: 'top' | 'bottom' | 'left' | 'right';
 }>();
 
 const isVisible = ref<Boolean>(false);

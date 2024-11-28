@@ -100,8 +100,12 @@
                 hide: noNumCol,
                 error: rowerr[`rid-${record.id}`],
               }" :pos="rowPos">
-                <input class="table__checkbox" type="checkbox" :checked="selected[rowPos] === record.id"
-                  @click="rowLabelClick" />
+                <input 
+                  class="table__checkbox" 
+                  type="checkbox" 
+                  :checked="selected[rowPos] === record.id"
+                  @click="rowLabelClick" 
+                />
               </td>
 
               <td v-else class="center-text first-col" :id="`rid-${record.id}`" :class="{
@@ -629,7 +633,8 @@ export default defineComponent({
           }
         }
       }
-    }
+    },
+    
   },
   watch: {
     modelValue() {
@@ -731,6 +736,11 @@ export default defineComponent({
           this.setting = data
       }
     }
+
+    this.selectedRows.forEach((id) => {
+      const rowIndex = this.table.findIndex((row) => row.id === id );
+      this.selected[rowIndex] = id;
+    });
   },
   methods: {
     addEventListener() {
@@ -2525,8 +2535,6 @@ export default defineComponent({
               this.$refs.texttip.style.left = rect.left + 'px'
             this.$refs.texttip.style.opacity = 1
           })
-          // this.$refs.texttip.style.top = rect.bottom + 'px'
-          // this.$refs.texttip.style.left = rect.left + 'px'
         }
         if (this.currentField.readonly) return
         this.inputBox.value = this.currentCell.textContent
@@ -2587,6 +2595,9 @@ export default defineComponent({
 
     /* *** InputBox *****************************************************************************************
      */
+
+
+     
     moveInputSquare(rowPos, colPos) {
       this.textTip = ''
       if (colPos < 0) return false
