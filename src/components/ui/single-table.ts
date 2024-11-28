@@ -92,7 +92,7 @@ export default[
       },
       "eff": {
           "value": 1,
-          "anomaly": "",
+          "anomaly": "some anomaly test last cell",
           "isSelected": false
       },
       "wct_tn": {
@@ -102,7 +102,7 @@ export default[
       },
       "gor_tn_to_m3": {
           "value": 29.961,
-          "anomaly": "",
+          "anomaly": "some anomaly test last cell",
           "isSelected": false
       },
       "$id": "10275885-0000000"

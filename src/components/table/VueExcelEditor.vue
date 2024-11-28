@@ -1,11 +1,6 @@
 <template>
-  <div 
-    ref="editor" 
-    class="vue-excel-editor" 
-    :style="{ display: 'inline-block', width }"
-    @paste="handlePaste"
-    @copy="handleCopy"
-  >
+  <div ref="editor" class="vue-excel-editor" :style="{ display: 'inline-block', width }" @paste="handlePaste"
+    @copy="handleCopy">
     <div class="component-content">
       <!-- No record -->
       <div v-if="localizedLabel.noRecordIndicator && pagingTable.length == 0" class="norecord"
@@ -48,16 +43,13 @@
                 </span>
               </th>
               <th v-for="(item, p) in fields" v-show="!item.invisible" :key="`th-${p}`"
-                :colspan="p === fields.length - 1 && vScroller.buttonHeight < vScroller.height ? 2 : 1" 
-                :class="{
+                :colspan="p === fields.length - 1 && vScroller.buttonHeight < vScroller.height ? 2 : 1" :class="{
                   'sort-asc-sign': sortPos == p && sortDir == 1,
                   'sort-des-sign': sortPos == p && sortDir == -1,
                   'sticky-column': item.sticky,
                   'no-sorting': item.noSorting
-                }" :style="{ left: item.left }" 
-                @mousedown="headerClick($event, p)"
-                @contextmenu.prevent="panelFilterClick(item)"
-                >
+                }" :style="{ left: item.left }" @mousedown="headerClick($event, p)"
+                @contextmenu.prevent="panelFilterClick(item)">
                 <div :class="{ 'filter-sign': columnFilter[p] }">
                   <span :class="{ 'table-col-header': !noHeaderEdit }" v-html="headerLabel(item.label, item)"></span>
                 </div>
@@ -68,11 +60,9 @@
               </th>
               <th v-if="$slots.actions" class="actions-header">
                 <div :class="{ 'filter-sign': columnFilter[p] }">
-                  <span 
-                  :class="{ 'table-col-header': !noHeaderEdit }"
-                  >
-                  <slot name="actions-header"></slot>
-                </span>
+                  <span :class="{ 'table-col-header': !noHeaderEdit }">
+                    <slot name="actions-header"></slot>
+                  </span>
                 </div>
                 <div class="col-sep" @mousedown="colSepMouseDown" @mouseover="colSepMouseOver"
                   @mouseout="colSepMouseOut">
@@ -94,16 +84,9 @@
                   </svg>
                 </span>
               </td>
-              <vue-excel-filter 
-                v-for="(item, p) in fields" 
-                v-show="!item.invisible" 
-                :ref="`filter-${item.name}`"
-                :colspan="p === fields.length - 1 ? 2 : 1" 
-                :key="`th2-${p}`" 
-                v-model="columnFilter[p]"
-                :class="{ 'sticky-column': item.sticky }" :style="{ left: item.left }" 
-                class="column-filter" 
-              />
+              <vue-excel-filter v-for="(item, p) in fields" v-show="!item.invisible" :ref="`filter-${item.name}`"
+                :colspan="p === fields.length - 1 ? 2 : 1" :key="`th2-${p}`" v-model="columnFilter[p]"
+                :class="{ 'sticky-column': item.sticky }" :style="{ left: item.left }" class="column-filter" />
             </tr>
           </thead>
           <tbody @mousedown="mouseDown">
@@ -130,8 +113,7 @@
 
 
               <td v-for="(item, p) in fields" v-show="!item.invisible" :id="`id-${record.id}-${item.name}`"
-                :cell-RC="`${rowPos}-${item.name}`" 
-                :class="{
+                :cell-RC="`${rowPos}-${item.name}`" :class="{
                   'highlight-row': highlightRowKey && record[highlightRowKey],
                   'cell-selected': record[item.name]?.isSelected,
                   readonly: item.readonly,
@@ -147,16 +129,18 @@
                 }" :key="p" :style="Object.assign(cellStyle(record, item), renderColumnCellStyle(item, record))"
                 @mouseover="cellMouseOver" @mousemove="cellMouseMove">
                 <template v-if="item.format == 'html'"><span
-                    v-html="item.toText(record[item.name]?.value, record, item, p)" /></template>
-                <template v-else>{{ item.toText(record[item.name]?.value, record, item, p) }}</template>
+                    v-html="item.toText(record[item.name]?.value, record, item, p)" />
+                </template>
+                <template v-else>
+                  <cell-tooltip v-if="record[item.name].anomaly" :content="record[item.name].anomaly">
+                    {{ record[item.name].value }}
+                  </cell-tooltip>
+                  <template v-else>{{ record[item.name].value }}</template>
+                </template>
               </td>
-              <td 
-                v-if="$slots.actions" 
-                class="actions-column"
-                :class="{
-                  'highlight-row': highlightRowKey && record[highlightRowKey],
-                }"
-              >
+              <td v-if="$slots.actions" class="actions-column" :class="{
+                'highlight-row': highlightRowKey && record[highlightRowKey],
+              }">
                 <slot name="actions" :record="record" />
               </td>
               <td v-if="vScroller.buttonHeight < vScroller.height" class="last-col"></td>
@@ -180,7 +164,7 @@
         <div v-show="tip" ref="tooltip" class="tool-tip">{{ tip }}</div>
 
         <!-- Text Tip -->
-        <div v-show="textTip" ref="texttip" class="text-tip">{{ textTip }}</div>
+        <div v-show="textTip" ref="texttip" class="text-tip">Пример</div>
 
         <!-- Editor Square -->
         <div v-show="focused" ref="inputSquare" class="input-square" @mousedown="inputSquareClick">
@@ -338,6 +322,8 @@ import PanelSetting from './components/settings/PanelSetting.vue'
 import PanelFind from './components/find/PanelFind.vue'
 import DatePicker from '@vuepic/vue-datepicker'
 import { read, writeFile, utils } from 'xlsx'
+import CellTooltip from "./components/tooltip/CellTooltip.vue";
+
 
 import '@vuepic/vue-datepicker/dist/main.css'
 
@@ -347,7 +333,8 @@ export default defineComponent({
     'panel-filter': PanelFilter,
     'panel-setting': PanelSetting,
     'panel-find': PanelFind,
-    'date-picker': DatePicker
+    'date-picker': DatePicker,
+    "cell-tooltip": CellTooltip,
   },
   props: {
     disablePanelSetting: {
@@ -807,7 +794,6 @@ export default defineComponent({
     },
     resetColumn() {
       this.fields = []
-      // this.$slots.default.forEach(col => col.componentInstance? col.componentInstance.init() : 0)
       this.tableContent.scrollTo(0, this.tableContent.scrollTop)
       this.calStickyLeft()
     },
@@ -1187,7 +1173,6 @@ export default defineComponent({
         if (!showCols.includes(field.name))
           field.invisible = true
       })
-      // this.refresh()
     },
 
     /* Still evaluating */
@@ -1208,7 +1193,6 @@ export default defineComponent({
         if (width > 450) width = 450
         field.width = width + 'px'
       })
-      // this.refresh()
     },
 
     columnFillWidth() {
@@ -1452,8 +1436,6 @@ export default defineComponent({
           this.lazy(() => this.$refs.vScrollButton.classList.remove('focus'), 1000)
         }
       }
-      // e.preventDefault()
-      // e.stopPropagation()
       return false
     },
     winResize() {
@@ -2286,24 +2268,6 @@ export default defineComponent({
     getSelectedRecords() {
       return this.table.filter((rec, i) => this.selected[i])
     },
-    //     getSelectedRecords() {
-    //   // Возвращаем записи, которые выбраны, при необходимости можно извлечь только значения
-    //   return this.table.filter((rec, i) => this.selected[i]).map(rec => {
-    //     // Преобразуем запись, чтобы вернуть только значения полей
-    //     const values = {};
-    //     this.fields.forEach(field => {
-    //       values[field.name] = rec[field.name].value; // Изменено: обращаемся к .value
-    //     });
-    //     return values;
-    //   });
-    // },
-    /*
-    deleteSelectedRecords () {
-      this.table = this.table.filter((rec, i) => typeof this.selected[i] === 'undefined')
-      this.selected = {}
-      this.selectedCount = 0
-    },
-    */
     rowLabelClick(e) {
       let target = e.target
       while (target.tagName !== 'TD') target = target.parentNode
@@ -2357,7 +2321,7 @@ export default defineComponent({
         this.selected[rowPos] = this.table[rowPos].id
         if (this.recordBody.children[rowPos - this.pageTop])
           this.recordBody.children[rowPos - this.pageTop].classList.add('select')
-          this.$emit('select', [this.selected[rowPos]], true)
+        this.$emit('select', [this.selected[rowPos]], true)
       }
     },
     selectRecordByKeys(keys) {
@@ -2369,7 +2333,7 @@ export default defineComponent({
       const rowPos = this.table.findIndex(v => v.id === id)
       if (rowPos >= 0) this.selectRecord(rowPos)
     },
-    unSelectRecord(rowPos) {      
+    unSelectRecord(rowPos) {
       if (typeof this.selected[rowPos] !== 'undefined') {
         const deletedId = this.selected[rowPos];
         delete this.selected[rowPos]
@@ -3102,7 +3066,7 @@ export default defineComponent({
     },
     handlePaste(event) {
       if (this.disableMultiPaste) return;
-      
+
       event.preventDefault();
       const clipboardData = event.clipboardData;
       const pastedData = clipboardData.getData("text");
@@ -3145,10 +3109,10 @@ export default defineComponent({
         row.forEach((cellData, cellIndex) => {
           const cellOffSet = this.selectedColIndex + cellIndex;
           const key = this.columns[cellOffSet]?.field;
-          if  (key) {
+          if (key) {
             this.table[rowOffset][key].value = cellData;
             this.table[rowOffset][key].isSelected = true;
-            rowUpdates.push({column: key, value: cellData});
+            rowUpdates.push({ column: key, value: cellData });
           }
         });
 
