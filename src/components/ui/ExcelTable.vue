@@ -4,7 +4,6 @@
     v-model="localTableData" 
     @update:modelValue="localTableData = $event"
     v-bind="editorProps"
-    :selectedRows="selectedRows"
     @select="handleSelect"
   >
     <VueExcelColumn 
@@ -31,7 +30,7 @@ import { TableProps } from '../table/types';
 const props = defineProps<TableProps>();
 const { modelValue, ...editorProps } = props;
 
-const selectedRows = ref(['30acecbe-80ee-41f1-97ab-996135f0cc65']);
+// const selectedRows = ref(['30acecbe-80ee-41f1-97ab-996135f0cc65']);
 
 const allSelectedIds = ref<string[]>([]);
 

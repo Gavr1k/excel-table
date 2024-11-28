@@ -17,7 +17,6 @@
         no-header-edit
         selectable
         free-select
-        :selectedRows="selectedRows"
         singleSelect
       ></ExcelTable>
       <!-- <OldTable></OldTable> -->
