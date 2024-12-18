@@ -37,6 +37,7 @@ const allSelectedIds = ref<string[]>([]);
 const emit = defineEmits(['update:modelValue', 'selected']);
 
 const handleSelect = (selectedId: string[], status: boolean,): void => {
+  console.log('here', status);
   if (allSelectedIds.value.length || props.singleSelect) {
     allSelectedIds.value = [];
   }

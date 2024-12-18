@@ -171,12 +171,29 @@
         <div v-show="textTip" ref="texttip" class="text-tip">Пример</div>
 
         <!-- Editor Square -->
-        <div v-show="focused" ref="inputSquare" class="input-square" @mousedown="inputSquareClick">
+        <div 
+          v-show="focused" 
+          ref="inputSquare" 
+          class="input-square" 
+          @mousedown="inputSquareClick"
+        >
           <div style="position: relative; height: 100%; padding: 2px 2px 1px">
             <div class="rb-square" />
-            <textarea ref="inputBox" id="inputBox" name="inputBox" class="input-box" :style="{ opacity: inputBoxShow }"
-              @blur="inputBoxBlur" @mousemove="inputBoxMouseMove" @mousedown="inputBoxMouseDown" trim autocomplete="off"
-              autocorrect="off" autocompitaize="off" :spellcheck="spellcheck"></textarea>
+            <textarea 
+              ref="inputBox" 
+              id="inputBox" 
+              name="inputBox" 
+              class="input-box" 
+              :style="{ opacity: inputBoxShow }"
+              @blur="inputBoxBlur" 
+              @mousemove="inputBoxMouseMove" 
+              @mousedown="inputBoxMouseDown"
+              trim
+              autocomplete="off"
+              autocorrect="off"
+              autocompitaize="off"
+              :spellcheck="spellcheck"
+              ></textarea>
           </div>
         </div>
 
@@ -327,7 +344,6 @@ import PanelFind from './components/find/PanelFind.vue'
 import DatePicker from '@vuepic/vue-datepicker'
 import { read, writeFile, utils } from 'xlsx'
 import CellTooltip from "./components/tooltip/CellTooltip.vue";
-
 
 import '@vuepic/vue-datepicker/dist/main.css'
 
@@ -634,7 +650,7 @@ export default defineComponent({
         }
       }
     },
-    
+
   },
   watch: {
     modelValue() {
@@ -2596,7 +2612,31 @@ export default defineComponent({
     /* *** InputBox *****************************************************************************************
      */
 
+    // moveInputSquareZone(selectedCells) {
+    //   const tableRect = this.systable.getBoundingClientRect();
 
+    //   const selectedCellsArr = Array.from(this.selectedCells);
+
+    //   const [firstRowIndex, firstColIndex] = selectedCellsArr[0].split('-');
+    //   const [lastRowIndex, lastColIndex] = selectedCellsArr.at(-1).split('-');
+
+    //   const firstRow = this.recordBody.children[firstRowIndex];
+    //   const firstCell = firstRow.children[parseInt(firstColIndex) + 1];
+    //   const firstCellRect = firstCell.getBoundingClientRect();
+
+    //   const lastRow = this.recordBody.children[lastRowIndex];
+    //   const lastCell = firstRow.children[parseInt(lastColIndex) + 1];
+    //   const lastCellRect = lastCell.getBoundingClientRect();
+
+    //   const selectedRowsQuntity = (parseInt(lastRowIndex)) - (parseInt(firstRowIndex)) + 1;
+
+    //   this.inputSquare.style.marginLeft = 0
+    //   this.inputSquare.style.left = (firstCellRect.left - tableRect.left - 1) + 'px';
+    //   this.inputSquare.style.top = (firstCellRect.top - tableRect.top - 1) + 'px';
+    //   this.inputSquare.style.width = (lastCellRect.right - firstCellRect.left + 1) + 'px';
+    //   this.inputSquare.style.height = (lastCellRect.height * selectedRowsQuntity + 2) + 'px';
+    //   this.inputSquare.style.zIndex = this.currentField.sticky ? 3 : 1
+    // },
      
     moveInputSquare(rowPos, colPos) {
       this.textTip = ''
@@ -2637,19 +2677,23 @@ export default defineComponent({
         this.inputBoxChanged = false
       }
 
+      // if (Array.from(this.selectedCells).length - 1 !== 0) {
+      //   this.moveInputSquareZone(this.selectedCells)
+      // } 
+
+        const cell = row.children[colPos + 1]
+        if (!cell) return false
+        this.currentField = this.fields[colPos]
+        const cellRect = cell.getBoundingClientRect()
+        const tableRect = this.systable.getBoundingClientRect()
+        this.squareSavedLeft = this.tableContent.scrollLeft
+        this.inputSquare.style.marginLeft = 0
+        this.inputSquare.style.left = (cellRect.left - tableRect.left - 1) + 'px'
+        this.inputSquare.style.top = (cellRect.top - tableRect.top - 1) + 'px'
+        this.inputSquare.style.width = (cellRect.width + 1) + 'px'
+        this.inputSquare.style.height = (cellRect.height + 1) + 'px'
+        this.inputSquare.style.zIndex = this.currentField.sticky ? 3 : 0
       // Relocate the inputSquare
-      const cell = row.children[colPos + 1]
-      if (!cell) return false
-      this.currentField = this.fields[colPos]
-      const cellRect = cell.getBoundingClientRect()
-      const tableRect = this.systable.getBoundingClientRect()
-      this.squareSavedLeft = this.tableContent.scrollLeft
-      this.inputSquare.style.marginLeft = 0
-      this.inputSquare.style.left = (cellRect.left - tableRect.left - 1) + 'px'
-      this.inputSquare.style.top = (cellRect.top - tableRect.top - 1) + 'px'
-      this.inputSquare.style.width = (cellRect.width + 1) + 'px'
-      this.inputSquare.style.height = (cellRect.height + 1) + 'px'
-      this.inputSquare.style.zIndex = this.currentField.sticky ? 3 : 1
 
       // Adjust the scrolling to display the whole focusing cell
       if (!this.currentField.sticky) {
@@ -3240,6 +3284,7 @@ export default defineComponent({
           this.table[row][columnKey].isSelected = true;
         }
       }
+      // this.moveInputSquareZone(this.selectedCells);
     },
     clearSelection() {
       this.selectedCells.clear();

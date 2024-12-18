@@ -9,7 +9,7 @@
         <button @click="">Открыть</button>
       </template>
     </NestedTableWrapper> -->
-      <ExcelTable
+      <!-- <ExcelTable
         v-model="singleTable"
         :columns="columns"
         noPaging 
@@ -18,8 +18,9 @@
         selectable
         free-select
         singleSelect
-      ></ExcelTable>
+      ></ExcelTable> -->
       <!-- <OldTable></OldTable> -->
+       <newTableApp></newTableApp>
   </div>
 </template>
 
@@ -28,6 +29,7 @@ import NestedTableWrapper from './components/ui/NestedTable.vue';
 import ExcelTable from './components/ui/ExcelTable.vue';
 import { reactive } from 'vue';
 import OldTable from './components/OldTable.vue';
+import newTableApp from './newTableApp.vue';
 
 import nestedTable_ from './components/ui/conts';
 import singleTable_ from './components/ui/single-table';
