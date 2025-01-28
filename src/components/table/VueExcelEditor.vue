@@ -89,7 +89,7 @@
                 :class="{ 'sticky-column': item.sticky }" :style="{ left: item.left }" class="column-filter" />
             </tr>
           </thead>
-          <tbody @mousedown="mouseDown">
+          <tbody @mousedown="mouseDown" @mouseup="mouseUp">
             <tr v-if="localizedLabel.noRecordIndicator && pagingTable.length == 0">
               <td colspan="100%" style="height:40px; vertical-align: middle; text-align: center"></td>
             </tr>
@@ -188,6 +188,7 @@
               @blur="inputBoxBlur" 
               @mousemove="inputBoxMouseMove" 
               @mousedown="inputBoxMouseDown"
+              @mouseup="mouseUp"
               trim
               autocomplete="off"
               autocorrect="off"
@@ -589,6 +590,7 @@ export default defineComponent({
       startCell: null,
       selectedRowIndex: 0,
       selectedColIndex: 0,
+      isCellClickActive: false,
     }
     return dataset
   },
@@ -2515,6 +2517,8 @@ export default defineComponent({
           this
         );
 
+        this.isCellClickActive = true;
+
         if (typeof this.currentField.cellClick === 'function')
           this.currentField.cellClick(this.currentCell.textContent, this.currentRecord, rowPos, colPos, this.currentField, this)
         if (this.currentField && this.currentField.link /* && e.altKey */ && this.currentCell.textContent)
@@ -2558,6 +2562,10 @@ export default defineComponent({
         if (e.target.classList.contains('datepick')) this.showDatePickerDiv()
       }
     },
+    mouseUp(e) {
+      e.preventDefault();
+      this.isCellClickActive = false;
+    },
     cellMouseMove(e) {
       let cursor = 'cell'
       if (this.inputBoxShow) cursor = 'default'
@@ -2575,14 +2583,30 @@ export default defineComponent({
       e.target.style.cursor = cursor
     },
     cellMouseOver(e) {
-      const cell = e.target
-      if (!cell.classList.contains('error')) return
-      if (this.tipTimeout) clearTimeout(this.tipTimeout)
-      if ((this.tip = this.errmsg[cell.getAttribute('id')]) === '') return
-      const rect = cell.getBoundingClientRect()
-      this.$refs.tooltip.style.top = (rect.top - 14) + 'px'
-      this.$refs.tooltip.style.left = (rect.right + 8) + 'px'
-      cell.addEventListener('mouseout', this.cellMouseOut)
+
+      if (!this.isCellClickActive) {
+        return;
+      }
+
+      const row = e.target.parentNode
+      const colPos = Array.from(row.children).indexOf(e.target) - 1
+      const rowPos = Array.from(row.parentNode.children).indexOf(row)
+      const [startRow, startCol] = this.startCell;
+        this.selectRange(
+          startRow,
+          startCol,
+          rowPos,
+          colPos
+        );
+
+      // const cell = e.target
+      // if (!cell.classList.contains('error')) return
+      // if (this.tipTimeout) clearTimeout(this.tipTimeout)
+      // if ((this.tip = this.errmsg[cell.getAttribute('id')]) === '') return
+      // const rect = cell.getBoundingClientRect()
+      // this.$refs.tooltip.style.top = (rect.top - 14) + 'px'
+      // this.$refs.tooltip.style.left = (rect.right + 8) + 'px'
+      // cell.addEventListener('mouseout', this.cellMouseOut)
     },
     numcolMouseOver(e) {
       const cell = e.target
@@ -2752,11 +2776,11 @@ export default defineComponent({
       if (e.target.offsetWidth - e.offsetX > 15) return
       if (this.currentField.readonly) return
       if (this.currentField.options) {
-        e.preventDefault()
+        // e.preventDefault()
         this.calAutocompleteList(true)
       }
       if (this.currentField.type === 'date') {
-        e.preventDefault()
+        // e.preventDefault()
         this.showDatePickerDiv()
       }
     },

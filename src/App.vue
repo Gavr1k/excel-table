@@ -9,7 +9,7 @@
         <button @click="">Открыть</button>
       </template>
     </NestedTableWrapper> -->
-      <!-- <ExcelTable
+      <ExcelTable
         v-model="singleTable"
         :columns="columns"
         noPaging 
@@ -18,9 +18,9 @@
         selectable
         free-select
         singleSelect
-      ></ExcelTable> -->
+      ></ExcelTable>
       <!-- <OldTable></OldTable> -->
-       <newTableApp></newTableApp>
+       <!-- <newTableApp></newTableApp> -->
   </div>
 </template>
 
