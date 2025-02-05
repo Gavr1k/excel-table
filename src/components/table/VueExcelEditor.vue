@@ -176,6 +176,7 @@
           ref="inputSquare" 
           class="input-square" 
           @mousedown="inputSquareClick"
+          @mouseup="mouseUp"
         >
           <div style="position: relative; height: 100%; padding: 2px 2px 1px">
             <div class="rb-square" />
@@ -345,6 +346,7 @@ import PanelFind from './components/find/PanelFind.vue'
 import DatePicker from '@vuepic/vue-datepicker'
 import { read, writeFile, utils } from 'xlsx'
 import CellTooltip from "./components/tooltip/CellTooltip.vue";
+import { cloneDeep } from 'lodash';
 
 import '@vuepic/vue-datepicker/dist/main.css'
 
@@ -591,6 +593,9 @@ export default defineComponent({
       selectedRowIndex: 0,
       selectedColIndex: 0,
       isCellClickActive: false,
+      undoStack: [],
+      redoStack: [],
+      maxHistorySteps: 50,
     }
     return dataset
   },
@@ -761,6 +766,68 @@ export default defineComponent({
     });
   },
   methods: {
+    saveState() {
+      const lastState = this.undoStack[this.undoStack.length - 1];
+      const currentState = {
+        table: cloneDeep(this.table),
+        selectedCells: cloneDeep(this.selectedCells),
+        startCell: cloneDeep(this.startCell),
+        selectedRowIndex: this.selectedRowIndex,
+        selectedColIndex: this.selectedColIndex,
+      };
+
+      if (lastState && JSON.stringify(lastState) === JSON.stringify(currentState)) {
+        return;
+      }
+
+      this.undoStack.push(currentState);
+
+      if (this.undoStack.length > this.maxHistorySteps) {
+        this.undoStack.shift();
+      }
+
+      if (this.undoStack.length > this.maxHistorySteps) {
+        this.undoStack.shift();
+      }
+
+      this.redoStack = [];
+    },
+    undoHistory() {
+      if (!this.undoStack.length) return;
+
+      this.redoStack.push({
+        table: cloneDeep(this.table),
+        selectedCells: cloneDeep(this.selectedCells),
+        startCell: cloneDeep(this.startCell),
+        selectedRowIndex: this.selectedRowIndex,
+        selectedColIndex: this.selectedColIndex,
+      });
+
+      this.applyState(this.undoStack.pop());
+    },
+    redoHistory() {
+      if (!this.redoStack.length) return;
+
+      this.undoStack.push({
+        table: cloneDeep(this.table),
+        selectedCells: cloneDeep(this.selectedCells),
+        startCell: cloneDeep(this.startCell),
+        selectedRowIndex: this.selectedRowIndex,
+        selectedColIndex: this.selectedColIndex,
+      });
+
+      this.applyState(this.redoStack.pop());
+    },
+    applyState(state) {
+      this.table = cloneDeep(state.table);
+      this.selectedCells = cloneDeep(state.selectedCells);
+      this.startCell = cloneDeep(state.startCell);
+      this.selectedRowIndex = state.selectedRowIndex;
+      this.selectedColIndex = state.selectedColIndex;
+      this.lazy(() => {
+        this.moveInputSquare(this.selectedRowIndex, this.selectedColIndex);
+      });
+    },
     addEventListener() {
       window.addEventListener('resize', this.winResize)
       window.addEventListener('paste', this.winPaste)
@@ -1514,6 +1581,16 @@ export default defineComponent({
       if (e.ctrlKey || e.metaKey)
         switch (e.keyCode) {
           case 90: // z
+            if (e.shiftKey) {
+              this.redoHistory(); // Ctrl + Shift + Z (Windows) или Cmd + Shift + Z (Mac)
+            } else {
+              this.undoHistory(); // Ctrl + Z (Windows/Linux) или Cmd + Z (Mac)
+              this.undoTransaction();
+            }
+            e.preventDefault()
+            break
+          case 89: // y
+            this.redoHistory();
             this.undoTransaction()
             e.preventDefault()
             break
@@ -3145,6 +3222,8 @@ export default defineComponent({
     },
     handlePaste(event) {
       if (this.disableMultiPaste) return;
+
+      this.saveState();
 
       event.preventDefault();
       const clipboardData = event.clipboardData;
